@@ -93,3 +93,13 @@ body {
       font-size: 0.9rem;
       margin-top: auto;
     }
+
+        .navbar-toggler {
+  background-color: maroon !important; /* make button maroon */
+  border: none; /* optional: remove border */
+}
+
+.navbar-toggler:focus {
+  box-shadow: none !important;  /* removes the white glow/border */
+  outline: none !important;     /* removes outline */
+}

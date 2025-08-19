@@ -1,3 +1,15 @@
+/* Hide Edge/IE built-in password reveal button */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+
+/* Hide Webkit (Chrome, Safari) built-in reveal button if it shows */
+input[type="password"]::-webkit-credentials-auto-fill-button,
+input[type="password"]::-webkit-clear-button {
+  display: none;
+}
+
 body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
@@ -92,6 +104,20 @@ body {
       transform: translateY(-2px);
     }
 
+.input-group .form-control {
+  border-right: none; /* remove right border of input */
+}
+
+.input-group .btn {
+  border-color: #ced4da; /* match border color */
+  border-left: none; /* remove left border */
+}
+
+.input-group .btn:focus,
+.input-group .form-control:focus {
+  box-shadow: none; /* clean focus effect */
+}
+
     .forgot-password {
       display: block;
       margin-top: 1rem;
@@ -146,3 +172,23 @@ body {
       color: #fbe9d0;
       font-weight: 500;
     }
+
+    .navbar-toggler {
+  background-color: maroon !important; /* make button maroon */
+  border: none; /* optional: remove border */
+}
+
+.navbar-toggler:focus {
+  box-shadow: none !important;  /* removes the white glow/border */
+  outline: none !important;     /* removes outline */
+}
+
+.form-check-input {
+  box-shadow: none !important;  /* removes the white glow/border */
+  outline: none !important;     /* removes outline */
+
+}
+
+
+
+    

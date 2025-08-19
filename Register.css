@@ -115,3 +115,13 @@ body {
         font-size: 1.6rem;
       }
     }
+
+        .navbar-toggler {
+  background-color: maroon !important; /* make button maroon */
+  border: none; /* optional: remove border */
+}
+
+.navbar-toggler:focus {
+  box-shadow: none !important;  /* removes the white glow/border */
+  outline: none !important;     /* removes outline */
+}
