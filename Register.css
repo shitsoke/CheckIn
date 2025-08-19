@@ -1,0 +1,117 @@
+body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(135deg, #6e0d0d, #BF3131);
+      color: #fbe9d0;
+    }
+
+    /* Navbar */
+    .navbar {
+      background-color: #6e0d0d;
+      padding: 1rem 2rem;
+    }
+
+    .navbar-brand {
+      color: #fff !important;
+      font-weight: 500;
+      font-size: 1.5rem;
+      letter-spacing: 2px;
+    }
+
+    .navbar-nav .nav-link {
+      color: #fff !important;
+      font-weight: 600;
+      margin-left: 1rem;
+    }
+
+    .navbar-nav .nav-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Center wrapper */
+    .main-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem 1rem;
+    }
+
+    /* Sign Up Section */
+.signup-section {
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  padding: 1.5rem;
+  border-radius: 16px;
+  background: transparent;   /* ✅ invisible card */
+  box-shadow: none;          /* ✅ remove shadow */
+}
+
+    .signup-section h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      letter-spacing: 1px;
+      color: #fff;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    }
+
+    /* Input styling */
+    .form-control {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      color: #333;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .form-control:focus {
+      box-shadow: 0 0 6px rgba(255, 180, 150, 0.7);
+      border-color: #a32727;
+    }
+
+    /* Buttons */
+    .btn-signup {
+      background-color: #6e0d0d;
+      color: #fff;
+      font-weight: 600;
+      padding: 0.8rem;
+      border-radius: 12px;
+      width: 100%;
+      margin-top: 1rem;
+      border: none;
+      transition: 0.3s;
+    }
+
+    .btn-signup:hover {
+      background-color: #f5d7b0;
+      color: #6e0d0d;
+      transform: translateY(-2px);
+    }
+
+    /* Footer */
+    footer {
+      background-color: #6e0d0d;
+      color: #fbe9d0;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      margin-top: auto;
+    }
+
+    /* Responsive Fix */
+    @media (max-width: 576px) {
+      .signup-section {
+        margin: 0;
+        padding: 1rem;
+      }
+      .signup-section h1 {
+        font-size: 1.6rem;
+      }
+    }

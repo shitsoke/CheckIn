@@ -1,0 +1,148 @@
+body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      
+    }
+
+    /* Navbar */
+    .navbar {
+      background-color: #6e0d0d;
+      padding: 1rem 2rem;
+    }
+
+    .navbar-brand {
+      color: #fff !important;
+      font-weight: 500;
+      font-size: 1.5rem;
+      letter-spacing: 2px;
+    }
+
+    .navbar-nav .nav-link {
+      color: #fff !important;
+      font-weight: 600;
+      margin-left: 1rem;
+    }
+
+    .navbar-nav .nav-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Main panels container */
+    .main-content {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      background: linear-gradient(135deg, #6e0d0d, #BF3131);
+      color: #fbe9d0;
+    }
+
+    /* Login card */
+    .login-card {
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+    }
+
+    .login-card h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      margin-bottom: 1.4rem;
+      letter-spacing: 1px;
+      color: #fff;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    }
+
+    /* Input styling */
+    .form-control {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      color: #333;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .form-control:focus {
+      box-shadow: 0 0 6px rgba(255, 180, 150, 0.7);
+      border-color: #a32727;
+    }
+
+    /* Buttons */
+    .btn-login {
+      background-color: #6e0d0d;
+      color: #fff;
+      font-weight: 600;
+      padding: 0.8rem;
+      border-radius: 12px;
+      width: 100%;
+      margin-top: 1rem;
+      border: none;
+      transition: 0.3s;
+    }
+
+    .btn-login:hover {
+      background-color: #f5d7b0;
+      color: #6e0d0d;
+      transform: translateY(-2px);
+    }
+
+    .forgot-password {
+      display: block;
+      margin-top: 1rem;
+      color: #fbe9d0;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: 0.3s;
+    }
+
+    .forgot-password:hover {
+      text-decoration: underline;
+      color: #fff;
+    }
+
+    /* Footer */
+    footer {
+      background-color: #6e0d0d;
+      color: #fbe9d0;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+      .main-content {
+        padding: 2rem 1.5rem;
+      }
+      .login-card h1 {
+        font-size: 2rem;
+      }
+    }
+
+    /* Custom maroon checkbox */
+    .form-check-input {
+      width: 1.2em;
+      height: 1.2em;
+      background-color: #fff; 
+      cursor: pointer;
+    }
+
+    .form-check-input:checked {
+      background-color: #fff; 
+      border-color: #6e0d0d; 
+    }
+
+    .form-check-input:checked[type=checkbox] {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%236e0d0d' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
+    }
+
+    .form-check-label {
+      color: #fbe9d0;
+      font-weight: 500;
+    }
