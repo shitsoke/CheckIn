@@ -1,3 +1,15 @@
+/* Hide Edge/IE built-in password reveal button */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+
+/* Hide Webkit (Chrome, Safari) built-in reveal button if it shows */
+input[type="password"]::-webkit-credentials-auto-fill-button,
+input[type="password"]::-webkit-clear-button {
+  display: none;
+}
+
 body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
@@ -125,3 +137,25 @@ body {
   box-shadow: none !important;  /* removes the white glow/border */
   outline: none !important;     /* removes outline */
 }
+
+/* Make the whole input group look seamless */
+  .input-group {
+    background-color: #fff !important;   /* white background across both */
+    border-radius: 0.375rem;             /* same as Bootstrap default */
+    overflow: hidden;                    /* hides any 1px gaps */
+  }
+
+  .input-group .form-control {
+    border: none !important;             /* remove inner borders */
+    box-shadow: none !important;
+  }
+
+  .input-group .btn {
+    border: none !important;             /* remove separator line */
+    background-color: #fff !important;   /* match input */
+    color: #222831!important;           /* maroon icon */
+  }
+
+  .input-group .btn:hover {
+    background-color: #f1f1f1 !important;
+  }
