@@ -7,7 +7,6 @@
       flex-direction: column;
     }
 
-    /* Navbar */
     .navbar {
       background-color: #6e0d0d;
       padding: 1rem 2rem;
@@ -30,7 +29,6 @@
       text-decoration: underline;
     }
 
-    /* Forgot Password Card */
     .forgot-container {
       max-width: 420px;
       width: 100%;
@@ -64,7 +62,6 @@
       border-color: #fff;
     }
 
-    /* Button */
     .btn-submit {
       background-color: #6e0d0d;
       color: #fff;
@@ -84,7 +81,6 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
 
-    /* Back link */
     .back-link {
       display: block;
       margin-top: 1.5rem;
@@ -99,7 +95,6 @@
       text-decoration: underline;
     }
 
-    /* Footer */
     footer {
       background-color: #6e0d0d;
       color: #fbe9d0;
@@ -110,11 +105,11 @@
     }
 
         .navbar-toggler {
-  background-color: maroon !important; /* make button maroon */
-  border: none; /* optional: remove border */
+  background-color: maroon !important;
+  border: none;
 }
 
 .navbar-toggler:focus {
-  box-shadow: none !important;  /* removes the white glow/border */
-  outline: none !important;     /* removes outline */
+  box-shadow: none !important;
+  outline: none !important;
 }

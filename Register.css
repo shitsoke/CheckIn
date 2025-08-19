@@ -1,10 +1,9 @@
-/* Hide Edge/IE built-in password reveal button */
+
 input[type="password"]::-ms-reveal,
 input[type="password"]::-ms-clear {
   display: none;
 }
 
-/* Hide Webkit (Chrome, Safari) built-in reveal button if it shows */
 input[type="password"]::-webkit-credentials-auto-fill-button,
 input[type="password"]::-webkit-clear-button {
   display: none;
@@ -20,7 +19,6 @@ body {
       color: #fbe9d0;
     }
 
-    /* Navbar */
     .navbar {
       background-color: #6e0d0d;
       padding: 1rem 2rem;
@@ -43,7 +41,6 @@ body {
       text-decoration: underline;
     }
 
-    /* Center wrapper */
     .main-container {
       flex: 1;
       display: flex;
@@ -52,15 +49,14 @@ body {
       padding: 2rem 1rem;
     }
 
-    /* Sign Up Section */
 .signup-section {
   width: 100%;
   max-width: 420px;
   text-align: center;
   padding: 1.5rem;
   border-radius: 16px;
-  background: transparent;   /* ✅ invisible card */
-  box-shadow: none;          /* ✅ remove shadow */
+  background: transparent;   
+  box-shadow: none;          
 }
 
     .signup-section h1 {
@@ -72,7 +68,6 @@ body {
       text-shadow: 0 2px 6px rgba(0,0,0,0.4);
     }
 
-    /* Input styling */
     .form-control {
       background-color: #fff;
       border: 1px solid #ddd;
@@ -88,7 +83,6 @@ body {
       border-color: #a32727;
     }
 
-    /* Buttons */
     .btn-signup {
       background-color: #6e0d0d;
       color: #fff;
@@ -107,7 +101,6 @@ body {
       transform: translateY(-2px);
     }
 
-    /* Footer */
     footer {
       background-color: #6e0d0d;
       color: #fbe9d0;
@@ -117,7 +110,6 @@ body {
       margin-top: auto;
     }
 
-    /* Responsive Fix */
     @media (max-width: 576px) {
       .signup-section {
         margin: 0;
@@ -129,31 +121,30 @@ body {
     }
 
         .navbar-toggler {
-  background-color: maroon !important; /* make button maroon */
-  border: none; /* optional: remove border */
+  background-color: maroon !important; 
+  border: none; 
 }
 
 .navbar-toggler:focus {
-  box-shadow: none !important;  /* removes the white glow/border */
-  outline: none !important;     /* removes outline */
+  box-shadow: none !important;  
+  outline: none !important;     
 }
 
-/* Make the whole input group look seamless */
   .input-group {
-    background-color: #fff !important;   /* white background across both */
-    border-radius: 0.375rem;             /* same as Bootstrap default */
-    overflow: hidden;                    /* hides any 1px gaps */
+    background-color: #fff !important;   
+    border-radius: 0.375rem;            
+    overflow: hidden;                   
   }
 
   .input-group .form-control {
-    border: none !important;             /* remove inner borders */
+    border: none !important;             
     box-shadow: none !important;
   }
 
   .input-group .btn {
-    border: none !important;             /* remove separator line */
-    background-color: #fff !important;   /* match input */
-    color: #222831!important;           /* maroon icon */
+    border: none !important;            
+    background-color: #fff !important;   
+    color: #222831!important;           
   }
 
   .input-group .btn:hover {
