@@ -11,8 +11,8 @@ intuitive interface and mobile-friendly design, CheckIn offers travelers a fast,
 to plan their stays anytime, anywhere. 
 
 Members:
- Jason Chris Lim
- Kevin John Pama
+ Jason Chris Lim,
+ Kevin John Pama,
  John Dhenzell Ermac
 
 Home: <img width="1365" height="696" alt="image" src="https://github.com/user-attachments/assets/c45ae12f-0980-4a98-b72a-2ebe04e97a0f" />
