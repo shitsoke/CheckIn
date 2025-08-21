@@ -21,4 +21,3 @@ Login: <img width="1366" height="698" alt="image" src="https://github.com/user-a
 Forgot: <img width="1363" height="699" alt="image" src="https://github.com/user-attachments/assets/c808dc5f-6ec0-4141-b9d8-5c8b0767d955" />
 
 Demo URL: https://jobedward20220.github.io/CheckIn/
-
