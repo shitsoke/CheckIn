@@ -78,7 +78,7 @@
       background-color: #f5d7b0;
       color: #6e0d0d;
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
     .back-link {
@@ -104,12 +104,12 @@
       margin-top: auto;
     }
 
-        .navbar-toggler {
-  background-color: maroon !important;
-  border: none;
-}
+    .navbar-toggler {
+      background-color: maroon !important;
+      border: none;
+    }
 
-.navbar-toggler:focus {
-  box-shadow: none !important;
-  outline: none !important;
-}
+    .navbar-toggler:focus {
+      box-shadow: none !important;
+      outline: none !important;
+    }
