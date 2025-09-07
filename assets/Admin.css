@@ -203,15 +203,3 @@ body {
             }
         }
 
-@media (max-width: 768px) {
-  .main-content {
-    padding-top: 60px;
-  }
-
-  .menu-toggle {
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    z-index: 1100; 
-  }
-}
