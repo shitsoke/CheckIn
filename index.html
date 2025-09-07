@@ -4,332 +4,330 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CheckIn</title>
+  <title>CheckIn Admin</title>
   <link rel="icon" type="image/png" sizes="512x512" href="assets/checkinlogo.png">
-
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/Index.css">
+  <link rel="stylesheet" href="assets/Admin.css">
 </head>
 
 <body>
 
-  <nav class="navbar navbar-expand-lg">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">CheckIn</a>
-      <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="register.html">Register</a></li>
-          <li class="nav-item"><a class="nav-link active" href="login.html">Login</a></li>
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div>
+      <h2>CheckIn Admin</h2>
+      <div class="sidebar-nav">
+        <a href="#rooms"><i class="bi bi-door-closed"></i> Manage Rooms</a>
+        <a href="#bookings"><i class="bi bi-calendar-check"></i> Manage Bookings</a>
+        <a href="#feedback"><i class="bi bi-chat-left-text"></i> Manage Feedback</a>
+      </div>
+    </div>
+    <a href="index.html" class="logout-btn"><i class="bi bi-box-arrow-right"></i> Logout</a>
+  </div>
+
+  <!-- Overlay -->
+  <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+  <!-- Mobile Menu Button -->
+  <button class="menu-toggle d-md-none" onclick="toggleSidebar()">
+    <i class="bi bi-list"></i>
+  </button>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <h1>Dashboard</h1>
+
+    <!-- Manage Rooms -->
+    <section id="rooms" class="mb-5">
+      <div class="card p-4">
+        <h3 class="mb-3 fw-semibold"><i class="bi bi-door-closed"></i> Manage Rooms</h3>
+
+        <!-- Desktop Table -->
+        <div class="table-responsive d-none d-md-block">
+          <table class="table align-middle text-center">
+            <thead>
+              <tr>
+                <th>Room</th>
+                <th>Price (₱)</th>
+                <th>Status</th>
+                <th>Size</th>
+                <th>Amenities</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Standard Room</td>
+                <td><input type="number" class="form-control" value="1500"></td>
+                <td>
+                  <select class="form-select">
+                    <option selected>Available</option>
+                    <option>Fully Booked</option>
+                  </select>
+                </td>
+                <td><input type="text" class="form-control" value="20 sqm"></td>
+                <td><textarea class="form-control">WiFi, AC, King-size Bed</textarea></td>
+                <td><button class="btn btn-primary btn-sm">Save</button></td>
+              </tr>
+              <tr>
+                <td>Deluxe Room</td>
+                <td><input type="number" class="form-control" value="2500"></td>
+                <td>
+                  <select class="form-select">
+                    <option>Available</option>
+                    <option selected>Fully Booked</option>
+                  </select>
+                </td>
+                <td><input type="text" class="form-control" value="30 sqm"></td>
+                <td><textarea class="form-control">WiFi, Smart TV, Jacuzzi</textarea></td>
+                <td><button class="btn btn-primary btn-sm">Save</button></td>
+              </tr>
+              <tr>
+                <td>Suite Room</td>
+                <td><input type="number" class="form-control" value="4000"></td>
+                <td>
+                  <select class="form-select">
+                    <option selected>Available</option>
+                    <option>Fully Booked</option>
+                  </select>
+                </td>
+                <td><input type="text" class="form-control" value="45 sqm"></td>
+                <td><textarea class="form-control">WiFi, Jacuzzi, Living Area</textarea></td>
+                <td><button class="btn btn-primary btn-sm">Save</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Mobile Cards -->
+        <div class="d-block d-md-none">
+          <!-- Standard Room -->
+          <div class="card mb-3 p-3 shadow-sm">
+            <h5 class="fw-semibold">Standard Room</h5>
+            <div class="row mb-2">
+              <div class="col-6"><strong>Price:</strong></div>
+              <div class="col-6"><input type="number" class="form-control form-control-sm" value="1500"></div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-6"><strong>Status:</strong></div>
+              <div class="col-6">
+                <select class="form-select form-select-sm">
+                  <option selected>Available</option>
+                  <option>Fully Booked</option>
+                </select>
+              </div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-6"><strong>Size:</strong></div>
+              <div class="col-6"><input type="text" class="form-control form-control-sm" value="20 sqm"></div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-6"><strong>Amenities:</strong></div>
+              <div class="col-6"><textarea class="form-control form-control-sm">WiFi, AC, King-size Bed</textarea></div>
+            </div>
+            <div class="text-end">
+              <button class="btn btn-primary btn-sm">Save</button>
+            </div>
+          </div>
+
+          <!-- Deluxe Room -->
+          <div class="card mb-3 p-3 shadow-sm">
+            <h5 class="fw-semibold">Deluxe Room</h5>
+            <div class="row mb-2">
+              <div class="col-6"><strong>Price:</strong></div>
+              <div class="col-6"><input type="number" class="form-control form-control-sm" value="2500"></div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-6"><strong>Status:</strong></div>
+              <div class="col-6">
+                <select class="form-select form-select-sm">
+                  <option>Available</option>
+                  <option selected>Fully Booked</option>
+                </select>
+              </div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-6"><strong>Size:</strong></div>
+              <div class="col-6"><input type="text" class="form-control form-control-sm" value="30 sqm"></div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-6"><strong>Amenities:</strong></div>
+              <div class="col-6"><textarea class="form-control form-control-sm">WiFi, Smart TV, Jacuzzi</textarea></div>
+            </div>
+            <div class="text-end">
+              <button class="btn btn-primary btn-sm">Save</button>
+            </div>
+          </div>
+
+          <!-- Suite Room -->
+          <div class="card mb-3 p-3 shadow-sm">
+            <h5 class="fw-semibold">Suite Room</h5>
+            <div class="row mb-2">
+              <div class="col-6"><strong>Price:</strong></div>
+              <div class="col-6"><input type="number" class="form-control form-control-sm" value="4000"></div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-6"><strong>Status:</strong></div>
+              <div class="col-6">
+                <select class="form-select form-select-sm">
+                  <option selected>Available</option>
+                  <option>Fully Booked</option>
+                </select>
+              </div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-6"><strong>Size:</strong></div>
+              <div class="col-6"><input type="text" class="form-control form-control-sm" value="45 sqm"></div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-6"><strong>Amenities:</strong></div>
+              <div class="col-6"><textarea class="form-control form-control-sm">WiFi, Jacuzzi, Living Area</textarea></div>
+            </div>
+            <div class="text-end">
+              <button class="btn btn-primary btn-sm">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Manage Bookings -->
+    <section id="bookings" class="mb-5">
+      <div class="card p-4">
+        <h3 class="mb-3 fw-semibold"><i class="bi bi-calendar-check"></i> Manage Bookings</h3>
+
+        <!-- Desktop Table -->
+        <div class="table-responsive d-none d-md-block">
+          <table class="table align-middle text-center">
+            <thead>
+              <tr>
+                <th>Guest Name</th>
+                <th>Room</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Juan Dela Cruz</td>
+                <td>Standard Room</td>
+                <td>2025-09-12</td>
+                <td><span class="badge bg-warning">Pending</span></td>
+                <td>
+                  <button class="btn btn-success btn-sm">Confirm</button>
+                  <button class="btn btn-danger btn-sm">Cancel</button>
+                </td>
+              </tr>
+              <tr>
+                <td>Ana Santos</td>
+                <td>Deluxe Room</td>
+                <td>2025-09-15</td>
+                <td><span class="badge bg-success">Confirmed</span></td>
+                <td><button class="btn btn-danger btn-sm">Cancel</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Mobile Cards -->
+        <div class="d-block d-md-none">
+          <div class="card mb-3 p-3 shadow-sm">
+            <h5 class="fw-semibold">Juan Dela Cruz</h5>
+            <p><strong>Room:</strong> Standard Room</p>
+            <p><strong>Date:</strong> 2025-09-12</p>
+            <p><strong>Status:</strong> <span class="badge bg-warning">Pending</span></p>
+            <div class="text-end">
+              <button class="btn btn-success btn-sm">Confirm</button>
+              <button class="btn btn-danger btn-sm">Cancel</button>
+            </div>
+          </div>
+
+          <div class="card mb-3 p-3 shadow-sm">
+            <h5 class="fw-semibold">Ana Santos</h5>
+            <p><strong>Room:</strong> Deluxe Room</p>
+            <p><strong>Date:</strong> 2025-09-15</p>
+            <p><strong>Status:</strong> <span class="badge bg-success">Confirmed</span></p>
+            <div class="text-end">
+              <button class="btn btn-danger btn-sm">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Manage Feedback -->
+    <section id="feedback">
+      <div class="card p-4">
+        <h3 class="mb-3 fw-semibold"><i class="bi bi-chat-left-text"></i> Manage Feedback</h3>
+
+        <!-- Desktop List -->
+        <ul class="list-group d-none d-md-block">
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            Great room and service! - Maria
+            <button class="btn btn-danger btn-sm">Delete</button>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            Too noisy outside. - Pedro
+            <button class="btn btn-danger btn-sm">Delete</button>
+          </li>
         </ul>
-      </div>
-    </div>
-  </nav>
 
-  <section class="intro">
-    <div class="content">
-      <h1>Welcome to CheckIn</h1>
-      <p>Experience comfort, privacy, and style at our love motel. Whether you’re staying for a short break or a special
-        night, we’ve got the perfect room to make your visit unforgettable.</p>
-    </div>
-  </section>
-
-  <section class="py-5" style="background-color:#fdf5f5;">
-    <div class="container">
-      <h2 class="text-center mb-4" style="color:#6e0d0d; font-weight:700;">Our Room Types</h2>
-      <div class="row g-4">
-
-        <div class="col-md-4">
-          <div class="card h-100 shadow-sm border-0 rounded-4">
-            <img
-              src="https://a0.muscache.com/im/pictures/hosting/Hosting-1441329155797316102/original/eb282705-f833-4c33-833d-cfef6c89c534.jpeg?im_w=1200"
-              class="card-img-top rounded-top-4" alt="Standard Room" data-bs-toggle="modal"
-              data-bs-target="#standardRoomModal">
-            <div class="card-body text-center">
-              <h5 class="card-title fw-bold">Standard Room</h5>
-              <p class="card-text">A cozy and affordable space designed for comfort, perfect for a relaxing stay with
-                all the basic essentials you need.</p>
-              <a href="#" class="btn-book" data-bs-toggle="modal" data-bs-target="#bookingModal"
-                onclick="openBooking('Standard Room')">
-                Book Now
-              </a>
+        <!-- Mobile Cards -->
+        <div class="d-block d-md-none">
+          <div class="card mb-2 p-3 shadow-sm">
+            <p><strong>Maria:</strong> Great room and service!</p>
+            <div class="text-end">
+              <button class="btn btn-danger btn-sm">Delete</button>
             </div>
           </div>
-        </div>
 
-        <div class="col-md-4">
-          <div class="card h-100 shadow-sm border-0 rounded-4">
-            <img
-              src="https://a0.muscache.com/im/pictures/miso/Hosting-1129277184458993193/original/673a77f7-052c-4c5d-bcd6-8ef00ce9087d.jpeg?im_w=1200"
-              class="card-img-top rounded-top-4" alt="Deluxe Room" data-bs-toggle="modal"
-              data-bs-target="#deluxeRoomModal">
-            <div class="card-body text-center">
-              <h5 class="card-title fw-bold">Deluxe Room</h5>
-              <p class="card-text">A spacious and comfortable room with upgraded amenities for a more relaxing and
-                enjoyable stay.</p>
-              <a href="#" class="btn-book" data-bs-toggle="modal" data-bs-target="#bookingModal"
-                onclick="openBooking('Deluxe Room')">
-                Book Now
-              </a>
+          <div class="card mb-2 p-3 shadow-sm">
+            <p><strong>Pedro:</strong> Too noisy outside.</p>
+            <div class="text-end">
+              <button class="btn btn-danger btn-sm">Delete</button>
             </div>
           </div>
-        </div>
-
-        <div class="col-md-4">
-          <div class="card h-100 shadow-sm border-0 rounded-4">
-            <img
-              src="https://reservations.nustar.ph/shs-ngbe-image-resizer/images/hotel/37834/images/room/suite_6.jpg"
-              class="card-img-top rounded-top-4" alt="Suite Room" data-bs-toggle="modal"
-              data-bs-target="#suiteRoomModal">
-            <div class="card-body text-center">
-              <h5 class="card-title fw-bold">Suite Room</h5>
-              <p class="card-text">A premium space with added comfort and exclusive features for an unforgettable stay.
-              </p>
-              <a href="#" class="btn-book" data-bs-toggle="modal" data-bs-target="#bookingModal"
-                onclick="openBooking('Suite Room')">
-                Book Now
-              </a>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <div class="modal fade" id="standardRoomModal" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-      <div class="modal-content rounded-4">
-        <div class="modal-header">
-          <h5 class="modal-title">Standard Room</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-
-          <div id="standardRoomCarousel" class="carousel slide mb-3">
-            <div class="carousel-inner">
-              <div class="carousel-item active">
-                <img
-                  src="https://a0.muscache.com/im/pictures/hosting/Hosting-1441329155797316102/original/eb282705-f833-4c33-833d-cfef6c89c534.jpeg?im_w=1200"
-                  class="d-block w-100 rounded-3">
-              </div>
-              <div class="carousel-item">
-                <img
-                  src="https://a0.muscache.com/im/pictures/hosting/Hosting-1441329155797316102/original/f45e4fd9-4af4-45c6-bc65-9b949ee0a0a5.jpeg?im_w=1200"
-                  class="d-block w-100 rounded-3">
-              </div>
-              <div class="carousel-item">
-                <img
-                  src="https://a0.muscache.com/im/pictures/hosting/Hosting-1441329155797316102/original/11a90ab8-e8d5-4148-9db5-3e06a4e85cce.jpeg?im_w=1200"
-                  class="d-block w-100 rounded-3">
-              </div>
-              <div class="carousel-item">
-                <img
-                  src="https://a0.muscache.com/im/pictures/hosting/Hosting-1441329155797316102/original/37c74b16-44a1-4704-9d52-861375bb72ce.jpeg?im_w=1200"
-                  class="d-block w-100 rounded-3">
-              </div>
-              <div class="carousel-item">
-                <img
-                  src="https://a0.muscache.com/im/pictures/hosting/Hosting-1441329155797316102/original/3c141c9a-c7b7-40c4-aafb-3149f712be11.jpeg?im_w=1200"
-                  class="d-block w-100 rounded-3">
-              </div>
-              <div class="carousel-item">
-                <img
-                  src="https://a0.muscache.com/im/pictures/hosting/Hosting-1441329155797316102/original/337fb664-2718-453b-96e1-c8b25e2bdeae.jpeg?im_w=1200"
-                  class="d-block w-100 rounded-3">
-              </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#standardRoomCarousel"
-              data-bs-slide="prev">
-              <span class="carousel-control-prev-icon"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#standardRoomCarousel"
-              data-bs-slide="next">
-              <span class="carousel-control-next-icon"></span>
-            </button>
-          </div>
-
-          <p><strong>Status:</strong> <span class="text-success">Available</span></p>
-          <p><strong>Room Size:</strong> 20 sqm</p>
-          <p><strong>Amenities:</strong> Free WiFi, King-size Bed, Air Conditioning, Flat-screen TV, Private Bathroom, Complimentary
-            Toiletries</p>
         </div>
       </div>
-    </div>
+    </section>
   </div>
 
-  <div class="modal fade" id="deluxeRoomModal" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-      <div class="modal-content rounded-4">
-        <div class="modal-header">
-          <h5 class="modal-title">Deluxe Room</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
+  <!-- Scripts -->
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+      const menuBtn = document.querySelector('.menu-toggle');
 
-          <div id="deluxeRoomCarousel" class="carousel slide mb-3">
-            <div class="carousel-inner">
-              <div class="carousel-item active">
-                <img
-                  src="https://a0.muscache.com/im/pictures/miso/Hosting-1129277184458993193/original/673a77f7-052c-4c5d-bcd6-8ef00ce9087d.jpeg?im_w=1200"
-                  class="d-block w-100 rounded-3">
-              </div>
-              <div class="carousel-item">
-                <img
-                  src="https://a0.muscache.com/im/pictures/miso/Hosting-1129277184458993193/original/33f176c5-48ae-47cc-99e6-d68f1f551c3d.jpeg?im_w=1200"
-                  class="d-block w-100 rounded-3">
-              </div>
-              <div class="carousel-item">
-                <img
-                  src="https://a0.muscache.com/im/pictures/miso/Hosting-1129277184458993193/original/33ad3c6d-c57e-47fc-b61d-d44776927719.jpeg?im_w=1200"
-                  class="d-block w-100 rounded-3">
-              </div>
-              <div class="carousel-item">
-                <img
-                  src="https://a0.muscache.com/im/pictures/miso/Hosting-1129277184458993193/original/0008e73f-e305-46e7-a65d-6ef93be975ee.jpeg?im_w=1200"
-                  class="d-block w-100 rounded-3">
-              </div>
-              <div class="carousel-item">
-                <img
-                  src="https://a0.muscache.com/im/pictures/miso/Hosting-1129277184458993193/original/b57e394c-5f3e-4cf3-a769-77a55f8348fc.jpeg?im_w=1200"
-                  class="d-block w-100 rounded-3">
-              </div>
-              <div class="carousel-item">
-                <img
-                  src="https://scontent.fceb1-2.fna.fbcdn.net/v/t1.6435-9/54354317_562468387607557_5721187637054668800_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeEAhGA1EOps4PQJ93ntz0NvY0WqUGG-LhBjRapQYb4uEPPb48TjFVaU7d2AzeOj07qxIMlIlhp2at5Q5BjicQYB&_nc_ohc=wg36ANKe0vAQ7kNvwG_RDc3&_nc_oc=AdmAVJP29u0Mab3pI8uEeQhPXt7PCkWWyyDmmmHEMWwdJb50g_jGgLd0DGmtFUIeuhw&_nc_zt=23&_nc_ht=scontent.fceb1-2.fna&_nc_gid=xlw0nkmuQtx6sCrEfH-IJw&oh=00_AfWvgQXVr1ucnaLAf8Vdf2O0vq2_cSUm9xFAYxXOfx6ZTQ&oe=68D7B39F"
-                  class="d-block w-100 rounded-3">
-              </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#deluxeRoomCarousel"
-              data-bs-slide="prev">
-              <span class="carousel-control-prev-icon"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#deluxeRoomCarousel"
-              data-bs-slide="next">
-              <span class="carousel-control-next-icon"></span>
-            </button>
-          </div>
+      sidebar.classList.toggle('active');
+      overlay.classList.toggle('active');
 
-          <p><strong>Status:</strong> <span class="text-danger">Fully Booked</span></p>
-          <p><strong>Room Size:</strong> 30 sqm</p>
-          <p><strong>Amenities:</strong> Free WiFi, King-size Bed, Smart TV, Jacuzzi, Mini-bar, Private Bathroom,
-            Complimentary Breakfast</p>
-        </div>
-      </div>
-    </div>
-  </div>
+      if (sidebar.classList.contains('active')) {
+        menuBtn.style.display = 'none';
+      } else {
+        menuBtn.style.display = 'block';
+      }
+    }
 
-  <div class="modal fade" id="suiteRoomModal" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-      <div class="modal-content rounded-4">
-        <div class="modal-header">
-          <h5 class="modal-title">Suite Room</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('active');
+      document.getElementById('overlay').classList.remove('active');
+      document.querySelector('.menu-toggle').style.display = 'block';
+    }
 
-          <div id="suiteRoomCarousel" class="carousel slide mb-3">
-            <div class="carousel-inner">
-              <div class="carousel-item active">
-                <img
-                  src="https://reservations.nustar.ph/shs-ngbe-image-resizer/images/hotel/37834/images/room/suite_6.jpg"
-                  class="d-block w-100 rounded-3">
-              </div>
-              <div class="carousel-item">
-                <img src="https://reservations.nustar.ph/shs-ngbe-image-resizer/images/hotel/37834/images/room/fili_suite.jpg"
-                  class="d-block w-100 rounded-3">
-              </div>
-              <div class="carousel-item">
-                <img src="https://reservations.nustar.ph/shs-ngbe-image-resizer/images/hotel/37834/images/room/suite_2.jpg"
-                  class="d-block w-100 rounded-3">
-              </div>
-              <div class="carousel-item">
-                <img src="https://q-xx.bstatic.com/xdata/images/hotel/max1024x768/671535790.jpg?k=b15ff7d0884490d48ca489e232cc6e2b752169e9df62527d3e1db2794c13b5d4&o=&s=1024x"
-                  class="d-block w-100 rounded-3">
-              </div>
-              <div class="carousel-item">
-                <img src="https://pix8.agoda.net/property/34183294/1193948359/7638385994d4ee182f982b891a2782aa.jpeg?ce=2&s=1024x"
-                  class="d-block w-100 rounded-3">
-              </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#suiteRoomCarousel"
-              data-bs-slide="prev">
-              <span class="carousel-control-prev-icon"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#suiteRoomCarousel"
-              data-bs-slide="next">
-              <span class="carousel-control-next-icon"></span>
-            </button>
-          </div>
+    document.querySelectorAll(".sidebar-nav a").forEach(link => {
+      link.addEventListener("click", function () {
+        document.querySelectorAll(".sidebar-nav a").forEach(item => item.classList.remove("active"));
+        this.classList.add("active");
 
-          <p><strong>Status:</strong> <span class="text-success">Available</span></p>
-          <p><strong>Room Size:</strong> 45 sqm</p>
-          <p><strong>Amenities:</strong> Free WiFi, King-size Bed, Smart TV, Jacuzzi, Living Area, Private Balcony,
-            Mini-bar, Complimentary Breakfast & Toiletries</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <footer>
-    &copy; 2025 CheckIn. All rights reserved.
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-  <div class="modal fade" id="bookingModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-
-        <div class="modal-header">
-          <h5 class="modal-title" id="roomName">Book Room</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-
-
-        <div class="modal-body">
-
-          <div class="mb-3">
-            <label for="guestName" class="form-label">Your Name</label>
-            <input type="text" id="guestName" class="form-control" placeholder="Enter your name"
-              style="background-color:#fdf5f5; color:#6e0d0d; font-weight:600;">
-          </div>
-
-          <div class="mb-3">
-            <label for="bookingDate" class="form-label">Select Date</label>
-            <div class="input-group">
-              <span class="input-group-text bg-light border-0">
-                <i class="bi bi-calendar-date text-danger"></i>
-              </span>
-              <input type="date" id="bookingDate" class="form-control shadow-sm border-0"
-                style="background-color:#fdf5f5; color:#6e0d0d; font-weight:600; cursor:pointer;">
-            </div>
-            <small class="text-muted">Pick your desired check-in date</small>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Choose Rate</label>
-            <div id="rateOptions" class="row g-3"></div>
-          </div>
-
-          <div>
-            <label class="form-label">Total</label>
-            <p id="totalPrice" class="fw-bold">₱0</p>
-          </div>
-        </div>
-
-        <div class="modal-footer"> <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button> <button
-            class="btn btn-primary">Book</button></div>
-
-      </div>
-    </div>
-  </div>
-  <script src="assets/script.js"></script>
+        if (window.innerWidth <= 768) {
+          closeSidebar();
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>

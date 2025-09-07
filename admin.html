@@ -2,194 +2,260 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CheckIn Admin</title>
-    <link rel="icon" type="image/png" sizes="512x512" href="assets/checkinlogo.png">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="assets/Admin.css">
-
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CheckIn Admin</title>
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/checkinlogo.png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/Admin.css">
 </head>
 
 <body>
 
-    <div class="sidebar" id="sidebar">
-        <div>
-            <h2>CheckIn Admin</h2>
-            <div class="sidebar-nav">
-                <a href="#rooms"><i class="bi bi-door-closed"></i> Manage Rooms</a>
-                <a href="#bookings"><i class="bi bi-calendar-check"></i> Manage Bookings</a>
-                <a href="#feedback"><i class="bi bi-chat-left-text"></i> Manage Feedback</a>
-            </div>
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div>
+      <h2>CheckIn Admin</h2>
+      <div class="sidebar-nav">
+        <a href="#rooms"><i class="bi bi-door-closed"></i> Manage Rooms</a>
+        <a href="#bookings"><i class="bi bi-calendar-check"></i> Manage Bookings</a>
+        <a href="#feedback"><i class="bi bi-chat-left-text"></i> Manage Feedback</a>
+      </div>
+    </div>
+    <a href="index.html" class="logout-btn"><i class="bi bi-box-arrow-right"></i> Logout</a>
+  </div>
+
+  <!-- Overlay -->
+  <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+  <!-- Mobile Menu Button -->
+  <button class="menu-toggle d-md-none" onclick="toggleSidebar()">
+    <i class="bi bi-list"></i>
+  </button>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <h1>Dashboard</h1>
+
+    <!-- Manage Rooms -->
+    <section id="rooms" class="mb-5">
+      <div class="card p-4">
+        <h3 class="mb-3 fw-semibold"><i class="bi bi-door-closed"></i> Manage Rooms</h3>
+
+        <!-- Desktop Table -->
+        <div class="table-responsive d-none d-md-block">
+          <table class="table align-middle text-center">
+            <thead>
+              <tr>
+                <th>Room</th>
+                <th>Price (₱)</th>
+                <th>Status</th>
+                <th>Size</th>
+                <th>Amenities</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Standard Room</td>
+                <td><input type="number" class="form-control" value="1500"></td>
+                <td>
+                  <select class="form-select">
+                    <option selected>Available</option>
+                    <option>Fully Booked</option>
+                  </select>
+                </td>
+                <td><input type="text" class="form-control" value="20 sqm"></td>
+                <td><textarea class="form-control">WiFi, AC, King-size Bed</textarea></td>
+                <td><button class="btn btn-primary btn-sm">Save</button></td>
+              </tr>
+              <tr>
+                <td>Deluxe Room</td>
+                <td><input type="number" class="form-control" value="2500"></td>
+                <td>
+                  <select class="form-select">
+                    <option>Available</option>
+                    <option selected>Fully Booked</option>
+                  </select>
+                </td>
+                <td><input type="text" class="form-control" value="30 sqm"></td>
+                <td><textarea class="form-control">WiFi, Smart TV, Jacuzzi</textarea></td>
+                <td><button class="btn btn-primary btn-sm">Save</button></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <a href="index.html" class="logout-btn"><i class="bi bi-box-arrow-right"></i> Logout</a>
-    </div>
 
-
-    <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
-
-    <button class="menu-toggle d-md-none" onclick="toggleSidebar()">
-        <i class="bi bi-list"></i>
-    </button>
-
-    <div class="main-content">
-        <h1>Dashboard</h1>
-
-        <section id="rooms" class="mb-5">
-            <div class="card p-4">
-                <h3 class="mb-3 fw-semibold"><i class="bi bi-door-closed"></i> Manage Rooms</h3>
-                <div class="table-responsive">
-                    <table class="table align-middle text-center">
-                        <thead>
-                            <tr>
-                                <th>Room</th>
-                                <th>Price (₱)</th>
-                                <th>Status</th>
-                                <th>Size</th>
-                                <th>Amenities</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Standard Room</td>
-                                <td><input type="number" class="form-control" value="1500"></td>
-                                <td>
-                                    <select class="form-select">
-                                        <option selected>Available</option>
-                                        <option>Fully Booked</option>
-                                    </select>
-                                </td>
-                                <td><input type="text" class="form-control" value="20 sqm"></td>
-                                <td><textarea class="form-control">WiFi, AC, King-size Bed</textarea></td>
-                                <td><button class="btn btn-primary btn-sm">Save</button></td>
-                            </tr>
-                            <tr>
-                                <td>Deluxe Room</td>
-                                <td><input type="number" class="form-control" value="2500"></td>
-                                <td>
-                                    <select class="form-select">
-                                        <option>Available</option>
-                                        <option selected>Fully Booked</option>
-                                    </select>
-                                </td>
-                                <td><input type="text" class="form-control" value="30 sqm"></td>
-                                <td><textarea class="form-control">WiFi, Smart TV, Jacuzzi</textarea></td>
-                                <td><button class="btn btn-primary btn-sm">Save</button></td>
-                            </tr>
-                            <tr>
-                                <td>Suite Room</td>
-                                <td><input type="number" class="form-control" value="4000"></td>
-                                <td>
-                                    <select class="form-select">
-                                        <option selected>Available</option>
-                                        <option>Fully Booked</option>
-                                    </select>
-                                </td>
-                                <td><input type="text" class="form-control" value="45 sqm"></td>
-                                <td><textarea class="form-control">WiFi, Jacuzzi, Living Area</textarea></td>
-                                <td><button class="btn btn-primary btn-sm">Save</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+        <!-- Mobile Cards -->
+        <div class="d-block d-md-none">
+          <div class="card mb-3 p-3 shadow-sm">
+            <h5 class="fw-semibold">Standard Room</h5>
+            <div class="row mb-2">
+              <div class="col-6"><strong>Price:</strong></div>
+              <div class="col-6"><input type="number" class="form-control form-control-sm" value="1500"></div>
             </div>
-        </section>
-
-        <section id="bookings" class="mb-5">
-            <div class="card p-4">
-                <h3 class="mb-3 fw-semibold"><i class="bi bi-calendar-check"></i> Manage Bookings</h3>
-                <div class="table-responsive">
-                    <table class="table align-middle text-center">
-                        <thead>
-                            <tr>
-                                <th>Guest Name</th>
-                                <th>Room</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Juan Dela Cruz</td>
-                                <td>Standard Room</td>
-                                <td>2025-09-12</td>
-                                <td><span class="badge bg-warning">Pending</span></td>
-                                <td>
-                                    <button class="btn btn-success btn-sm">Confirm</button>
-                                    <button class="btn btn-danger btn-sm">Cancel</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Ana Santos</td>
-                                <td>Deluxe Room</td>
-                                <td>2025-09-15</td>
-                                <td><span class="badge bg-success">Confirmed</span></td>
-                                <td>
-                                    <button class="btn btn-danger btn-sm">Cancel</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="row mb-2">
+              <div class="col-6"><strong>Status:</strong></div>
+              <div class="col-6">
+                <select class="form-select form-select-sm">
+                  <option selected>Available</option>
+                  <option>Fully Booked</option>
+                </select>
+              </div>
             </div>
-        </section>
-
-        <section id="feedback">
-            <div class="card p-4">
-                <h3 class="mb-3 fw-semibold"><i class="bi bi-chat-left-text"></i> Manage Feedback</h3>
-                <ul class="list-group">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Great room and service! - Maria
-                        <button class="btn btn-danger btn-sm">Delete</button>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Too noisy outside. - Pedro
-                        <button class="btn btn-danger btn-sm">Delete</button>
-                    </li>
-                </ul>
+            <div class="row mb-2">
+              <div class="col-6"><strong>Size:</strong></div>
+              <div class="col-6"><input type="text" class="form-control form-control-sm" value="20 sqm"></div>
             </div>
-        </section>
-    </div>
+            <div class="row mb-2">
+              <div class="col-6"><strong>Amenities:</strong></div>
+              <div class="col-6"><textarea class="form-control form-control-sm">WiFi, AC, King-size Bed</textarea></div>
+            </div>
+            <div class="text-end">
+              <button class="btn btn-primary btn-sm">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<script>
+    <!-- Manage Bookings -->
+    <section id="bookings" class="mb-5">
+      <div class="card p-4">
+        <h3 class="mb-3 fw-semibold"><i class="bi bi-calendar-check"></i> Manage Bookings</h3>
+
+        <!-- Desktop Table -->
+        <div class="table-responsive d-none d-md-block">
+          <table class="table align-middle text-center">
+            <thead>
+              <tr>
+                <th>Guest Name</th>
+                <th>Room</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Juan Dela Cruz</td>
+                <td>Standard Room</td>
+                <td>2025-09-12</td>
+                <td><span class="badge bg-warning">Pending</span></td>
+                <td>
+                  <button class="btn btn-success btn-sm">Confirm</button>
+                  <button class="btn btn-danger btn-sm">Cancel</button>
+                </td>
+              </tr>
+              <tr>
+                <td>Ana Santos</td>
+                <td>Deluxe Room</td>
+                <td>2025-09-15</td>
+                <td><span class="badge bg-success">Confirmed</span></td>
+                <td><button class="btn btn-danger btn-sm">Cancel</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Mobile Cards -->
+        <div class="d-block d-md-none">
+          <div class="card mb-3 p-3 shadow-sm">
+            <h5 class="fw-semibold">Juan Dela Cruz</h5>
+            <p><strong>Room:</strong> Standard Room</p>
+            <p><strong>Date:</strong> 2025-09-12</p>
+            <p><strong>Status:</strong> <span class="badge bg-warning">Pending</span></p>
+            <div class="text-end">
+              <button class="btn btn-success btn-sm">Confirm</button>
+              <button class="btn btn-danger btn-sm">Cancel</button>
+            </div>
+          </div>
+
+          <div class="card mb-3 p-3 shadow-sm">
+            <h5 class="fw-semibold">Ana Santos</h5>
+            <p><strong>Room:</strong> Deluxe Room</p>
+            <p><strong>Date:</strong> 2025-09-15</p>
+            <p><strong>Status:</strong> <span class="badge bg-success">Confirmed</span></p>
+            <div class="text-end">
+              <button class="btn btn-danger btn-sm">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Manage Feedback -->
+    <section id="feedback">
+      <div class="card p-4">
+        <h3 class="mb-3 fw-semibold"><i class="bi bi-chat-left-text"></i> Manage Feedback</h3>
+
+        <!-- Desktop List -->
+        <ul class="list-group d-none d-md-block">
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            Great room and service! - Maria
+            <button class="btn btn-danger btn-sm">Delete</button>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            Too noisy outside. - Pedro
+            <button class="btn btn-danger btn-sm">Delete</button>
+          </li>
+        </ul>
+
+        <!-- Mobile Cards -->
+        <div class="d-block d-md-none">
+          <div class="card mb-2 p-3 shadow-sm">
+            <p><strong>Maria:</strong> Great room and service!</p>
+            <div class="text-end">
+              <button class="btn btn-danger btn-sm">Delete</button>
+            </div>
+          </div>
+
+          <div class="card mb-2 p-3 shadow-sm">
+            <p><strong>Pedro:</strong> Too noisy outside.</p>
+            <div class="text-end">
+              <button class="btn btn-danger btn-sm">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Scripts -->
+  <script>
     function toggleSidebar() {
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('overlay');
-        const menuBtn = document.querySelector('.menu-toggle');
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+      const menuBtn = document.querySelector('.menu-toggle');
 
-        sidebar.classList.toggle('active');
-        overlay.classList.toggle('active');
+      sidebar.classList.toggle('active');
+      overlay.classList.toggle('active');
 
-        if (sidebar.classList.contains('active')) {
-            menuBtn.style.display = 'none'; 
-        } else {
-            menuBtn.style.display = 'block'; 
-        }
+      if (sidebar.classList.contains('active')) {
+        menuBtn.style.display = 'none';
+      } else {
+        menuBtn.style.display = 'block';
+      }
     }
 
     function closeSidebar() {
-        document.getElementById('sidebar').classList.remove('active');
-        document.getElementById('overlay').classList.remove('active');
-        document.querySelector('.menu-toggle').style.display = 'block';
+      document.getElementById('sidebar').classList.remove('active');
+      document.getElementById('overlay').classList.remove('active');
+      document.querySelector('.menu-toggle').style.display = 'block';
     }
 
- 
     document.querySelectorAll(".sidebar-nav a").forEach(link => {
-        link.addEventListener("click", function () {
-            document.querySelectorAll(".sidebar-nav a").forEach(item => item.classList.remove("active"));
-            this.classList.add("active");
+      link.addEventListener("click", function () {
+        document.querySelectorAll(".sidebar-nav a").forEach(item => item.classList.remove("active"));
+        this.classList.add("active");
 
-          
-            if (window.innerWidth <= 768) {
-                closeSidebar();
-            }
-        });
+        if (window.innerWidth <= 768) {
+          closeSidebar();
+        }
+      });
     });
-</script>
+  </script>
 </body>
 
 </html>
