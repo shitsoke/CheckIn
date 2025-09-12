@@ -220,3 +220,19 @@ footer {
   color: #6e0d0d;
   font-weight: 700;
 }
+
+.dropdown-menu {
+  min-width: 200px;
+  padding: 0.5rem;
+}
+
+.dropdown-item {
+  border-radius: 8px;
+  transition: all 0.2s ease-in-out;
+}
+
+.dropdown-item:hover {
+  background-color: #f8d7da; /* light red hover */
+  color: #6e0d0d; /* your theme color */
+  transform: translateX(4px);
+}
