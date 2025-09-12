@@ -1,0 +1,70 @@
+body {
+    background-color: #f3f0ee; 
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  .profile-card {
+    max-width: 100%;
+    width: 100%;
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+
+  .profile-img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #800000; 
+    margin-bottom: 15px;
+  }
+
+  .profile-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #800000; 
+  }
+
+  .profile-bio {
+    font-size: 0.95rem;
+    color: #6c757d;
+    margin-bottom: 20px;
+    padding: 0 10px;
+  }
+
+  .profile-info {
+    font-size: 0.9rem;
+    color: #333;
+  }
+
+  .btn-maroon {
+    background-color: #800000;
+    border-color: #800000;
+    color: white;
+  }
+
+  .btn-maroon:hover {
+    background-color: #5c0000;
+    border-color: #5c0000;
+  }
+
+  @media (max-width: 576px) {
+    .profile-card {
+      margin: 20px;
+      padding: 15px;
+    }
+
+    .profile-img {
+      width: 80px;
+      height: 80px;
+    }
+
+    .profile-name {
+      font-size: 1.25rem;
+    }
+  }
