@@ -209,3 +209,53 @@ body {
     color: #800000;
 
 }
+
+
+
+
+
+
+#users h3 {
+    color: #800000;
+  }
+
+  .user-card {
+    background: #fff;
+    border-left: 5px solid #800000;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+  }
+
+  .user-card img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #800000;
+    margin-right: 15px;
+  }
+
+  .user-info h6 {
+    margin: 0;
+    font-weight: 600;
+    color: #800000;
+  }
+
+  .user-info small {
+    color: #6c757d;
+  }
+
+  @media (max-width: 576px) {
+    .user-card {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .user-card img {
+      margin-bottom: 10px;
+    }
+  }

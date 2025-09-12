@@ -2,17 +2,31 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>CheckIn Admin</title>
-  <link rel="icon" type="image/png" sizes="512x512" href="assets/checkinlogo.png">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-  <link rel="stylesheet" href="assets/Admin.css">
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/checkinlogo.png" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/Admin.css" />
+  <style>
+   
+    .user-card img {
+      object-fit: cover;
+      border: 2px solid #800000; 
+    }
+
+    .user-card h6 {
+      font-weight: 600;
+    }
+
+    .user-card small {
+      color: #555;
+    }
+  </style>
 </head>
 
 <body>
-  
   <div class="sidebar" id="sidebar">
     <div>
       <h2>CheckIn Admin</h2>
@@ -20,98 +34,177 @@
         <a href="#rooms"><i class="bi bi-door-closed"></i> Manage Rooms</a>
         <a href="#bookings"><i class="bi bi-calendar-check"></i> Manage Bookings</a>
         <a href="#feedback"><i class="bi bi-chat-left-text"></i> Manage Feedback</a>
+        <a href="#users"><i class="bi bi-people"></i> User List</a>
       </div>
     </div>
     <a href="index.html" class="logout-btn"><i class="bi bi-box-arrow-right"></i> Logout</a>
   </div>
 
-  
   <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
   <button class="menu-toggle d-md-none" onclick="toggleSidebar()"><i class="bi bi-list"></i></button>
 
-  
   <div class="main-content">
     <h1 class="text-center text-md-start">Dashboard</h1>
 
-    
-<section id="rooms" class="mb-5">
-  <div class="card p-4">
-    <h3 class="mb-3 fw-semibold"><i class="bi bi-door-closed"></i> Manage Rooms</h3>
+    <section id="rooms" class="mb-5">
+      <div class="card p-4">
+        <h3 class="mb-3 fw-semibold"><i class="bi bi-door-closed"></i> Manage Rooms</h3>
 
-    <div class="row g-4">
-      
-      <div class="col-12 col-md-6 col-lg-4">
-        <div class="card shadow-sm h-100">
-          <div class="card-header text-white fw-semibold" style="background:#800000;">Standard Room</div>
-          <div class="card-body">
-           
-            <div class="row g-2 mb-3">
-              <div class="col-6"><label class="form-label">2hr (₱)</label><input type="number" class="form-control form-control-sm" value="500"></div>
-              <div class="col-6"><label class="form-label">3hr (₱)</label><input type="number" class="form-control form-control-sm" value="700"></div>
-              <div class="col-6"><label class="form-label">10hr (₱)</label><input type="number" class="form-control form-control-sm" value="1200"></div>
-              <div class="col-6"><label class="form-label">12hr (₱)</label><input type="number" class="form-control form-control-sm" value="1400"></div>
-              <div class="col-12"><label class="form-label">24hr (₱)</label><input type="number" class="form-control form-control-sm" value="1500"></div>
+        <div class="row g-4">
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="card shadow-sm h-100">
+              <div class="card-header text-white fw-semibold" style="background:#800000;">Standard Room</div>
+              <div class="card-body">
+
+                <div class="row g-2 mb-3">
+                  <div class="col-6">
+                    <label class="form-label">2hr (₱)</label>
+                    <input type="number" class="form-control form-control-sm" value="500" />
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label">3hr (₱)</label>
+                    <input type="number" class="form-control form-control-sm" value="700" />
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label">10hr (₱)</label>
+                    <input type="number" class="form-control form-control-sm" value="1200" />
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label">12hr (₱)</label>
+                    <input type="number" class="form-control form-control-sm" value="1400" />
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">24hr (₱)</label>
+                    <input type="number" class="form-control form-control-sm" value="1500" />
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Status</label>
+                  <select class="form-select form-select-sm">
+                    <option selected>Available</option>
+                    <option>Fully Booked</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Size</label>
+                  <input type="text" class="form-control form-control-sm" value="20 sqm" />
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Amenities</label>
+                  <textarea class="form-control form-control-sm">WiFi, AC, King-size Bed</textarea>
+                </div>
+              </div>
+              <div class="card-footer text-end">
+                <button class="btn btn-primary btn-sm">Save</button>
+              </div>
             </div>
-            <div class="mb-3"><label class="form-label">Status</label><select class="form-select form-select-sm"><option selected>Available</option><option>Fully Booked</option></select></div>
-            <div class="mb-3"><label class="form-label">Size</label><input type="text" class="form-control form-control-sm" value="20 sqm"></div>
-            <div class="mb-3"><label class="form-label">Amenities</label><textarea class="form-control form-control-sm">WiFi, AC, King-size Bed</textarea></div>
           </div>
-          <div class="card-footer text-end"><button class="btn btn-primary btn-sm">Save</button></div>
+
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="card shadow-sm h-100">
+              <div class="card-header text-white fw-semibold" style="background:#800000;">Deluxe Room</div>
+              <div class="card-body">
+
+                <div class="row g-2 mb-3">
+                  <div class="col-6">
+                    <label class="form-label">2hr (₱)</label>
+                    <input type="number" class="form-control form-control-sm" value="800" />
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label">3hr (₱)</label>
+                    <input type="number" class="form-control form-control-sm" value="1000" />
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label">10hr (₱)</label>
+                    <input type="number" class="form-control form-control-sm" value="2000" />
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label">12hr (₱)</label>
+                    <input type="number" class="form-control form-control-sm" value="2200" />
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">24hr (₱)</label>
+                    <input type="number" class="form-control form-control-sm" value="2500" />
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Status</label>
+                  <select class="form-select form-select-sm">
+                    <option>Available</option>
+                    <option selected>Fully Booked</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Size</label>
+                  <input type="text" class="form-control form-control-sm" value="30 sqm" />
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Amenities</label>
+                  <textarea class="form-control form-control-sm">WiFi, Smart TV, Jacuzzi</textarea>
+                </div>
+              </div>
+              <div class="card-footer text-end">
+                <button class="btn btn-primary btn-sm">Save</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="card shadow-sm h-100">
+              <div class="card-header text-white fw-semibold" style="background:#800000;">Suite Room</div>
+              <div class="card-body">
+
+                <div class="row g-2 mb-3">
+                  <div class="col-6">
+                    <label class="form-label">2hr (₱)</label>
+                    <input type="number" class="form-control form-control-sm" value="1200" />
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label">3hr (₱)</label>
+                    <input type="number" class="form-control form-control-sm" value="1500" />
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label">10hr (₱)</label>
+                    <input type="number" class="form-control form-control-sm" value="3000" />
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label">12hr (₱)</label>
+                    <input type="number" class="form-control form-control-sm" value="3500" />
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">24hr (₱)</label>
+                    <input type="number" class="form-control form-control-sm" value="4000" />
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Status</label>
+                  <select class="form-select form-select-sm">
+                    <option selected>Available</option>
+                    <option>Fully Booked</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Size</label>
+                  <input type="text" class="form-control form-control-sm" value="45 sqm" />
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Amenities</label>
+                  <textarea class="form-control form-control-sm">WiFi, Jacuzzi, Living Area</textarea>
+                </div>
+              </div>
+              <div class="card-footer text-end">
+                <button class="btn btn-primary btn-sm">Save</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+    </section>
 
-      
-      <div class="col-12 col-md-6 col-lg-4">
-        <div class="card shadow-sm h-100">
-          <div class="card-header text-white fw-semibold" style="background:#800000;">Deluxe Room</div>
-          <div class="card-body">
-           
-            <div class="row g-2 mb-3">
-              <div class="col-6"><label class="form-label">2hr (₱)</label><input type="number" class="form-control form-control-sm" value="800"></div>
-              <div class="col-6"><label class="form-label">3hr (₱)</label><input type="number" class="form-control form-control-sm" value="1000"></div>
-              <div class="col-6"><label class="form-label">10hr (₱)</label><input type="number" class="form-control form-control-sm" value="2000"></div>
-              <div class="col-6"><label class="form-label">12hr (₱)</label><input type="number" class="form-control form-control-sm" value="2200"></div>
-              <div class="col-12"><label class="form-label">24hr (₱)</label><input type="number" class="form-control form-control-sm" value="2500"></div>
-            </div>
-            <div class="mb-3"><label class="form-label">Status</label><select class="form-select form-select-sm"><option>Available</option><option selected>Fully Booked</option></select></div>
-            <div class="mb-3"><label class="form-label">Size</label><input type="text" class="form-control form-control-sm" value="30 sqm"></div>
-            <div class="mb-3"><label class="form-label">Amenities</label><textarea class="form-control form-control-sm">WiFi, Smart TV, Jacuzzi</textarea></div>
-          </div>
-          <div class="card-footer text-end"><button class="btn btn-primary btn-sm">Save</button></div>
-        </div>
-      </div>
-
-      
-      <div class="col-12 col-md-6 col-lg-4">
-        <div class="card shadow-sm h-100">
-          <div class="card-header text-white fw-semibold" style="background:#800000;">Suite Room</div>
-          <div class="card-body">
-            
-            <div class="row g-2 mb-3">
-              <div class="col-6"><label class="form-label">2hr (₱)</label><input type="number" class="form-control form-control-sm" value="1200"></div>
-              <div class="col-6"><label class="form-label">3hr (₱)</label><input type="number" class="form-control form-control-sm" value="1500"></div>
-              <div class="col-6"><label class="form-label">10hr (₱)</label><input type="number" class="form-control form-control-sm" value="3000"></div>
-              <div class="col-6"><label class="form-label">12hr (₱)</label><input type="number" class="form-control form-control-sm" value="3500"></div>
-              <div class="col-12"><label class="form-label">24hr (₱)</label><input type="number" class="form-control form-control-sm" value="4000"></div>
-            </div>
-            <div class="mb-3"><label class="form-label">Status</label><select class="form-select form-select-sm"><option selected>Available</option><option>Fully Booked</option></select></div>
-            <div class="mb-3"><label class="form-label">Size</label><input type="text" class="form-control form-control-sm" value="45 sqm"></div>
-            <div class="mb-3"><label class="form-label">Amenities</label><textarea class="form-control form-control-sm">WiFi, Jacuzzi, Living Area</textarea></div>
-          </div>
-          <div class="card-footer text-end"><button class="btn btn-primary btn-sm">Save</button></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-    
     <section id="bookings" class="mb-5">
       <div class="card p-4">
         <h3 class="mb-3 fw-semibold"><i class="bi bi-calendar-check"></i> Manage Bookings</h3>
         <div class="row g-3">
-         
           <div class="col-12 col-md-6">
             <div class="card shadow-sm p-3 h-100">
               <h5 class="fw-semibold">Juan Dela Cruz</h5>
@@ -124,7 +217,7 @@
               </div>
             </div>
           </div>
-         
+
           <div class="col-12 col-md-6">
             <div class="card shadow-sm p-3 h-100">
               <h5 class="fw-semibold">Ana Santos</h5>
@@ -140,7 +233,6 @@
       </div>
     </section>
 
-  
     <section id="feedback">
       <div class="card p-4">
         <h3 class="mb-3 fw-semibold"><i class="bi bi-chat-left-text"></i> Manage Feedback</h3>
@@ -160,32 +252,62 @@
         </div>
       </div>
     </section>
-  </div>
 
+    <section id="users" class="mb-5">
+      <div class="card p-4">
+        <h3 class="mb-3 fw-semibold"><i class="bi bi-people"></i> User List</h3>
+    
+        <a href="viewuserprofile.html" class="user-card d-flex align-items-center mb-3 text-decoration-none text-dark">
+          <img src="https://pbs.twimg.com/profile_images/1574431345161355266/kJ0ychwu_400x400.jpg" alt="User Avatar" class="rounded-circle me-3" width="50" height="50" />
+          <div>
+            <h6 class="mb-0">Juan Dela Cruz</h6>
+            <small class="text-muted">juan.delacruz@example.com</small>
+          </div>
+        </a>
+    
+        <a href="viewuserprofile.html" class="user-card d-flex align-items-center mb-3 text-decoration-none text-dark">
+          <img src="https://tse2.mm.bing.net/th/id/OIP.vfWArz6hA8ZVM7OdD4moNQHaHg?rs=1&pid=ImgDetMain&o=7&rm=3" alt="User Avatar" class="rounded-circle me-3" width="50" height="50" />
+          <div>
+            <h6 class="mb-0">Ana Santos</h6>
+            <small class="text-muted">ana.santos@example.com</small>
+          </div>
+        </a>
+    
+        <a href="viewuserprofile.html" class="user-card d-flex align-items-center mb-3 text-decoration-none text-dark">
+          <img src="https://tse1.explicit.bing.net/th/id/OIP.qTaK7JniMod6TNXz4tEv7QHaHc?rs=1&pid=ImgDetMain&o=7&rm=3" alt="User Avatar" class="rounded-circle me-3" width="50" height="50" />
+          <div>
+            <h6 class="mb-0">Pedro Cruz</h6>
+            <small class="text-muted">pedro.cruz@example.com</small>
+          </div>
+        </a>
+      </div>
+    </section>
+    
+    
 
   <script>
     function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('overlay');
-      const menuBtn = document.querySelector('.menu-toggle');
-      sidebar.classList.toggle('active');
-      overlay.classList.toggle('active');
-      if (sidebar.classList.contains('active')) {
-        menuBtn.style.display = 'none';
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("overlay");
+      const menuBtn = document.querySelector(".menu-toggle");
+      sidebar.classList.toggle("active");
+      overlay.classList.toggle("active");
+      if (sidebar.classList.contains("active")) {
+        menuBtn.style.display = "none";
       } else {
-        menuBtn.style.display = 'block';
+        menuBtn.style.display = "block";
       }
     }
 
     function closeSidebar() {
-      document.getElementById('sidebar').classList.remove('active');
-      document.getElementById('overlay').classList.remove('active');
-      document.querySelector('.menu-toggle').style.display = 'block';
+      document.getElementById("sidebar").classList.remove("active");
+      document.getElementById("overlay").classList.remove("active");
+      document.querySelector(".menu-toggle").style.display = "block";
     }
 
-    document.querySelectorAll(".sidebar-nav a").forEach(link => {
+    document.querySelectorAll(".sidebar-nav a").forEach((link) => {
       link.addEventListener("click", function () {
-        document.querySelectorAll(".sidebar-nav a").forEach(item => item.classList.remove("active"));
+        document.querySelectorAll(".sidebar-nav a").forEach((item) => item.classList.remove("active"));
         this.classList.add("active");
         if (window.innerWidth <= 768) {
           closeSidebar();
@@ -194,4 +316,5 @@
     });
   </script>
 </body>
+
 </html>
