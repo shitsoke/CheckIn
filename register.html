@@ -13,6 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="assets/Register.css">
+  <script src="assets/userModel.js"></script>
 </head>
 
 <body>
@@ -26,81 +27,74 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="register.html">Register</a></li>
-          <li class="nav-item"><a class="nav-link active" href="login.html">Login</a></li>
+          <li class="nav-item"><a class="nav-link active" href="register.html">Register</a></li>
+          <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
         </ul>
       </div>
     </div>
   </nav>
 
-  <div class="main-container">
-
-    <div class="signup-section">
-      <h1>Sign Up</h1>
-      <form id="signupForm">
-        <div class="row g-2">
-          <div class="col-md-6">
-            <input type="text" class="form-control" placeholder="First Name" required>
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card shadow">
+          <div class="card-header bg-primary text-white text-center">
+            <h4>Register</h4>
           </div>
-          <div class="col-md-6">
-            <input type="text" class="form-control" placeholder="Middle Name">
+          <div class="card-body">
+            <form action="register.php" method="POST" id="registerForm">
+              <div class="mb-3">
+                <label for="firstName" class="form-label">First Name</label>
+                <input type="text" class="form-control" id="firstName" name="firstName" required>
+              </div>
+              <div class="mb-3">
+                <label for="middleName" class="form-label">Middle Name</label>
+                <input type="text" class="form-control" id="middleName" name="middleName">
+              </div>
+              <div class="mb-3">
+                <label for="lastName" class="form-label">Last Name</label>
+                <input type="text" class="form-control" id="lastName" name="lastName" required>
+              </div>
+              <div class="mb-3">
+                <label for="email" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+              </div>
+              <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+              </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+              </div>
+              <button type="submit" class="btn btn-primary w-100">Register</button>
+            </form>
           </div>
         </div>
-        <div class="row g-2 mt-2">
-          <div class="col-md-8">
-            <input type="text" class="form-control" placeholder="Last Name" required>
-          </div>
-          <div class="col-md-4">
-            <input type="text" class="form-control" placeholder="Suffix">
-          </div>
-        </div>
-        <div class="mt-2">
-          <input type="email" class="form-control" placeholder="Email" required>
-        </div>
-
-        <div class="mt-2 input-group">
-          <input type="password" id="password" class="form-control" placeholder="Password" required>
-          <button type="button" class="btn btn-outline-secondary" onclick="togglePassword('password', this)">
-            <i class="bi bi-eye"></i>
-          </button>
-        </div>
-
-        <div class="mt-2 input-group">
-          <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm Password" required>
-          <button type="button" class="btn btn-outline-secondary" onclick="togglePassword('confirmPassword', this)">
-            <i class="bi bi-eye"></i>
-          </button>
-        </div>
-
-        <button type="submit" class="btn btn-signup mt-3">Sign Up</button>
-      </form>
+      </div>
     </div>
   </div>
 
   <script>
-    document.getElementById("signupForm").addEventListener("submit", function (event) {
-      const password = document.getElementById("password").value;
-      const confirmPassword = document.getElementById("confirmPassword").value;
-
-      if (password !== confirmPassword) {
-        event.preventDefault();
-        alert("Passwords do not match!");
+    // MVP Presenter for register.html
+    (function() {
+      if (window.UserModel.isLoggedIn()) {
+        window.location.href = 'index.html';
       }
-    });
-
-    function togglePassword(fieldId, button) {
-      const input = document.getElementById(fieldId);
-      const icon = button.querySelector("i");
-      if (input.type === "password") {
-        input.type = "text";
-        icon.classList.remove("bi-eye");
-        icon.classList.add("bi-eye-slash");
-      } else {
-        input.type = "password";
-        icon.classList.remove("bi-eye-slash");
-        icon.classList.add("bi-eye");
-      }
-    }
+      // Register presenter logic
+      document.getElementById('registerForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const username = document.getElementById('username').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        if (!username || !email || !password) return;
+        // Save user to localStorage
+        const user = { username, email, password, type: 'customer' };
+        localStorage.setItem('user', JSON.stringify(user));
+        document.cookie = `userType=customer; path=/`;
+        window.location.href = 'profile.html';
+      });
+    })();
   </script>
 
   <footer>

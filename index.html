@@ -11,6 +11,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/Index.css">
+  <script src="assets/userModel.js"></script>
 </head>
 
 <body>
@@ -31,6 +32,21 @@
       </div>
     </div>
   </nav>
+  <script>
+    // MVP Presenter for index.html
+    (function() {
+      // Only allow customer users
+      if (!window.UserModel.isLoggedIn()) {
+        window.location.href = 'login.html';
+        return;
+      }
+      if (window.UserModel.isAdmin()) {
+        window.location.href = 'admin.html';
+        return;
+      }
+      // Customer users can stay
+    })();
+  </script>
 
   <section class="intro">
     <div class="content">
@@ -334,4 +350,4 @@
 </body>
 
 </html>
- 
+
