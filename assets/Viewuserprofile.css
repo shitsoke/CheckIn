@@ -1,0 +1,368 @@
+ body {
+      background: linear-gradient(135deg, #6e0d0d, #BF3131);
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .profile-header {
+      background-color: rgba(110, 13, 13, 0.95);
+      color: #fff;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+    }
+    .profile-header h1 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin: 0;
+    }
+    .btn-back {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 1.5rem;
+      transition: 0.3s ease;
+    }
+    .btn-back:hover {
+      color: #ffc107;
+    }
+
+    .profile-card {
+      max-width: 950px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 16px;
+      padding: 25px 30px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+      min-height: 550px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .profile-top {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    .profile-img {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 5px solid #fff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .profile-name {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-top: 15px;
+    }
+    .profile-bio {
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 10px;
+    }
+    .badge-gold {
+      background-color: #FFD700;
+      color: #333;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+    }
+
+    .nav-tabs .nav-link {
+      border: none;
+      border-bottom: 3px solid transparent;
+      font-weight: 500;
+      color: #444;
+    }
+    .nav-tabs .nav-link.active {
+      color: #6e0d0d;
+      border-bottom: 3px solid #6e0d0d;
+    }
+
+    .tab-content {
+      flex: 1;
+      min-height: 400px;
+    }
+
+    .info-card {
+      background: #fafafa;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+    }
+    .info-card h5 {
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: #6e0d0d;
+    }
+    .info-item {
+      display: flex;
+      align-items: center;
+      margin: 8px 0;
+      font-size: 1rem;
+      color: #444;
+    }
+    .info-item i {
+      margin-right: 10px;
+      color: #6e0d0d;
+    }
+
+    .booking-card {
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+      transition: transform 0.2s ease;
+    }
+    .booking-card:hover {
+      transform: translateY(-2px);
+    }
+    .booking-card h6 {
+      margin: 0 0 5px;
+      font-weight: 600;
+      color: #6e0d0d;
+    }
+    .status-badge {
+      font-size: 0.85rem;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-weight: 500;
+    }
+    .status-completed { background: #28a745; color: #fff; }
+    .status-upcoming { background: #ffc107; color: #333; }
+
+    .review-card {
+      background: #fafafa;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+    .review-header {
+      display: flex;
+      align-items: center;
+    }
+    .review-header img {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 12px;
+    }
+    .review-stars {
+      color: #FFD700;
+      margin-left: auto;
+    }
+    .review-comment {
+      margin-top: 10px;
+      font-size: 0.95rem;
+      color: #555;
+    }
+
+    footer {
+      background-color: #6e0d0d;
+      color: #fff;
+      text-align: center;
+      padding: 12px;
+      font-size: 0.9rem;
+      margin-top: auto;
+    }
+
+    @media (max-width: 768px) {
+      .profile-name { font-size: 1.5rem; }
+      .profile-bio { font-size: 0.95rem; }
+      .profile-card { padding: 20px; }
+    }
+ body {
+      background: linear-gradient(135deg, #6e0d0d, #BF3131);
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .profile-header {
+      background-color: rgba(110, 13, 13, 0.95);
+      color: #fff;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+    }
+    .profile-header h1 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin: 0;
+    }
+    .btn-back {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 1.5rem;
+      transition: 0.3s ease;
+    }
+    .btn-back:hover {
+      color: #ffc107;
+    }
+
+    .profile-card {
+      max-width: 950px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 16px;
+      padding: 25px 30px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+      min-height: 550px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .profile-top {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    .profile-img {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 5px solid #fff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .profile-name {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-top: 15px;
+    }
+    .profile-bio {
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 10px;
+    }
+    .badge-gold {
+      background-color: #FFD700;
+      color: #333;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+    }
+
+    .nav-tabs .nav-link {
+      border: none;
+      border-bottom: 3px solid transparent;
+      font-weight: 500;
+      color: #444;
+    }
+    .nav-tabs .nav-link.active {
+      color: #6e0d0d;
+      border-bottom: 3px solid #6e0d0d;
+    }
+
+    .tab-content {
+      flex: 1;
+      min-height: 400px;
+    }
+
+    .info-card {
+      background: #fafafa;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+    }
+    .info-card h5 {
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: #6e0d0d;
+    }
+    .info-item {
+      display: flex;
+      align-items: center;
+      margin: 8px 0;
+      font-size: 1rem;
+      color: #444;
+    }
+    .info-item i {
+      margin-right: 10px;
+      color: #6e0d0d;
+    }
+
+    .booking-card {
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+      transition: transform 0.2s ease;
+    }
+    .booking-card:hover {
+      transform: translateY(-2px);
+    }
+    .booking-card h6 {
+      margin: 0 0 5px;
+      font-weight: 600;
+      color: #6e0d0d;
+    }
+    .status-badge {
+      font-size: 0.85rem;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-weight: 500;
+    }
+    .status-completed { background: #28a745; color: #fff; }
+    .status-upcoming { background: #ffc107; color: #333; }
+
+    .review-card {
+      background: #fafafa;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+    .review-header {
+      display: flex;
+      align-items: center;
+    }
+    .review-header img {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 12px;
+    }
+    .review-stars {
+      color: #FFD700;
+      margin-left: auto;
+    }
+    .review-comment {
+      margin-top: 10px;
+      font-size: 0.95rem;
+      color: #555;
+    }
+
+    footer {
+      background-color: #6e0d0d;
+      color: #fff;
+      text-align: center;
+      padding: 12px;
+      font-size: 0.9rem;
+      margin-top: auto;
+    }
+
+    @media (max-width: 768px) {
+      .profile-name { font-size: 1.5rem; }
+      .profile-bio { font-size: 0.95rem; }
+      .profile-card { padding: 20px; }
+    }
