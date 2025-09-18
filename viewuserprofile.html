@@ -1,30 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>User Profile - Maroon Theme</title>
-  <link rel="stylesheet" href="assets/Profile.css" />
+  <title>User Profile | CheckIn</title>
 
-
+  <link rel="stylesheet" href="assets/Profile.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-
-
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <style>
+    .profile-card {
+      display: none;
+    }
+  </style>
 </head>
+
 <body>
 
-  <div class="profile-card">
-    <img src="https://i.ytimg.com/vi/QO54VpsdR5g/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGFUgYyhlMA8=&rs=AOn4CLCbHTToteBxJYqN0pyDSfbtuO05cg" alt="Profile Photo" class="profile-img" />
-    <div class="profile-name">John Doe</div>
-    <div class="profile-bio">Web Developer | Tech Enthusiast | Coffee Lover</div>
-
-    <div class="profile-info text-start">
-      <p><strong>Email:</strong> john.doe@example.com</p>
-      <p><strong>Location:</strong> New York, USA</p>
-    </div>
-
+  <div class="profile-header">
+    <button onclick="window.location.href='admin.html'" class="btn-back">
+      <i class="bi bi-arrow-left-circle"></i>
+    </button>
+    <h1><i class="bi bi-person-fill me-2"></i> User Profile</h1>
+    <div></div>
   </div>
 
+  <!-- Profile will be injected here -->
+  <div id="profilesContainer" class="container my-4"></div>
+
+  <footer class="text-center mt-4">
+    <p>All rights reserved © CheckIn</p>
+  </footer>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const users = {
+
+      "Juan Dela Cruz": {
+        email: "juan.delacruz@example.com",
+        phone: "+63 912 345 6789",
+        location: "Manila, Philippines",
+        points: "1250",
+        gender: "Male",
+        birthday: "Jan 5, 1998",
+        address: "123 Main St, Manila, Philippines",
+        nationality: "Filipino",
+        bio: "Frequent traveler, enjoys deluxe rooms.",
+        img: "https://pbs.twimg.com/profile_images/1574431345161355266/kJ0ychwu_400x400.jpg",
+        badge: "Gold Member",
+        bookings: [
+          { room: "Deluxe Room", checkin: "May 2, 2025", checkout: "May 5, 2025", status: "Completed" },
+          { room: "Suite Room", checkin: "Aug 20, 2025", checkout: "Aug 25, 2025", status: "Upcoming" }
+        ],
+        reviews: [
+          { stars: 4, date: "May 6, 2025", room: "Deluxe Room", comment: "Okay ra ang room pero like ang WiFi ba, murag hinay gyud siya. Hahaha." },
+          { stars: 5, date: "Aug 26, 2025", room: "Suite Room", comment: "Grabe ka cozy jud, like mura kog sosyal na boss diri. Super worth it gyud!" }
+        ]
+      },
+
+      "Ana Santos": {
+        email: "ana.santos@example.com",
+        phone: "+63 987 654 3210",
+        location: "Quezon City, Philippines",
+        points: "980",
+        gender: "Female",
+        birthday: "Feb 14, 2000",
+        address: "Blk 5 Lot 23 QC, Philippines",
+        nationality: "Filipino",
+        bio: "Weekend traveler, spa lover.",
+        img: "https://tse2.mm.bing.net/th/id/OIP.vfWArz6hA8ZVM7OdD4moNQHaHg",
+        badge: "Silver Member",
+        bookings: [
+          { room: "Standard Room", checkin: "Jun 10, 2025", checkout: "Jun 12, 2025", status: "Completed" }
+        ],
+        reviews: [
+          { stars: 5, date: "Jun 15, 2025", room: "Standard Room", comment: "Sobra ka nice ang service, like chill kaayo. Balik jud ko diri next time!" }
+        ]
+      },
+
+      "Pedro Cruz": {
+        email: "pedro.cruz@example.com",
+        phone: "+63 912 345 6789",
+        location: "Cebu, Philippines",
+        points: "600",
+        gender: "Male",
+        birthday: "Nov 5, 1995",
+        address: "Colon St, Cebu City",
+        nationality: "Filipino",
+        bio: "Beach lover, foodie, and traveler.",
+        img: "https://tse1.mm.bing.net/th/id/OIP.3CgcGs5ePHIaFyM0BmGGnAHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
+        badge: "Bronze Member",
+        bookings: [
+          { room: "Suite Room", checkin: "Sep 1, 2025", checkout: "Sep 3, 2025", status: "Upcoming" }
+        ],
+        reviews: [
+          { stars: 4, date: "Aug 10, 2025", room: "Suite Room", comment: "Ang view sa beach kay like wow jud kaayo! Chill ra kaayo tan-aw sunset." }
+        ]
+      }
+      };
+
+
+    const profilesContainer = document.getElementById("profilesContainer");
+
+      function createProfileHTML(username, u) {
+        let reviewsHtml = "";
+    u.reviews.forEach(r => {
+      const stars = Math.floor(r.stars);
+      const halfStar = r.stars % 1 !== 0;
+      let starsHtml = "";
+      for (let i = 0; i < stars; i++) starsHtml += `<i class="bi bi-star-fill"></i>`;
+      if (halfStar) starsHtml += `<i class="bi bi-star-half"></i>`;
+      for (let i = stars + (halfStar ? 1 : 0); i < 5; i++) starsHtml += `<i class="bi bi-star"></i>`;
+
+      reviewsHtml += `
+          <div class="review-card mt-2">
+            <div class="review-header">
+              <img src="${u.img}" alt="User" />
+              <strong>${username}</strong>
+              <div class="review-stars">${starsHtml}</div>
+            </div>
+            <small class="text-muted">Reviewed on ${r.date} | ${r.room}</small>
+            <p class="review-comment">${r.comment}</p>
+          </div>
+        `;
+    });
+
+    let bookingsHtml = "";
+    u.bookings.forEach(b => {
+      bookingsHtml += `
+          <div class="booking-card mb-2">
+            <h6><i class="bi bi-house-door-fill me-2"></i>${b.room}</h6>
+            <p>Check-in: ${b.checkin} | Check-out: ${b.checkout}</p>
+            <span class="status-badge status-${b.status.toLowerCase()}">${b.status}</span>
+          </div>
+        `;
+    });
+
+    return `
+        <div class="profile-card mb-5" style="display:block;">
+          <div class="profile-top text-center">
+            <img src="${u.img}" alt="Profile Photo" class="profile-img" />
+            <h3 class="profile-name">${username}</h3>
+            <p class="profile-bio">${u.bio}</p>
+            <span class="badge-gold"><i class="bi bi-trophy-fill me-1"></i> ${u.badge}</span>
+          </div>
+
+          <div class="info-card mt-3">
+            <div class="info-item"><i class="bi bi-envelope-fill"></i> ${u.email}</div>
+            <div class="info-item"><i class="bi bi-phone-fill"></i> ${u.phone}</div>
+            <div class="info-item"><i class="bi bi-geo-alt-fill"></i> ${u.location}</div>
+            <div class="info-item"><i class="bi bi-star-fill"></i> Loyalty Points: ${u.points}</div>
+            <div class="info-item"><i class="bi bi-gender-ambiguous"></i> Gender: ${u.gender}</div>
+            <div class="info-item"><i class="bi bi-calendar-event-fill"></i> Birthday: ${u.birthday}</div>
+            <div class="info-item"><i class="bi bi-geo-alt-fill"></i> Address: ${u.address}</div>
+            <div class="info-item"><i class="bi bi-flag-fill"></i> Nationality: ${u.nationality}</div>
+          </div>
+
+          <h5 class="mt-4"><i class="bi bi-journal-bookmark-fill me-2"></i>Bookings</h5>
+          ${bookingsHtml}
+
+          <h5 class="mt-4"><i class="bi bi-star-fill me-2"></i>Reviews</h5>
+          ${reviewsHtml}
+        </div>
+      `;
+    }
+
+    // Get user from URL parameter
+    const params = new URLSearchParams(window.location.search);
+    const username = params.get("user");
+
+    if (username && users[username]) {
+      profilesContainer.innerHTML = createProfileHTML(username, users[username]);
+    } else {
+      profilesContainer.innerHTML = "<p>User not found.</p>";
+    }
+  </script>
 </body>
+
 </html>

@@ -8,12 +8,12 @@
   <link rel="icon" type="image/png" sizes="512x512" href="assets/checkinlogo.png" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <link rel="stylesheet" href="assets/Admin.css" />
   <style>
-   
     .user-card img {
       object-fit: cover;
-      border: 2px solid #800000; 
+      border: 2px solid #800000;
     }
 
     .user-card h6 {
@@ -256,25 +256,43 @@
     <section id="users" class="mb-5">
       <div class="card p-4">
         <h3 class="mb-3 fw-semibold"><i class="bi bi-people"></i> User List</h3>
-    
-        <a href="viewuserprofile.html" class="user-card d-flex align-items-center mb-3 text-decoration-none text-dark">
-          <img src="https://pbs.twimg.com/profile_images/1574431345161355266/kJ0ychwu_400x400.jpg" alt="User Avatar" class="rounded-circle me-3" width="50" height="50" />
+
+        <!-- User 1 -->
+        <a href="#" class="user-card d-flex align-items-center mb-3 text-decoration-none text-dark"
+          data-bs-toggle="modal" data-bs-target="#userModal" data-name="Juan Dela Cruz"
+          data-email="juan.delacruz@example.com" data-phone="+63 912 345 6789" data-address="123 Main St, Manila"
+          data-bio="Frequent traveler, enjoys deluxe rooms"
+          data-img="https://pbs.twimg.com/profile_images/1574431345161355266/kJ0ychwu_400x400.jpg">
+          <img src="https://pbs.twimg.com/profile_images/1574431345161355266/kJ0ychwu_400x400.jpg" alt="User Avatar"
+            class="rounded-circle me-3" width="50" height="50" />
           <div>
             <h6 class="mb-0">Juan Dela Cruz</h6>
             <small class="text-muted">juan.delacruz@example.com</small>
           </div>
         </a>
-    
-        <a href="viewuserprofile.html" class="user-card d-flex align-items-center mb-3 text-decoration-none text-dark">
-          <img src="https://tse2.mm.bing.net/th/id/OIP.vfWArz6hA8ZVM7OdD4moNQHaHg?rs=1&pid=ImgDetMain&o=7&rm=3" alt="User Avatar" class="rounded-circle me-3" width="50" height="50" />
+
+        <!-- User 2 -->
+        <a href="#" class="user-card d-flex align-items-center mb-3 text-decoration-none text-dark"
+          data-bs-toggle="modal" data-bs-target="#userModal" data-name="Ana Santos" data-email="ana.santos@example.com"
+          data-phone="+63 987 654 3210" data-address="Quezon City, Philippines"
+          data-bio="Loves weekend getaways and spa rooms"
+          data-img="https://tse2.mm.bing.net/th/id/OIP.vfWArz6hA8ZVM7OdD4moNQHaHg?rs=1&pid=ImgDetMain&o=7&rm=3">
+          <img src="https://tse2.mm.bing.net/th/id/OIP.vfWArz6hA8ZVM7OdD4moNQHaHg?rs=1&pid=ImgDetMain&o=7&rm=3"
+            alt="User Avatar" class="rounded-circle me-3" width="50" height="50" />
           <div>
             <h6 class="mb-0">Ana Santos</h6>
             <small class="text-muted">ana.santos@example.com</small>
           </div>
         </a>
-    
-        <a href="viewuserprofile.html" class="user-card d-flex align-items-center mb-3 text-decoration-none text-dark">
-          <img src="https://tse1.explicit.bing.net/th/id/OIP.qTaK7JniMod6TNXz4tEv7QHaHc?rs=1&pid=ImgDetMain&o=7&rm=3" alt="User Avatar" class="rounded-circle me-3" width="50" height="50" />
+
+        <!-- User 3 -->
+        <a href="#" class="user-card d-flex align-items-center mb-3 text-decoration-none text-dark"
+          data-bs-toggle="modal" data-bs-target="#userModal" data-name="Pedro Cruz" data-email="pedro.cruz@example.com"
+          data-phone="+63 900 111 2222" data-address="Cebu City, Philippines"
+          data-bio="Business traveler, prefers suite rooms"
+          data-img="https://tse1.mm.bing.net/th/id/OIP.3CgcGs5ePHIaFyM0BmGGnAHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3">
+          <img src="https://tse1.mm.bing.net/th/id/OIP.3CgcGs5ePHIaFyM0BmGGnAHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"
+            alt="User Avatar" class="rounded-circle me-3" width="50" height="50" />
           <div>
             <h6 class="mb-0">Pedro Cruz</h6>
             <small class="text-muted">pedro.cruz@example.com</small>
@@ -282,39 +300,114 @@
         </a>
       </div>
     </section>
-    
-    
 
-  <script>
-    function toggleSidebar() {
-      const sidebar = document.getElementById("sidebar");
-      const overlay = document.getElementById("overlay");
-      const menuBtn = document.querySelector(".menu-toggle");
-      sidebar.classList.toggle("active");
-      overlay.classList.toggle("active");
-      if (sidebar.classList.contains("active")) {
-        menuBtn.style.display = "none";
-      } else {
-        menuBtn.style.display = "block";
-      }
-    }
+    <!-- User Profile Modal -->
+    <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header" style="background:#800000; color:white;">
+            <h5 class="modal-title" id="userModalLabel"><i class="bi bi-person-circle me-2"></i> User Profile</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div class="text-center mb-3">
+              <img id="modalUserImg" src="" class="rounded-circle mb-2" width="100" height="100" alt="User Profile">
+              <h5 id="modalUserName"></h5>
+              <p class="text-muted" id="modalUserBio"></p>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <p><i class="bi bi-envelope-fill me-2"></i> <span id="modalUserEmail"></span></p>
+                <p><i class="bi bi-phone-fill me-2"></i> <span id="modalUserPhone"></span></p>
+              </div>
+              <div class="col-md-6">
+                <p><i class="bi bi-geo-alt-fill me-2"></i> <span id="modalUserAddress"></span></p>
+                <p><i class="bi bi-trophy-fill me-2"></i> Gold Member</p>
+              </div>
+            </div>
+            <hr>
+            <h6><i class="bi bi-journal-bookmark-fill me-2"></i> Recent Bookings</h6>
+            <ul>
+              <li>Deluxe Room - Aug 15–18, 2025 (Completed)</li>
+              <li>Suite Room - Jul 02–05, 2025 (Completed)</li>
+            </ul>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button class="btn btn-primary" onclick="viewProfile('Ana Santos')">View Full Profile</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    function closeSidebar() {
-      document.getElementById("sidebar").classList.remove("active");
-      document.getElementById("overlay").classList.remove("active");
-      document.querySelector(".menu-toggle").style.display = "block";
-    }
 
-    document.querySelectorAll(".sidebar-nav a").forEach((link) => {
-      link.addEventListener("click", function () {
-        document.querySelectorAll(".sidebar-nav a").forEach((item) => item.classList.remove("active"));
-        this.classList.add("active");
-        if (window.innerWidth <= 768) {
-          closeSidebar();
+
+    <script>
+      function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("overlay");
+        const menuBtn = document.querySelector(".menu-toggle");
+        sidebar.classList.toggle("active");
+        overlay.classList.toggle("active");
+        if (sidebar.classList.contains("active")) {
+          menuBtn.style.display = "none";
+        } else {
+          menuBtn.style.display = "block";
         }
+      }
+
+      function closeSidebar() {
+        document.getElementById("sidebar").classList.remove("active");
+        document.getElementById("overlay").classList.remove("active");
+        document.querySelector(".menu-toggle").style.display = "block";
+      }
+
+      document.querySelectorAll(".sidebar-nav a").forEach((link) => {
+        link.addEventListener("click", function () {
+          document.querySelectorAll(".sidebar-nav a").forEach((item) => item.classList.remove("active"));
+          this.classList.add("active");
+          if (window.innerWidth <= 768) {
+            closeSidebar();
+          }
+        });
       });
-    });
-  </script>
+
+
+      const userModal = document.getElementById('userModal');
+      userModal.addEventListener('show.bs.modal', function (event) {
+        const trigger = event.relatedTarget;
+
+        // Extract user data
+        const name = trigger.getAttribute('data-name');
+        const email = trigger.getAttribute('data-email');
+        const phone = trigger.getAttribute('data-phone');
+        const address = trigger.getAttribute('data-address');
+        const bio = trigger.getAttribute('data-bio');
+        const img = trigger.getAttribute('data-img');
+
+        // Update modal content
+        document.getElementById('modalUserName').textContent = name;
+        document.getElementById('modalUserEmail').textContent = email;
+        document.getElementById('modalUserPhone').textContent = phone;
+        document.getElementById('modalUserAddress').textContent = address;
+        document.getElementById('modalUserBio').textContent = bio;
+        document.getElementById('modalUserImg').src = img;
+
+        // Update "View Full Profile" button dynamically
+        const profileBtn = userModal.querySelector('.btn-primary');
+        profileBtn.setAttribute('onclick', `viewProfile('${name}')`);
+      });
+
+
+      function viewProfile(username) {
+        // Pass username as parameter to profile.html
+        window.location.href = "viewuserprofile.html?user=" + encodeURIComponent(username);
+      }
+
+      const userKey = username.replace(/\s+/g, '');
+      const user = users[userKey];
+
+    </script>
 </body>
 
 </html>
