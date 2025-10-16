@@ -113,8 +113,8 @@ $imgsRes = $imgs->get_result();
   <h5>Existing Images</h5>
   <div class="row">
     <?php while($im = $imgsRes->fetch_assoc()): ?>
-      <div class="col-md-3 mb-3">
-  <img src="<?=htmlspecialchars('../'.$im['filepath'])?>" class="img-fluid" style="height:140px;object-fit:cover">
+    <div class="col-md-3 mb-3">
+  <img src="<?=htmlspecialchars('../'.$im['filepath'])?>" class="img-fluid click-enlarge" data-src="<?=htmlspecialchars('../'.$im['filepath'])?>" style="height:140px;object-fit:cover">
         <div class="mt-1 small text-muted"><?=htmlspecialchars($im['alt_text'])?></div>
         <div class="mt-1">
           <?php if($im['is_primary']): ?>
@@ -135,3 +135,4 @@ $imgsRes = $imgs->get_result();
   </div>
 </div>
 </body></html>
+<?php require_once __DIR__ . '/../includes/image_modal.php'; ?>

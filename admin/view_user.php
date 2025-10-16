@@ -7,7 +7,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if ($id <= 0) die('Invalid user id');
 
-$stmt = $conn->prepare("SELECT u.first_name,u.middle_name,u.last_name,u.email,u.created_at,u.is_banned,p.phone,p.address,p.avatar FROM users u LEFT JOIN profiles p ON p.user_id=u.id WHERE u.id=?");
+$stmt = $conn->prepare("SELECT u.first_name,u.middle_name,u.last_name,u.email,u.created_at,u.is_banned,p.phone,p.address,p.avatar,p.display_name FROM users u LEFT JOIN profiles p ON p.user_id=u.id WHERE u.id=?");
 $stmt->bind_param("i", $id);
 $stmt->execute();
 $res = $stmt->get_result();
@@ -31,7 +31,8 @@ if (!$user) die('User not found');
     </div>
     <div class="col-md-8">
       <table class="table">
-        <tr><th>Name</th><td><?=htmlspecialchars($user['first_name'].' '.($user['middle_name']?:'').' '.$user['last_name'])?></td></tr>
+        <tr><th>Full name</th><td><?=htmlspecialchars(trim($user['first_name'].' '.($user['middle_name']?:'').' '.$user['last_name']))?></td></tr>
+        <tr><th>Display name</th><td><?=htmlspecialchars($user['display_name'] ?? '')?></td></tr>
         <tr><th>Email</th><td><?=htmlspecialchars($user['email'])?></td></tr>
         <tr><th>Phone</th><td><?=htmlspecialchars($user['phone'] ?? '')?></td></tr>
         <tr><th>Address</th><td><?=nl2br(htmlspecialchars($user['address'] ?? ''))?></td></tr>

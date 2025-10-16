@@ -10,6 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $middle = trim($_POST['middle_name'] ?? '');
   $last = trim($_POST['last_name'] ?? '');
   $email = trim($_POST['email'] ?? '');
+  $phone = trim($_POST['phone'] ?? '');
   $pass = $_POST['password'] ?? '';
   $confirm = $_POST['confirm_password'] ?? '';
 
@@ -18,6 +19,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $msg = 'Passwords do not match.';
   } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     $msg = 'Invalid email.';
+  } elseif (strlen($phone) < 6) {
+    $msg = 'Phone number is required.';
+  } elseif (!preg_match('/^[0-9+()\-\s]{6,20}$/', $phone) || preg_match_all('/[0-9]/', $phone) < 7) {
+    $msg = 'Invalid phone number format.';
   } elseif (strlen($first) < 1 || strlen($last) < 1) {
     $msg = 'Name required.';
   } else {
@@ -43,9 +48,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param("sssssis", $first, $middle, $last, $email, $hash, $role, $token);
         if ($stmt->execute()) {
           $userId = $conn->insert_id;
-          // create empty profile row
-          $p = $conn->prepare("INSERT INTO profiles (user_id) VALUES (?)");
-          $p->bind_param("i", $userId);
+          // create profile row with phone
+          $p = $conn->prepare("INSERT INTO profiles (user_id, phone) VALUES (?, ?)");
+          $p->bind_param("is", $userId, $phone);
           $p->execute();
 
           // send verification email (best-effort)
@@ -81,6 +86,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <div class="col"><input name="last_name" class="form-control mb-2" placeholder="Last name" required></div>
     </div>
     <input name="email" type="email" class="form-control mb-2" placeholder="Email" required>
+    <input name="phone" id="phoneInput" type="text" pattern="[0-9+()\-\s]{6,20}" title="Enter your phone number (digits and +()- allowed)" class="form-control mb-2" placeholder="Phone number" required>
+    <script>
+      document.addEventListener('DOMContentLoaded', function(){
+        var f = document.querySelector('form');
+        f.addEventListener('submit', function(e){
+          var phone = document.getElementById('phoneInput').value || '';
+          var digits = phone.replace(/\D/g,'');
+          if (digits.length < 7) { e.preventDefault(); alert('Please enter a valid phone number (at least 7 digits).'); }
+        });
+      });
+    </script>
     <input name="password" type="password" class="form-control mb-2" placeholder="Password" required>
     <input name="confirm_password" type="password" class="form-control mb-2" placeholder="Confirm password" required>
     <button class="btn btn-primary w-100">Register</button>

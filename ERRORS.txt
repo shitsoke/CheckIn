@@ -1,0 +1,24 @@
+Common error codes and explanations for CheckIn project
+
+500 - Server Error
+ - Means an uncaught exception or fatal error occurred on the server. Check PHP error logs and application logs (logs/errors.log) for stack traces.
+
+403 - Forbidden
+ - User tried to access a resource requiring different permissions (admin-only page). Ensure session role is set correctly and auth_check is included.
+
+404 - Not Found
+ - Resource not found. Ensure correct file paths, query parameters, and that routes exist.
+
+Database connection issues
+ - If DB connection fails, check `db_connect.php` credentials and MySQL service.
+
+Booking conflicts
+ - When double-booking occurs, the system rejects overlapping bookings. The user sees a friendly message: "Room already has a booking overlapping your requested time.".
+
+Validation errors
+ - The app uses session flash messages for user-visible validation errors (e.g., invalid datetimes, missing fields). Check the displayed message on the page.
+
+Email/PDF Issues
+ - PDF generation requires Dompdf (composer install). Email using SMTP requires `includes/smtp_config.php` to be populated. Check logs/errors.log and vendor autoload.
+
+For developers: enable display_errors in dev and consult `logs/errors.log` (create this file if missing with writable permissions).

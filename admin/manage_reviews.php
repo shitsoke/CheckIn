@@ -22,14 +22,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $filterRoom = isset($_GET['room_id']) ? intval($_GET['room_id']) : 0;
-if ($filterRoom) {
-  $res = $conn->prepare("SELECT rv.*, u.email, t.name as roomtype FROM reviews rv JOIN users u ON rv.user_id=u.id LEFT JOIN room_types t ON rv.room_type_id=t.id WHERE rv.room_id=? ORDER BY rv.created_at DESC");
-  $res->bind_param("i", $filterRoom);
-  $res->execute();
-  $res = $res->get_result();
-} else {
-  $res = $conn->query("SELECT rv.*, u.email, t.name as roomtype FROM reviews rv JOIN users u ON rv.user_id=u.id LEFT JOIN room_types t ON rv.room_type_id=t.id ORDER BY rv.created_at DESC");
-}
+// Filters
+$where = [];
+$params = [];
+$types = '';
+if (!empty($_GET['room_id'])) { $where[] = 'rv.room_id = ?'; $params[] = intval($_GET['room_id']); $types .= 'i'; }
+if (!empty($_GET['room_type'])) { $where[] = 'rv.room_type_id = ?'; $params[] = intval($_GET['room_type']); $types .= 'i'; }
+if (!empty($_GET['rating'])) { $where[] = 'rv.rating = ?'; $params[] = intval($_GET['rating']); $types .= 'i'; }
+if (isset($_GET['visible']) && $_GET['visible'] !== '') { $where[] = 'rv.is_visible = ?'; $params[] = intval($_GET['visible']); $types .= 'i'; }
+$where_sql = $where ? 'WHERE '.implode(' AND ', $where) : '';
+$sql = "SELECT rv.*, u.email, t.name as roomtype FROM reviews rv JOIN users u ON rv.user_id=u.id LEFT JOIN room_types t ON rv.room_type_id=t.id " . $where_sql . " ORDER BY rv.created_at DESC";
+$stmt = $conn->prepare($sql);
+if ($params) $stmt->bind_param($types, ...$params);
+$stmt->execute();
+$res = $stmt->get_result();
 ?>
 <!doctype html>
 <html><head><meta charset="utf-8"><title>Manage Reviews</title>
@@ -42,6 +48,29 @@ if ($filterRoom) {
   <h3>Reviews Moderation</h3>
   <a href="index.php" class="btn btn-secondary mb-3">← Back</a>
   <div class="alert alert-info">Toggle: hide/unhide a review from public view. Delete: permanently remove a review.</div>
+  <form method="get" class="row gy-2 gx-2 mb-3">
+    <div class="col-md-3"><input name="room_id" value="<?=htmlspecialchars($_GET['room_id'] ?? '')?>" class="form-control" placeholder="Room ID"></div>
+    <div class="col-md-3">
+      <select name="room_type" class="form-select">
+        <option value="">Any room type</option>
+        <?php $rtypes = $conn->query("SELECT * FROM room_types"); while($rt=$rtypes->fetch_assoc()): ?><option value="<?=$rt['id']?>" <?=(!empty($_GET['room_type']) && $_GET['room_type']==$rt['id'])? 'selected':''?>><?=htmlspecialchars($rt['name'])?></option><?php endwhile; ?>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <select name="rating" class="form-select">
+        <option value="">Any rating</option>
+        <?php for($i=5;$i>=1;$i--): ?><option value="<?=$i?>" <?=(!empty($_GET['rating']) && $_GET['rating']==$i)? 'selected':''?>><?=$i?></option><?php endfor; ?>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <select name="visible" class="form-select">
+        <option value="">Any</option>
+        <option value="1" <?=isset($_GET['visible']) && $_GET['visible']==='1' ? 'selected':''?>>Visible</option>
+        <option value="0" <?=isset($_GET['visible']) && $_GET['visible']==='0' ? 'selected':''?>>Hidden</option>
+      </select>
+    </div>
+    <div class="col-md-2"><button class="btn btn-outline-primary w-100">Filter</button></div>
+  </form>
   <table class="table table-striped">
   <thead><tr><th>ID</th><th>User</th><th>Room Type</th><th>Room</th><th>Rating</th><th>Comment</th><th>Visible</th><th>Action</th></tr></thead>
     <tbody>

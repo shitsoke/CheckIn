@@ -8,7 +8,7 @@ $user_id = $_SESSION['user_id'];
 $msg = "";
 
 // fetch user & profile
-$stmt = $conn->prepare("SELECT u.first_name, u.middle_name, u.last_name, u.email, p.phone, p.address, p.avatar
+$stmt = $conn->prepare("SELECT u.first_name, u.middle_name, u.last_name, u.email, p.phone, p.address, p.avatar, p.display_name
   FROM users u LEFT JOIN profiles p ON p.user_id=u.id WHERE u.id=?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -18,6 +18,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   verify_csrf();
   $phone = trim($_POST['phone'] ?? '');
   $address = trim($_POST['address'] ?? '');
+  $display_name = trim($_POST['display_name'] ?? '');
+  $first = trim($_POST['first_name'] ?? '');
+  $middle = trim($_POST['middle_name'] ?? '');
+  $last = trim($_POST['last_name'] ?? '');
 
   // file upload handling
   $updated = false;
@@ -36,20 +40,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $filename = 'avatar_'.$user_id.'_'.time().'.'.$ext;
       $dest = $targetDir.'/'.$filename;
       if (move_uploaded_file($_FILES['avatar']['tmp_name'], $dest)) {
-        $avatarPath = 'uploads/avatars/'.$filename;
-        $u = $conn->prepare("UPDATE profiles SET phone=?, address=?, avatar=? WHERE user_id=?");
-        $u->bind_param("sssi", $phone, $address, $avatarPath, $user_id);
-        $u->execute();
+          $avatarPath = 'uploads/avatars/'.$filename;
+          $u = $conn->prepare("UPDATE profiles SET phone=?, address=?, avatar=?, display_name=? WHERE user_id=?");
+          $u->bind_param("ssssi", $phone, $address, $avatarPath, $display_name, $user_id);
+          $u->execute();
+          // update names on users table
+          $uu = $conn->prepare("UPDATE users SET first_name=?, middle_name=?, last_name=? WHERE id=?");
+          $uu->bind_param("sssi", $first, $middle, $last, $user_id); $uu->execute();
         $updated = true;
         $msg = "Profile updated.";
       } else $msg = "Failed to save uploaded file.";
     }
   } else {
     // update without avatar, but only if changed
-    if ($phone !== ($user['phone'] ?? '') || $address !== ($user['address'] ?? '')) {
-      $u = $conn->prepare("UPDATE profiles SET phone=?, address=? WHERE user_id=?");
-      $u->bind_param("ssi", $phone, $address, $user_id);
+    if ($phone !== ($user['phone'] ?? '') || $address !== ($user['address'] ?? '') || $display_name !== ($user['display_name'] ?? '') || $first !== ($user['first_name'] ?? '') || $middle !== ($user['middle_name'] ?? '') || $last !== ($user['last_name'] ?? '')) {
+      $u = $conn->prepare("UPDATE profiles SET phone=?, address=?, display_name=? WHERE user_id=?");
+      $u->bind_param("sssi", $phone, $address, $display_name, $user_id);
       $u->execute();
+      // update names in users table
+      $uu = $conn->prepare("UPDATE users SET first_name=?, middle_name=?, last_name=? WHERE id=?");
+      $uu->bind_param("sssi", $first, $middle, $last, $user_id); $uu->execute();
       $updated = true;
       $msg = "Profile updated.";
     } else {
@@ -82,10 +92,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </div>
       <div class="col-md-9">
         <div class="mb-2"><label>Email</label><input disabled class="form-control" value="<?=htmlspecialchars($user['email'])?>"></div>
+        <div class="mb-2"><label>Display name (optional)</label><input name="display_name" class="form-control mb-2" value="<?=htmlspecialchars($user['display_name'] ?? '')?>" placeholder="How your name will appear"></div>
         <div class="row">
-          <div class="col"><input disabled class="form-control mb-2" value="<?=htmlspecialchars($user['first_name'])?>"></div>
-          <div class="col"><input disabled class="form-control mb-2" value="<?=htmlspecialchars($user['middle_name'])?>"></div>
-          <div class="col"><input disabled class="form-control mb-2" value="<?=htmlspecialchars($user['last_name'])?>"></div>
+          <div class="col"><input name="first_name" class="form-control mb-2" value="<?=htmlspecialchars($user['first_name'])?>"></div>
+          <div class="col"><input name="middle_name" class="form-control mb-2" value="<?=htmlspecialchars($user['middle_name'])?>"></div>
+          <div class="col"><input name="last_name" class="form-control mb-2" value="<?=htmlspecialchars($user['last_name'])?>"></div>
         </div>
       </div>
     </div>
@@ -99,7 +110,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php endif; ?>
     <input type="file" name="avatar" class="form-control mb-2" accept="image/*">
     <button class="btn btn-primary">Save Profile</button>
-    <a href="dashboard.php" class="btn btn-secondary">Cancel</a>
+    <?php $ret = $_GET['return_to'] ?? 'dashboard.php'; ?>
+    <a href="<?=htmlspecialchars($ret)?>" class="btn btn-secondary">Cancel</a>
   </form>
 </div>
 </body></html>

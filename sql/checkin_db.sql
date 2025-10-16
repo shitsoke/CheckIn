@@ -29,6 +29,11 @@ CREATE TABLE profiles (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+-- Add optional display_name for user profiles (used in UI, not on receipts)
+-- Run this on existing DBs to enable the display name feature
+ALTER TABLE profiles
+  ADD COLUMN IF NOT EXISTS display_name VARCHAR(191) NULL AFTER avatar;
+
 CREATE TABLE room_types (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(50),
@@ -42,11 +47,18 @@ INSERT INTO room_types (name, hourly_rate, description) VALUES
 
 CREATE TABLE rooms (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  room_number VARCHAR(20),
+  room_number VARCHAR(20) UNIQUE,
   room_type_id INT,
   status ENUM('available','reserved','occupied','maintenance') DEFAULT 'available',
+  description TEXT,
+  is_visible TINYINT(1) DEFAULT 1,
   FOREIGN KEY (room_type_id) REFERENCES room_types(id)
 );
+
+-- Make room_number unique to prevent duplicate room numbers
+-- If you have duplicates already, resolve them before running this.
+ALTER TABLE rooms
+  ADD UNIQUE INDEX IF NOT EXISTS ux_rooms_room_number (room_number(20));
 
 CREATE TABLE bookings (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -115,6 +127,13 @@ ALTER TABLE reviews
   ADD COLUMN room_id INT NULL,
   ADD INDEX idx_room_id (room_id),
   ADD CONSTRAINT fk_reviews_room FOREIGN KEY (room_id) REFERENCES rooms(id) ON DELETE SET NULL;
+
+-- Booking migration: ensure start_time/end_time exist and add receipt_sent flag
+-- If your `bookings` table already has these columns, MySQL will error on ADD COLUMN; run these ALTERs only after inspection or wrap them in conditional checks.
+ALTER TABLE bookings
+  ADD COLUMN IF NOT EXISTS start_time DATETIME NULL,
+  ADD COLUMN IF NOT EXISTS end_time DATETIME NULL,
+  ADD COLUMN IF NOT EXISTS receipt_sent TINYINT(1) DEFAULT 0;
 
 -- Note: After running the ALTER statements, you can migrate existing reviews by mapping room_type_id to a representative room id, or leave room_id NULL.
 USE checkin;

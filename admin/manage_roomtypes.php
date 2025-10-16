@@ -23,7 +23,6 @@ $result = $conn->query("SELECT * FROM room_types ORDER BY id ASC");
       <tr>
         <th>ID</th>
         <th>Name</th>
-        <th>Description</th>
         <th>Hourly Rate (₱)</th>
         <th>Action</th>
       </tr>
@@ -33,7 +32,6 @@ $result = $conn->query("SELECT * FROM room_types ORDER BY id ASC");
       <tr>
         <td><?= htmlspecialchars($row['id']) ?></td>
         <td><?= htmlspecialchars($row['name']) ?></td>
-        <td><?= htmlspecialchars($row['description']) ?></td>
         <td><?= number_format($row['hourly_rate'], 2) ?></td>
         <td><a href="edit_roomtype.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-primary">Edit</a></td>
       </tr>

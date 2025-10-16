@@ -3,6 +3,7 @@ session_start();
 require_once "includes/auth_check.php";
 require_once "includes/csrf.php";
 require_once "db_connect.php";
+require_once __DIR__ . '/includes/name_helper.php';
 
 $user_id = $_SESSION['user_id'];
 $msg = "";
@@ -107,12 +108,12 @@ $myReviewsRes = $myReviews->get_result();
   <hr>
   <h4>Recent Overall Hotel Reviews</h4>
   <?php
-    $hotelList = $conn->query("SELECT rv.*, u.first_name, u.last_name FROM reviews rv JOIN users u ON rv.user_id=u.id WHERE rv.room_id IS NULL AND rv.is_visible=1 ORDER BY rv.created_at DESC LIMIT 10");
+    $hotelList = $conn->query("SELECT rv.*, u.first_name, u.last_name, p.display_name FROM reviews rv JOIN users u ON rv.user_id=u.id LEFT JOIN profiles p ON p.user_id=u.id WHERE rv.room_id IS NULL AND rv.is_visible=1 ORDER BY rv.created_at DESC LIMIT 10");
   ?>
   <?php if ($hotelList && $hotelList->num_rows): ?>
       <?php while($hr=$hotelList->fetch_assoc()): ?>
         <div class="border p-2 mb-2">
-          <strong><?=htmlspecialchars($hr['first_name'].' '.$hr['last_name'])?></strong>
+          <strong><?=htmlspecialchars(!empty($hr['display_name']) ? $hr['display_name'] : ($hr['first_name'].' '.$hr['last_name']))?></strong>
           <div>Rating: <?=intval($hr['rating'])?>/5</div>
           <?php $hsafe = htmlspecialchars($hr['comment']); ?>
           <div class="review-text break-word"><?=nl2br($hsafe)?></div>
@@ -179,4 +180,5 @@ $myReviewsRes = $myReviews->get_result();
     });
   });
 </script>
+<?php require_once __DIR__ . '/includes/image_modal.php'; ?>
 </body></html>

@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once "../db_connect.php";
+require_once __DIR__ . '/../includes/name_helper.php';
 
 // Check if logged in as admin
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
@@ -47,12 +48,18 @@ if (isset($_GET['unban'])) {
 }
 
 // --- Load all users ---
-$res = $conn->query("
-  SELECT u.*, r.name AS role
-  FROM users u
-  JOIN roles r ON u.role_id = r.id
-  ORDER BY u.id DESC
-");
+$where = [];
+$params = [];
+$types = '';
+if (!empty($_GET['q'])) { $where[] = "(u.email LIKE ? OR u.first_name LIKE ? OR u.last_name LIKE ?)"; $params[] = '%'.$_GET['q'].'%'; $params[] = '%'.$_GET['q'].'%'; $params[] = '%'.$_GET['q'].'%'; $types .= 'sss'; }
+if (!empty($_GET['role'])) { $where[] = "u.role_id = ?"; $params[] = intval($_GET['role']); $types .= 'i'; }
+if (isset($_GET['status']) && $_GET['status'] !== '') { if ($_GET['status'] === 'banned') { $where[] = "u.is_banned = 1"; } else { $where[] = "u.is_banned = 0"; } }
+$where_sql = $where ? 'WHERE '.implode(' AND ', $where) : '';
+$sql = "SELECT u.*, r.name AS role, p.display_name FROM users u JOIN roles r ON u.role_id = r.id LEFT JOIN profiles p ON p.user_id=u.id " . $where_sql . " ORDER BY u.id DESC";
+$stmt = $conn->prepare($sql);
+if ($params) { $stmt->bind_param($types, ...$params); }
+$stmt->execute();
+$res = $stmt->get_result();
 ?>
 <!doctype html>
 <html lang="en">
@@ -65,6 +72,24 @@ $res = $conn->query("
 <div class="container">
   <h3>Manage Users</h3>
   <a href="index.php" class="btn btn-secondary mb-3">← Back</a>
+
+  <form method="get" class="row gy-2 gx-2 mb-3">
+    <div class="col-md-4"><input name="q" value="<?=htmlspecialchars($_GET['q'] ?? '')?>" class="form-control" placeholder="Search by name or email"></div>
+    <div class="col-md-3">
+      <select name="role" class="form-select">
+        <option value="">All roles</option>
+        <?php $roles = $conn->query("SELECT * FROM roles"); while($rrole=$roles->fetch_assoc()): ?><option value="<?=$rrole['id']?>" <?=(!empty($_GET['role']) && $_GET['role']==$rrole['id'])? 'selected':''?>><?=htmlspecialchars($rrole['name'])?></option><?php endwhile; ?>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <select name="status" class="form-select">
+        <option value="">Any status</option>
+        <option value="active" <?=(!empty($_GET['status']) && $_GET['status']=='active')? 'selected':''?>>Active</option>
+        <option value="banned" <?=(!empty($_GET['status']) && $_GET['status']=='banned')? 'selected':''?>>Banned</option>
+      </select>
+    </div>
+    <div class="col-md-2"><button class="btn btn-outline-primary w-100">Filter</button></div>
+  </form>
 
   <?php if(isset($_SESSION['msg'])): ?>
     <div class="alert alert-info"><?= htmlspecialchars($_SESSION['msg']); unset($_SESSION['msg']); ?></div>
@@ -82,10 +107,10 @@ $res = $conn->query("
       </tr>
     </thead>
     <tbody>
-      <?php while($u = $res->fetch_assoc()): ?>
+      <?php require_once __DIR__ . '/../includes/name_helper.php'; while($u = $res->fetch_assoc()): ?>
       <tr>
         <td><?= $u['id'] ?></td>
-        <td><?= htmlspecialchars($u['first_name'].' '.$u['last_name']) ?></td>
+        <td><?= htmlspecialchars(display_name_from_row($u)) ?></td>
         <td><?= htmlspecialchars($u['email']) ?></td>
         <td><?= htmlspecialchars(ucfirst($u['role'])) ?></td>
         <td>

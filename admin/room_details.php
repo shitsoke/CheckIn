@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once "../db_connect.php";
+require_once __DIR__ . '/../includes/csrf.php';
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
   header("Location: ../login.php"); exit;
 }
@@ -40,6 +41,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 $room_id = intval($_GET['id'] ?? 0);
 if ($room_id <= 0) die('Invalid room id');
+// handle edit/save of room description and visibility
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_room'])) {
+  // CSRF not previously included on this page
+  require_once __DIR__ . '/../includes/csrf.php'; verify_csrf();
+  $desc = trim($_POST['description'] ?? '');
+  $vis = isset($_POST['is_visible']) ? 1 : 0;
+  $upd = $conn->prepare("UPDATE rooms SET description=?, is_visible=? WHERE id=?");
+  $upd->bind_param("sii", $desc, $vis, $room_id); $upd->execute();
+  header('Location: room_details.php?id='.$room_id.'&msg=saved'); exit;
+}
 $stmt = $conn->prepare("SELECT r.*, t.name as type, t.hourly_rate FROM rooms r JOIN room_types t ON r.room_type_id=t.id WHERE r.id=?");
 $stmt->bind_param("i", $room_id);
 $stmt->execute();
@@ -76,17 +87,19 @@ $reviewsRes = $reviews->get_result();
         <div class="row">
           <?php while($im=$imgsRes->fetch_assoc()): ?>
             <div class="col-md-4 mb-2">
-              <img src="<?=htmlspecialchars('../'.$im['filepath'])?>" class="img-fluid" style="height:140px;object-fit:cover">
+              <img src="<?=htmlspecialchars('../'.$im['filepath'])?>" class="img-fluid click-enlarge" data-src="<?=htmlspecialchars('../'.$im['filepath'])?>" style="height:140px;object-fit:cover">
               <div class="mt-1">
                 <?php if($im['is_primary']): ?>
                   <span class="badge bg-success">Primary</span>
                 <?php else: ?>
                   <form method="post" class="d-inline">
+                    <?=csrf_input_field()?>
                     <input type="hidden" name="make_primary_id" value="<?=intval($im['id'])?>">
                     <button class="btn btn-sm btn-outline-primary" type="submit">Make Primary</button>
                   </form>
                 <?php endif; ?>
                 <form method="post" class="d-inline" onsubmit="return confirm('Delete image?');">
+                  <?=csrf_input_field()?>
                   <input type="hidden" name="delete_id" value="<?=intval($im['id'])?>">
                   <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
                 </form>
@@ -100,6 +113,18 @@ $reviewsRes = $reviews->get_result();
 
       <p><?=nl2br(htmlspecialchars($room['description'] ?? ''))?></p>
       <p>Rate: ₱<?=number_format($room['hourly_rate'],2)?>/hr</p>
+
+      <hr>
+      <h5>Edit Room Details</h5>
+      <?php if (!empty($_GET['msg']) && $_GET['msg']==='saved'): ?><div class="alert alert-success">Saved.</div><?php endif; ?>
+      <form method="post">
+        <?=csrf_input_field()?>
+        <div class="mb-2"><label class="form-label">Description</label>
+          <textarea name="description" class="form-control"><?=htmlspecialchars($room['description'] ?? '')?></textarea></div>
+        <div class="form-check mb-2"><input type="checkbox" name="is_visible" class="form-check-input" id="visCheck" <?=($room['is_visible']? 'checked':'')?>><label for="visCheck" class="form-check-label">Visible to customers</label></div>
+        <input type="hidden" name="save_room" value="1">
+        <button class="btn btn-primary">Save</button>
+      </form>
 
       <hr>
       <h5>Reviews for this room</h5>
@@ -127,3 +152,4 @@ $reviewsRes = $reviews->get_result();
   </div>
 </div>
 </body></html>
+<?php require_once __DIR__ . '/../includes/image_modal.php'; ?>
