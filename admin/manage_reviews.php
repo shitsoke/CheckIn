@@ -2,6 +2,7 @@
 session_start();
 require_once "../db_connect.php";
 require_once __DIR__ . '/../includes/csrf.php';
+include "admin_sidebar.php";
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
   header("Location: ../login.php"); exit;
 }
@@ -49,7 +50,6 @@ $res = $stmt->get_result();
 <body class="p-4 bg-light">
 <div class="container">
   <h3 class="text-danger fw-bold mb-3">Reviews Moderation</h3>
-  <a href="index.php" class="btn btn-outline-danger mb-3">← Back</a>
   <div class="alert alert-danger">
     <strong>Note:</strong> Toggle hides/unhides a review from public view. Delete permanently removes a review.
   </div>

@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once "../db_connect.php";
+include "admin_sidebar.php";
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
   header("Location: ../login.php");
   exit;
@@ -17,7 +18,6 @@ $result = $conn->query("SELECT * FROM room_types ORDER BY id ASC");
 <body class="p-4 bg-light">
 <div class="container">
   <h3 class="text-danger fw-bold mb-3">Manage Room Types</h3>
-  <a href="index.php" class="btn btn-outline-danger mb-3">Back to Dashboard</a>
   <table class="table table-bordered text-center align-middle">
     <thead class="table-danger">
       <tr>

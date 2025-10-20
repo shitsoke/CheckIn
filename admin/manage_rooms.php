@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once "../db_connect.php";
+include "admin_sidebar.php";
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
   header("Location: ../login.php"); exit;
 }
@@ -95,7 +96,6 @@ $types = $conn->query("SELECT * FROM room_types");
 <div class="container">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h3>Manage Rooms</h3>
-    <a href="index.php" class="btn btn-secondary">← Back</a>
   </div>
 
   <?php if($msg): ?><div class="alert alert-info"><?=$msg?></div><?php endif; ?>

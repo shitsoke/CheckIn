@@ -2,6 +2,7 @@
 session_start();
 require_once "../db_connect.php";
 require_once __DIR__ . '/../includes/name_helper.php';
+include "admin_sidebar.php";
 
 // Check if logged in as admin
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
@@ -83,8 +84,6 @@ $res = $stmt->get_result();
 <body class="p-4 bg-light">
 <div class="container">
   <h3 class="text-danger fw-bold mb-3">Manage Users</h3>
-  <a href="index.php" class="btn btn-outline-danger mb-3">← Back</a>
-
   <form method="get" class="row gy-2 gx-2 mb-3">
     <div class="col-md-4">
       <input name="q" value="<?=htmlspecialchars($_GET['q'] ?? '')?>" class="form-control border-danger" placeholder="Search by name or email">

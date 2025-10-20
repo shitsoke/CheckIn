@@ -1,135 +1,93 @@
 <?php
 session_start();
 require_once "../db_connect.php";
+include "admin_sidebar.php";
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
   header("Location: ../login.php");
   exit;
 }
+
+// ─────────────────────────────────────────────
+//  Placeholder counts — replace with real queries
+// ─────────────────────────────────────────────
+$available_rooms = 12;  // e.g., SELECT COUNT(*) FROM rooms WHERE status='available'
+$reserved_rooms  = 8;   // e.g., SELECT COUNT(*) FROM bookings WHERE status='reserved'
+$ongoing_rooms   = 5;   // e.g., SELECT COUNT(*) FROM bookings WHERE status='confirmed' OR 'ongoing'
 ?>
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Admin | CheckIn</title>
+  <title>Admin Dashboard | CheckIn</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body {
-      background-color: #ffffff;
+    .stat-card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    .sidebar {
-      min-height: 100vh;
-      background-color: #b30000; /* deep red */
-      color: white;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 220px;
-      padding-top: 20px;
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
     }
-    .sidebar a {
-      color: white;
-      text-decoration: none;
-    }
-    .sidebar a:hover {
-      background-color: #990000;
-      border-radius: 5px;
-    }
-    .sidebar .nav-link.active {
-      background-color: #990000;
-      border-radius: 5px;
-    }
-    .content {
-      margin-left: 240px;
-      padding: 20px;
+    .stat-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
     }
   </style>
 </head>
 
 <body>
-  <div class="sidebar d-flex flex-column p-3">
-    
-    <h4 class="text-center mb-4">CheckIn Admin</h4>
-    <ul class="nav flex-column">
-      <li class="nav-item mb-2">
-        <a href="admin_dashboard.php" class="nav-link active text-white">🏠 Dashboard</a>
-      </li>
-      <li class="nav-item mb-2">
-        <a href="manage_rooms.php" class="nav-link text-white">🛏 Manage Rooms</a>
-      </li>
-      <li class="nav-item mb-2">
-        <a href="manage_bookings.php" class="nav-link text-white">📘 Manage Bookings</a>
-      </li>
-      <li class="nav-item mb-2">
-        <a href="manage_users.php" class="nav-link text-white">👤 Manage Users</a>
-      </li>
-      <li class="nav-item mb-2">
-        <a href="manage_reviews.php" class="nav-link text-white">💬 Moderate Reviews</a>
-      </li>
-      <li class="nav-item mb-2">
-        <a href="manage_roomtypes.php" class="nav-link text-white">🏨 Room Types</a>
-      </li>
-    </ul>
-    <hr>
-    <a href="../logout.php" class="btn btn-light text-danger mt-auto">Logout</a>
-  </div>
-
   <div class="content">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h3>Admin Dashboard</h3>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h3 class="fw-bold text-danger">Admin Dashboard</h3>
     </div>
-    <hr>
-
-    <div class="row g-3">
+    <div class="text-center text-muted mb-3" style="font-size: 1.1rem;">
+  <p class="mb-1">
+    Welcome back, 
+    <strong style="font-size: 1.2rem; color: #b71c1c;">
+      <?= htmlspecialchars($_SESSION['username'] ?? 'Admin') ?>
+    </strong>!
+  </p>
+  <small style="font-size: 1rem;">Use the sidebar to manage rooms, users, and bookings.</small>
+</div>
+    <div class="row g-4 mb-4">
+      <!-- Available Rooms -->
       <div class="col-md-4">
-        <div class="card border-danger shadow-sm">
-          <div class="card-body text-center">
-            <h5 class="card-title text-danger">Manage Rooms</h5>
-            <p class="card-text">Add, update, or delete available rooms.</p>
-            <a href="manage_rooms.php" class="btn btn-danger">Go</a>
+        <div class="card stat-card text-center border-success shadow-sm">
+          <div class="card-body">
+            <div class="stat-icon text-success">🟢</div>
+            <h5 class="card-title text-success">Available Rooms</h5>
+            <h2 class="fw-bold"><?= $available_rooms ?></h2>
+            <p class="text-muted mb-0">Rooms ready for booking</p>
           </div>
         </div>
       </div>
 
+      <!-- Reserved Rooms -->
       <div class="col-md-4">
-        <div class="card border-danger shadow-sm">
-          <div class="card-body text-center">
-            <h5 class="card-title text-danger">Manage Bookings</h5>
-            <p class="card-text">View and update customer bookings.</p>
-            <a href="manage_bookings.php" class="btn btn-danger">Go</a>
+        <div class="card stat-card text-center border-warning shadow-sm">
+          <div class="card-body">
+            <div class="stat-icon text-warning">🟡</div>
+            <h5 class="card-title text-warning">Reserved Rooms</h5>
+            <h2 class="fw-bold"><?= $reserved_rooms ?></h2>
+            <p class="text-muted mb-0">Awaiting guest check-in</p>
           </div>
         </div>
       </div>
 
+      <!-- Confirmed / Ongoing Rooms -->
       <div class="col-md-4">
-        <div class="card border-danger shadow-sm">
-          <div class="card-body text-center">
-            <h5 class="card-title text-danger">Manage Users</h5>
-            <p class="card-text">Handle user accounts and roles.</p>
-            <a href="manage_users.php" class="btn btn-danger">Go</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="card border-danger shadow-sm">
-          <div class="card-body text-center">
-            <h5 class="card-title text-danger">Moderate Reviews</h5>
-            <p class="card-text">Approve or remove user feedback.</p>
-            <a href="manage_reviews.php" class="btn btn-danger">Go</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="card border-danger shadow-sm">
-          <div class="card-body text-center">
-            <h5 class="card-title text-danger">Manage Room Types</h5>
-            <p class="card-text">Configure different room categories.</p>
-            <a href="manage_roomtypes.php" class="btn btn-danger">Go</a>
+        <div class="card stat-card text-center border-danger shadow-sm">
+          <div class="card-body">
+            <div class="stat-icon text-danger">🔴</div>
+            <h5 class="card-title text-danger">Confirmed / Ongoing</h5>
+            <h2 class="fw-bold"><?= $ongoing_rooms ?></h2>
+            <p class="text-muted mb-0">Currently occupied rooms</p>
           </div>
         </div>
       </div>
     </div>
+
+    <hr class="mb-4">
   </div>
 </body>
 </html>

@@ -2,6 +2,7 @@
 session_start();
 require_once "../db_connect.php";
 require_once __DIR__ . '/../includes/csrf.php';
+include "admin_sidebar.php";
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
   header("Location: ../login.php"); exit;
 }
@@ -106,9 +107,6 @@ $res = $stmt->get_result();
   <?php if (!empty($_GET['msg']) && $_GET['msg']==='booking_updated'): ?>
     <div class="alert alert-success">Booking updated.</div>
   <?php endif; ?>
-
-  <a href="index.php" class="btn btn-outline-danger mb-3">← Back</a>
-
   <form method="get" class="row gy-2 gx-2 mb-3">
     <div class="col-md-3"><input name="q" value="<?=htmlspecialchars($_GET['q'] ?? '')?>" class="form-control" placeholder="Search by user email or room #"></div>
     <div class="col-md-2">
