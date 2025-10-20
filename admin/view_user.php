@@ -15,31 +15,90 @@ $user = $res->fetch_assoc();
 if (!$user) die('User not found');
 ?>
 <!doctype html>
-<html><head><meta charset="utf-8"><title>View User | Admin - CheckIn</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"></head>
-<body class="p-4">
-<div class="container">
-  <h3>User Profile</h3>
-  <a href="manage_users.php" class="btn btn-secondary mb-3">← Back</a>
-  <div class="row">
-    <div class="col-md-4">
-      <?php if (!empty($user['avatar'])): ?>
-        <img src="<?=htmlspecialchars('../'.$user['avatar'])?>" class="img-fluid rounded" alt="Avatar">
-      <?php else: ?>
-        <div style="width:100%;padding:40% 0;background:#f0f0f0;text-align:center;color:#777">No avatar</div>
-      <?php endif; ?>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>View User | Admin - CheckIn</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light text-dark">
+  <div class="container py-5">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h3 class="fw-bold text-danger">👤 User Profile</h3>
+      <a href="manage_users.php" class="btn btn-outline-danger fw-semibold">
+        ← Back to Users
+      </a>
     </div>
-    <div class="col-md-8">
-      <table class="table">
-        <tr><th>Full name</th><td><?=htmlspecialchars(trim($user['first_name'].' '.($user['middle_name']?:'').' '.$user['last_name']))?></td></tr>
-        <tr><th>Display name</th><td><?=htmlspecialchars($user['display_name'] ?? '')?></td></tr>
-        <tr><th>Email</th><td><?=htmlspecialchars($user['email'])?></td></tr>
-        <tr><th>Phone</th><td><?=htmlspecialchars($user['phone'] ?? '')?></td></tr>
-        <tr><th>Address</th><td><?=nl2br(htmlspecialchars($user['address'] ?? ''))?></td></tr>
-        <tr><th>Registered</th><td><?=htmlspecialchars($user['created_at'])?></td></tr>
-        <tr><th>Status</th><td><?= $user['is_banned'] ? '<span class="badge bg-danger">Banned</span>' : '<span class="badge bg-success">Active</span>' ?></td></tr>
-      </table>
+
+    <!-- Profile Card -->
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-danger text-white fw-bold">
+        User Information
+      </div>
+
+      <div class="card-body p-4">
+        <div class="row g-4 align-items-start">
+          
+          <!-- Avatar Section -->
+          <div class="col-md-4 text-center">
+            <?php if (!empty($user['avatar'])): ?>
+              <img src="<?= htmlspecialchars('../'.$user['avatar']) ?>" 
+                   class="img-fluid rounded-circle border border-3 border-danger" 
+                   style="width: 180px; height: 180px; object-fit: cover;" 
+                   alt="Avatar">
+            <?php else: ?>
+              <div class="d-flex flex-column justify-content-center align-items-center border border-2 border-danger rounded-circle" 
+                   style="width: 180px; height: 180px;">
+                <span class="text-muted">No Avatar</span>
+              </div>
+            <?php endif; ?>
+            <div class="mt-3">
+              <?= $user['is_banned'] 
+                ? '<span class="badge bg-danger px-3 py-2">Banned</span>' 
+                : '<span class="badge bg-success px-3 py-2">Active</span>' ?>
+            </div>
+          </div>
+
+          <!-- Details Section -->
+          <div class="col-md-8">
+            <div class="table-responsive">
+              <table class="table table-borderless">
+                <tbody>
+                  <tr>
+                    <th class="text-danger w-25">Full Name:</th>
+                    <td class="fw-semibold"><?= htmlspecialchars(trim($user['first_name'].' '.($user['middle_name']?:'').' '.$user['last_name'])) ?></td>
+                  </tr>
+                  <tr>
+                    <th class="text-danger">Display Name:</th>
+                    <td><?= htmlspecialchars($user['display_name'] ?? '') ?></td>
+                  </tr>
+                  <tr>
+                    <th class="text-danger">Email:</th>
+                    <td><?= htmlspecialchars($user['email']) ?></td>
+                  </tr>
+                  <tr>
+                    <th class="text-danger">Phone:</th>
+                    <td><?= htmlspecialchars($user['phone'] ?? '') ?></td>
+                  </tr>
+                  <tr>
+                    <th class="text-danger">Address:</th>
+                    <td><?= nl2br(htmlspecialchars($user['address'] ?? '')) ?></td>
+                  </tr>
+                  <tr>
+                    <th class="text-danger">Registered:</th>
+                    <td><?= htmlspecialchars($user['created_at']) ?></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </div>
     </div>
+
   </div>
-</div>
-</body></html>
+</body>
+</html>

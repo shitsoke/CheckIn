@@ -68,88 +68,200 @@ $reviews->execute();
 $reviewsRes = $reviews->get_result();
 ?>
 <!doctype html>
-<html><head><meta charset="utf-8"><title>Admin Room Details</title>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin Room Details</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
-  .break-word { overflow-wrap: anywhere; word-break: break-word; white-space: pre-wrap; }
-</style></head>
+  body {
+    background-color: #ffffff;
+    color: #333;
+    font-family: 'Inter', sans-serif;
+  }
+  h3, h5 {
+    color: #b30000;
+    font-weight: 700;
+  }
+  .btn-primary {
+    background-color: #b30000;
+    border-color: #b30000;
+  }
+  .btn-primary:hover {
+    background-color: #990000;
+    border-color: #990000;
+  }
+  .btn-outline-primary {
+    color: #b30000;
+    border-color: #b30000;
+  }
+  .btn-outline-primary:hover {
+    background-color: #b30000;
+    color: #fff;
+  }
+  .btn-outline-danger {
+    color: #b30000;
+    border-color: #b30000;
+  }
+  .btn-outline-danger:hover {
+    background-color: #b30000;
+    color: #fff;
+  }
+  .btn-secondary {
+    background-color: #f8f9fa;
+    color: #b30000;
+    border: 1px solid #b30000;
+  }
+  .btn-secondary:hover {
+    background-color: #b30000;
+    color: #fff;
+  }
+  .card {
+    border: 1px solid #f3f3f3;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  }
+  .img-thumb {
+    border: 2px solid #b30000;
+    border-radius: 8px;
+    height: 140px;
+    object-fit: cover;
+    transition: transform .2s ease;
+  }
+  .img-thumb:hover {
+    transform: scale(1.05);
+  }
+  .alert-success {
+    background-color: #ffeaea;
+    color: #b30000;
+    border: none;
+  }
+  .form-check-input:checked {
+    background-color: #b30000;
+    border-color: #b30000;
+  }
+  hr {
+    border-top: 2px solid #b30000;
+    opacity: 0.6;
+  }
+  .review-card {
+    background-color: #fff;
+    border-left: 5px solid #b30000;
+    border-radius: 6px;
+    padding: 1rem;
+  }
+  .badge.bg-success {
+    background-color: #b30000 !important;
+  }
+  .break-word {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    white-space: pre-wrap;
+  }
+</style>
+</head>
+
 <body class="p-4">
 <div class="container">
-  <h3>Room <?=htmlspecialchars($room['room_number'])?> — <?=htmlspecialchars($room['type'])?></h3>
-  <?php
-    $adminBack = 'manage_rooms.php';
-    if (isset($_GET['from']) && $_GET['from']==='manage_reviews') $adminBack = 'manage_reviews.php';
-  ?>
-  <a href="<?=htmlspecialchars($adminBack)?>" class="btn btn-secondary mb-3">← Back to Admin</a>
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Room <?=htmlspecialchars($room['room_number'])?> — <?=htmlspecialchars($room['type'])?></h3>
+    <?php
+      $adminBack = 'manage_rooms.php';
+      if (isset($_GET['from']) && $_GET['from']==='manage_reviews') $adminBack = 'manage_reviews.php';
+    ?>
+    <a href="<?=htmlspecialchars($adminBack)?>" class="btn btn-secondary">← Back to Admin</a>
+  </div>
+
   <div class="row">
     <div class="col-md-8">
-      <?php if ($imgsRes->num_rows): ?>
-        <div class="row">
-          <?php while($im=$imgsRes->fetch_assoc()): ?>
-            <div class="col-md-4 mb-2">
-              <img src="<?=htmlspecialchars('../'.$im['filepath'])?>" class="img-fluid click-enlarge" data-src="<?=htmlspecialchars('../'.$im['filepath'])?>" style="height:140px;object-fit:cover">
-              <div class="mt-1">
-                <?php if($im['is_primary']): ?>
-                  <span class="badge bg-success">Primary</span>
-                <?php else: ?>
-                  <form method="post" class="d-inline">
+
+      <!-- ROOM IMAGES -->
+      <div class="card mb-4 p-3">
+        <h5>Room Images</h5>
+        <?php if ($imgsRes->num_rows): ?>
+          <div class="row mt-2">
+            <?php while($im=$imgsRes->fetch_assoc()): ?>
+              <div class="col-md-4 mb-3 text-center">
+                <img src="<?=htmlspecialchars('../'.$im['filepath'])?>" class="img-fluid img-thumb click-enlarge" data-src="<?=htmlspecialchars('../'.$im['filepath'])?>">
+                <div class="mt-2">
+                  <?php if($im['is_primary']): ?>
+                    <span class="badge bg-success">Primary</span>
+                  <?php else: ?>
+                    <form method="post" class="d-inline">
+                      <?=csrf_input_field()?>
+                      <input type="hidden" name="make_primary_id" value="<?=intval($im['id'])?>">
+                      <button class="btn btn-sm btn-outline-primary" type="submit">Make Primary</button>
+                    </form>
+                  <?php endif; ?>
+                  <form method="post" class="d-inline" onsubmit="return confirm('Delete image?');">
                     <?=csrf_input_field()?>
-                    <input type="hidden" name="make_primary_id" value="<?=intval($im['id'])?>">
-                    <button class="btn btn-sm btn-outline-primary" type="submit">Make Primary</button>
+                    <input type="hidden" name="delete_id" value="<?=intval($im['id'])?>">
+                    <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
                   </form>
-                <?php endif; ?>
-                <form method="post" class="d-inline" onsubmit="return confirm('Delete image?');">
-                  <?=csrf_input_field()?>
-                  <input type="hidden" name="delete_id" value="<?=intval($im['id'])?>">
-                  <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
-                </form>
+                </div>
+              </div>
+            <?php endwhile; ?>
+          </div>
+        <?php else: ?>
+          <div class="text-center py-4 text-muted bg-light rounded">No images available</div>
+        <?php endif; ?>
+      </div>
+
+      <!-- ROOM DESCRIPTION -->
+      <div class="card mb-4 p-3">
+        <h5>Room Description</h5>
+        <p class="break-word"><?=nl2br(htmlspecialchars($room['description'] ?? ''))?></p>
+        <p class="fw-bold text-danger">Rate: ₱<?=number_format($room['hourly_rate'],2)?>/hr</p>
+      </div>
+
+      <!-- EDIT FORM -->
+      <div class="card mb-4 p-3">
+        <h5>Edit Room Details</h5>
+        <?php if (!empty($_GET['msg']) && $_GET['msg']==='saved'): ?>
+          <div class="alert alert-success mt-2">Saved successfully!</div>
+        <?php endif; ?>
+        <form method="post" class="mt-3">
+          <?=csrf_input_field()?>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Description</label>
+            <textarea name="description" class="form-control" rows="4"><?=htmlspecialchars($room['description'] ?? '')?></textarea>
+          </div>
+          <div class="form-check mb-3">
+            <input type="checkbox" name="is_visible" class="form-check-input" id="visCheck" <?=($room['is_visible']? 'checked':'')?>>
+            <label for="visCheck" class="form-check-label">Visible to customers</label>
+          </div>
+          <input type="hidden" name="save_room" value="1">
+          <button class="btn btn-primary px-4">Save Changes</button>
+        </form>
+      </div>
+
+      <!-- REVIEWS -->
+      <div class="card mb-4 p-3">
+        <h5>Reviews for this room</h5>
+        <?php if ($reviewsRes->num_rows): ?>
+          <?php while($rv=$reviewsRes->fetch_assoc()): ?>
+            <div class="review-card mb-3">
+              <div class="d-flex justify-content-between">
+                <strong><?=htmlspecialchars($rv['first_name'].' '.$rv['last_name'])?></strong>
+                <span class="text-muted small"><?=htmlspecialchars($rv['created_at'])?></span>
+              </div>
+              <div>Rating: <span class="text-danger fw-bold"><?=intval($rv['rating'])?>/5</span></div>
+              <div class="break-word mt-2"><?=nl2br(htmlspecialchars($rv['comment']))?></div>
+              <div class="mt-3">
+                <a class="btn btn-sm btn-outline-primary" href="?toggle=1&id=<?=$rv['id']?>">Toggle Visible</a>
+                <a class="btn btn-sm btn-outline-danger" href="manage_reviews.php?delete=<?=$rv['id']?>" onclick="return confirm('Delete?')">Delete</a>
               </div>
             </div>
           <?php endwhile; ?>
-        </div>
-      <?php else: ?>
-        <div style="height:160px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;color:#777">No images</div>
-      <?php endif; ?>
+        <?php else: ?>
+          <div class="text-muted">No reviews yet for this room.</div>
+        <?php endif; ?>
+      </div>
 
-      <p><?=nl2br(htmlspecialchars($room['description'] ?? ''))?></p>
-      <p>Rate: ₱<?=number_format($room['hourly_rate'],2)?>/hr</p>
-
-      <hr>
-      <h5>Edit Room Details</h5>
-      <?php if (!empty($_GET['msg']) && $_GET['msg']==='saved'): ?><div class="alert alert-success">Saved.</div><?php endif; ?>
-      <form method="post">
-        <?=csrf_input_field()?>
-        <div class="mb-2"><label class="form-label">Description</label>
-          <textarea name="description" class="form-control"><?=htmlspecialchars($room['description'] ?? '')?></textarea></div>
-        <div class="form-check mb-2"><input type="checkbox" name="is_visible" class="form-check-input" id="visCheck" <?=($room['is_visible']? 'checked':'')?>><label for="visCheck" class="form-check-label">Visible to customers</label></div>
-        <input type="hidden" name="save_room" value="1">
-        <button class="btn btn-primary">Save</button>
-      </form>
-
-      <hr>
-      <h5>Reviews for this room</h5>
-      <?php if ($reviewsRes->num_rows): ?>
-        <?php while($rv=$reviewsRes->fetch_assoc()): ?>
-          <div class="border p-2 mb-2">
-            <strong><?=htmlspecialchars($rv['first_name'].' '.$rv['last_name'])?></strong>
-            <span class="text-muted"> — <?=htmlspecialchars($rv['created_at'])?></span>
-            <div>Rating: <?=intval($rv['rating'])?>/5</div>
-            <div class="break-word"><?=nl2br(htmlspecialchars($rv['comment']))?></div>
-            <div class="mt-2">
-              <a class="btn btn-sm btn-outline-primary" href="?toggle=1&id=<?=$rv['id']?>">Toggle Visible</a>
-              <a class="btn btn-sm btn-outline-danger" href="manage_reviews.php?delete=<?=$rv['id']?>" onclick="return confirm('Delete?')">Delete</a>
-            </div>
-          </div>
-        <?php endwhile; ?>
-      <?php else: ?>
-        <div class="text-muted">No reviews yet for this room.</div>
-      <?php endif; ?>
-    </div>
-    <div class="col-md-4">
-      <h5>Admin tools</h5>
-      <p>Use this page to inspect room images and reviews. Admin cannot leave reviews here.</p>
     </div>
   </div>
 </div>
-</body></html>
+</body>
+</html>
 <?php require_once __DIR__ . '/../includes/image_modal.php'; ?>

@@ -22,7 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $filterRoom = isset($_GET['room_id']) ? intval($_GET['room_id']) : 0;
-// Filters
 $where = [];
 $params = [];
 $types = '';
@@ -31,73 +30,65 @@ if (!empty($_GET['room_type'])) { $where[] = 'rv.room_type_id = ?'; $params[] = 
 if (!empty($_GET['rating'])) { $where[] = 'rv.rating = ?'; $params[] = intval($_GET['rating']); $types .= 'i'; }
 if (isset($_GET['visible']) && $_GET['visible'] !== '') { $where[] = 'rv.is_visible = ?'; $params[] = intval($_GET['visible']); $types .= 'i'; }
 $where_sql = $where ? 'WHERE '.implode(' AND ', $where) : '';
-$sql = "SELECT rv.*, u.email, t.name as roomtype FROM reviews rv JOIN users u ON rv.user_id=u.id LEFT JOIN room_types t ON rv.room_type_id=t.id " . $where_sql . " ORDER BY rv.created_at DESC";
+$sql = "SELECT rv.*, u.email, t.name as roomtype FROM reviews rv 
+        JOIN users u ON rv.user_id=u.id 
+        LEFT JOIN room_types t ON rv.room_type_id=t.id 
+        $where_sql ORDER BY rv.created_at DESC";
 $stmt = $conn->prepare($sql);
 if ($params) $stmt->bind_param($types, ...$params);
 $stmt->execute();
 $res = $stmt->get_result();
 ?>
 <!doctype html>
-<html><head><meta charset="utf-8"><title>Manage Reviews</title>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Manage Reviews | Admin - CheckIn</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<style>
-  .break-word { overflow-wrap: anywhere; word-break: break-word; white-space: pre-wrap; }
-</style></head>
-<body class="p-4">
+</head>
+<body class="p-4 bg-light">
 <div class="container">
-  <h3>Reviews Moderation</h3>
-  <a href="index.php" class="btn btn-secondary mb-3">← Back</a>
-  <div class="alert alert-info">Toggle: hide/unhide a review from public view. Delete: permanently remove a review.</div>
+  <h3 class="text-danger fw-bold mb-3">Reviews Moderation</h3>
+  <a href="index.php" class="btn btn-outline-danger mb-3">← Back</a>
+  <div class="alert alert-danger">
+    <strong>Note:</strong> Toggle hides/unhides a review from public view. Delete permanently removes a review.
+  </div>
+
   <form method="get" class="row gy-2 gx-2 mb-3">
-    <div class="col-md-3"><input name="room_id" value="<?=htmlspecialchars($_GET['room_id'] ?? '')?>" class="form-control" placeholder="Room ID"></div>
     <div class="col-md-3">
-      <select name="room_type" class="form-select">
+      <input name="room_id" value="<?=htmlspecialchars($_GET['room_id'] ?? '')?>" class="form-control border-danger" placeholder="Room ID">
+    </div>
+    <div class="col-md-3">
+      <select name="room_type" class="form-select border-danger">
         <option value="">Any room type</option>
-        <?php $rtypes = $conn->query("SELECT * FROM room_types"); while($rt=$rtypes->fetch_assoc()): ?><option value="<?=$rt['id']?>" <?=(!empty($_GET['room_type']) && $_GET['room_type']==$rt['id'])? 'selected':''?>><?=htmlspecialchars($rt['name'])?></option><?php endwhile; ?>
+        <?php $rtypes = $conn->query("SELECT * FROM room_types"); while($rt=$rtypes->fetch_assoc()): ?>
+          <option value="<?=$rt['id']?>" <?=(!empty($_GET['room_type']) && $_GET['room_type']==$rt['id'])? 'selected':''?>>
+            <?=htmlspecialchars($rt['name'])?>
+          </option>
+        <?php endwhile; ?>
       </select>
     </div>
     <div class="col-md-2">
-      <select name="rating" class="form-select">
+      <select name="rating" class="form-select border-danger">
         <option value="">Any rating</option>
-        <?php for($i=5;$i>=1;$i--): ?><option value="<?=$i?>" <?=(!empty($_GET['rating']) && $_GET['rating']==$i)? 'selected':''?>><?=$i?></option><?php endfor; ?>
+        <?php for($i=5;$i>=1;$i--): ?>
+          <option value="<?=$i?>" <?=(!empty($_GET['rating']) && $_GET['rating']==$i)? 'selected':''?>><?=$i?></option>
+        <?php endfor; ?>
       </select>
     </div>
     <div class="col-md-2">
-      <select name="visible" class="form-select">
+      <select name="visible" class="form-select border-danger">
         <option value="">Any</option>
         <option value="1" <?=isset($_GET['visible']) && $_GET['visible']==='1' ? 'selected':''?>>Visible</option>
         <option value="0" <?=isset($_GET['visible']) && $_GET['visible']==='0' ? 'selected':''?>>Hidden</option>
       </select>
     </div>
-    <div class="col-md-2"><button class="btn btn-outline-primary w-100">Filter</button></div>
+    <div class="col-md-2">
+      <button class="btn btn-danger w-100">Filter</button>
+    </div>
   </form>
-  <table class="table table-striped">
-  <thead><tr><th>ID</th><th>User</th><th>Room Type</th><th>Room</th><th>Rating</th><th>Comment</th><th>Visible</th><th>Action</th></tr></thead>
-    <tbody>
-      <?php while($r = $res->fetch_assoc()): ?>
+
+  <table class="table table-bordered text-center align-middle">
+    <thead class="table-danger">
       <tr>
-        <td><?=$r['id']?></td>
-        <td><?=htmlspecialchars($r['email'])?></td>
-  <td><?=htmlspecialchars($r['roomtype'] ?? 'Hotel')?></td>
-  <td><?php if(!empty($r['room_id'])): ?><a href="room_details.php?id=<?=intval($r['room_id'])?>&from=manage_reviews">View room</a><?php else: ?>Overall Hotel<?php endif; ?></td>
-        <td><?=intval($r['rating'])?></td>
-  <td class="break-word"><?=htmlspecialchars($r['comment'])?></td>
-        <td><?=$r['is_visible'] ? 'Yes' : 'No'?></td>
-        <td>
-          <form method="post" class="d-inline">
-            <?=csrf_input_field()?>
-            <input type="hidden" name="toggle_id" value="<?=$r['id']?>">
-            <button class="btn btn-sm btn-outline-primary" type="submit">Toggle</button>
-          </form>
-          <form method="post" class="d-inline" onsubmit="return confirm('Delete this review?');">
-            <?=csrf_input_field()?>
-            <input type="hidden" name="delete_id" value="<?=$r['id']?>">
-            <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
-          </form>
-        </td>
-      </tr>
-      <?php endwhile; ?>
-    </tbody>
-  </table>
-</div>
-</body></html>
+        <th>ID</t
