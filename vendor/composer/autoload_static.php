@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit1a05a9524d564b4057d7afd880afbebf
+class ComposerStaticInit336b7cfd5121bbd7a8d212e8562c4e90
 {
     public static $prefixLengthsPsr4 = array (
         'S' => 
@@ -37,7 +37,7 @@ class ComposerStaticInit1a05a9524d564b4057d7afd880afbebf
     public static $prefixDirsPsr4 = array (
         'Svg\\' => 
         array (
-            0 => __DIR__ . '/..' . '/dompdf/php-svg-lib/src/Svg',
+            0 => __DIR__ . '/..' . '/phenx/php-svg-lib/src/Svg',
         ),
         'Sabberworm\\CSS\\' => 
         array (
@@ -53,7 +53,7 @@ class ComposerStaticInit1a05a9524d564b4057d7afd880afbebf
         ),
         'FontLib\\' => 
         array (
-            0 => __DIR__ . '/..' . '/dompdf/php-font-lib/src/FontLib',
+            0 => __DIR__ . '/..' . '/phenx/php-font-lib/src/FontLib',
         ),
         'Dompdf\\' => 
         array (
@@ -73,9 +73,9 @@ class ComposerStaticInit1a05a9524d564b4057d7afd880afbebf
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit1a05a9524d564b4057d7afd880afbebf::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit1a05a9524d564b4057d7afd880afbebf::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit1a05a9524d564b4057d7afd880afbebf::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit336b7cfd5121bbd7a8d212e8562c4e90::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit336b7cfd5121bbd7a8d212e8562c4e90::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit336b7cfd5121bbd7a8d212e8562c4e90::$classMap;
 
         }, null, ClassLoader::class);
     }
