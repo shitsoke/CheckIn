@@ -135,6 +135,17 @@ ALTER TABLE bookings
   ADD COLUMN IF NOT EXISTS end_time DATETIME NULL,
   ADD COLUMN IF NOT EXISTS receipt_sent TINYINT(1) DEFAULT 0;
 
+-- Table to store persistent login "remember me" tokens
+CREATE TABLE IF NOT EXISTS remember_tokens (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  token VARCHAR(128) NOT NULL,
+  expires_at DATETIME NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_user_token (user_id, token),
+  CONSTRAINT fk_remember_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
 -- Note: After running the ALTER statements, you can migrate existing reviews by mapping room_type_id to a representative room id, or leave room_id NULL.
 USE checkin;
 INSERT IGNORE INTO roles (id, name) VALUES (1, 'admin'), (2, 'customer');

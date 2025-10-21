@@ -2,7 +2,44 @@
 session_start();
 require_once "db_connect.php";
 require_once "includes/csrf.php";
+// initialize
 $msg = "";
+$email = '';
+
+// Auto-login via remember cookie (format: userId:token) if session not already active
+if (empty($_SESSION['user_id']) && empty($_POST['email']) && !empty($_COOKIE['remember'])) {
+  try {
+    $parts = explode(':', $_COOKIE['remember'], 2);
+    if (count($parts) === 2) {
+      $cookieUserId = intval($parts[0]);
+      $cookieToken = $parts[1];
+      // ensure table exists before querying
+      $tbl = $conn->query("SHOW TABLES LIKE 'remember_tokens'");
+      if ($tbl && $tbl->num_rows) {
+        $rt = $conn->prepare("SELECT user_id, token, expires_at FROM remember_tokens WHERE user_id=? AND token=? LIMIT 1");
+        $rt->bind_param("is", $cookieUserId, $cookieToken);
+        $rt->execute();
+        $row = $rt->get_result()->fetch_assoc();
+        if ($row && strtotime($row['expires_at']) > time()) {
+          // token valid - restore session
+          $u = $conn->prepare("SELECT u.id, r.name FROM users u JOIN roles r ON u.role_id=r.id WHERE u.id=? AND u.is_banned=0 LIMIT 1");
+          $u->bind_param("i", $cookieUserId);
+          $u->execute();
+          $usr = $u->get_result()->fetch_assoc();
+          if ($usr) {
+            $_SESSION['user_id'] = $usr['id'];
+            $_SESSION['role'] = $usr['name'];
+            // redirect to dashboard immediately
+            header('Location: ' . ($usr['name'] === 'admin' ? 'admin/index.php' : 'dashboard.php'));
+            exit;
+          }
+        }
+      }
+    }
+  } catch (Exception $e) {
+    // ignore and continue to normal login
+  }
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   verify_csrf();
@@ -20,6 +57,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if (!empty($user['email_verified']) && password_verify($password, $user['password'])) {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['role'] = $user['name'];
+        // Remember-me handling: create long-lived token if requested
+        if (!empty($_POST['remember'])) {
+          try {
+            // ensure table exists
+            $tbl = $conn->query("SHOW TABLES LIKE 'remember_tokens'");
+            if ($tbl && $tbl->num_rows) {
+              $token = bin2hex(random_bytes(32));
+              $expires = date('Y-m-d H:i:s', time() + 60*60*24*30); // 30 days
+              $ins = $conn->prepare("INSERT INTO remember_tokens (user_id, token, expires_at, created_at) VALUES (?, ?, ?, NOW())");
+              $ins->bind_param("iss", $user['id'], $token, $expires);
+              $ins->execute();
+              if ($ins->affected_rows) setcookie('remember', $user['id'] . ':' . $token, time()+60*60*24*30, '/', '', false, true);
+            }
+          } catch (Exception $e) {
+            // ignore - do not prevent login if remember fails
+          }
+        }
         if ($user['name'] === 'admin') header("Location: admin/index.php");
         else header("Location: dashboard.php");
         exit;
@@ -528,12 +582,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       <form method="post">
         <?=csrf_input_field()?>
-        <input name="email" type="email" class="form-control" placeholder="Email" required>
-        <input name="password" type="password" class="form-control" placeholder="Password" required>
+        <input name="email" id="emailInput" value="<?=htmlspecialchars($email)?>" type="email" class="form-control" placeholder="Email" required>
+        <div class="input-group mt-2 mb-2">
+          <input name="password" id="passwordInput" type="password" class="form-control" placeholder="Password" required>
+          <button type="button" class="btn btn-outline-secondary" id="toggleShowPwd" aria-label="Toggle password visibility">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
 
         <div class="remember-forgot">
           <div>
-            <input type="checkbox" id="remember">
+            <input type="checkbox" id="remember" name="remember">
             <label for="remember">Remember me</label>
           </div>
           <a href="forgot_password.php">Forgot password?</a>
@@ -542,6 +601,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button class="btn btn-login mt-2">Login</button>
         <p class="text-center mt-3">No account? <a href="register.php">Register here</a></p>
       </form>
+
+      <script>
+        function togglePassword(inputId) {
+          const input = document.getElementById(inputId);
+          const btn = document.getElementById('toggleShowPwd');
+          const icon = btn.querySelector('i');
+          if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye'); icon.classList.add('fa-eye-slash');
+          } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye');
+          }
+        }
+        document.getElementById('toggleShowPwd').addEventListener('click', function(){ togglePassword('passwordInput'); });
+
+        // Restore last used email from localStorage or cookie if available
+        (function(){
+          try {
+            const el = document.getElementById('emailInput');
+            if (!el.value) {
+              // prefer cookie
+              const match = document.cookie.match(/(?:^|; )checkin_last_email=([^;]+)/);
+              if (match) el.value = decodeURIComponent(match[1]);
+              else {
+                const saved = localStorage.getItem('checkin_last_email');
+                if (saved) el.value = saved;
+              }
+            }
+            el.addEventListener('change', function(){ localStorage.setItem('checkin_last_email', this.value); document.cookie = 'checkin_last_email=' + encodeURIComponent(this.value) + '; path=/; max-age=' + (60*60*24*365); });
+          } catch (e) {}
+        })();
+      </script>
     </div>
   </div>
 

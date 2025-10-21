@@ -79,6 +79,16 @@ function calcEstimateFromTimes(rateId, startId, endId, totalId) {
   ?>
   <a href="<?=htmlspecialchars($back)?>" class="btn btn-secondary mb-3">← Back</a>
   <?php if (!empty($_SESSION['booking_error'])): ?><div class="alert alert-danger"><?=htmlspecialchars($_SESSION['booking_error'])?></div><?php unset($_SESSION['booking_error']); endif; ?>
+  <?php if (!empty($_SESSION['booking_form_values'])): ?>
+    <script>
+      try {
+        const vals = <?= json_encode($_SESSION['booking_form_values']) ?>;
+        if (vals.start_time) localStorage.setItem('checkin_start_auto', vals.start_time);
+        if (vals.end_time) localStorage.setItem('checkin_end_auto', vals.end_time);
+      } catch(e){}
+    </script>
+    <?php unset($_SESSION['booking_form_values']); ?>
+  <?php endif; ?>
   <h3>Room <?=htmlspecialchars($room['room_number'])?> — <?=htmlspecialchars($room['type'])?></h3>
   <div class="alert alert-warning">Note: Rates may vary and are subject to change. Final price confirmed at booking.</div>
   <div class="row">
@@ -94,7 +104,7 @@ function calcEstimateFromTimes(rateId, startId, endId, totalId) {
           <div style="height:200px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;color:#777">No images</div>
         <?php endif; ?>
       </div>
-  <p><?=nl2br(htmlspecialchars($room['type_description'] ?? $room['description'] ?? ''))?></p>
+  <p><?=nl2br(htmlspecialchars($room['description'] ?? ($room['type_description'] ?? 'No description available.'))) ?></p>
       <p>Rate: ₱<?=number_format($room['hourly_rate'],2)?>/hr</p>
 
       <hr>
@@ -218,4 +228,19 @@ function normalizeDatetimeToHour(id) {
   function pad(n){return n<10? '0'+n: n}
   el.value = dt.getFullYear()+'-'+pad(dt.getMonth()+1)+'-'+pad(dt.getDate())+'T'+pad(dt.getHours())+':00';
 }
+</script>
+<script>
+  // Restore saved values if any (localStorage)
+  (function(){
+    try {
+      const s = localStorage.getItem('checkin_start_detail') || localStorage.getItem('checkin_start_auto');
+      const e = localStorage.getItem('checkin_end_detail') || localStorage.getItem('checkin_end_auto');
+      if (s && !document.getElementById('start_detail').value) document.getElementById('start_detail').value = s;
+      if (e && !document.getElementById('end_detail').value) document.getElementById('end_detail').value = e;
+      if (s && e) calcEstimateFromTimes('rate_detail','start_detail','end_detail','total_detail');
+      // save on change
+      document.getElementById('start_detail').addEventListener('change', function(){ try{ localStorage.setItem('checkin_start_detail', this.value);}catch(e){} });
+      document.getElementById('end_detail').addEventListener('change', function(){ try{ localStorage.setItem('checkin_end_detail', this.value);}catch(e){} });
+    } catch(err) {}
+  })();
 </script>

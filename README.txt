@@ -35,3 +35,9 @@ Error pages Error handling
 UI --Dark mode/light mode ana pama
 Gcash 50/50 Mock
 Laravel
+
+UI Elements with mobile responsive but outdated backend scripts and such
+
+ Updated Backend scripts but outdate UI elements and not mobile respnsive 
+
+Merge them Provide full copy paste script

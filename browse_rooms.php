@@ -353,6 +353,16 @@ $roomTypes = $conn->query("SELECT * FROM room_types ORDER BY hourly_rate ASC");
     <div class="alert alert-danger"><?=htmlspecialchars($_SESSION['booking_error'])?></div>
     <?php unset($_SESSION['booking_error']); ?>
   <?php endif; ?>
+  <?php if (!empty($_SESSION['booking_form_values'])): ?>
+    <script>
+      try {
+        const vals = <?= json_encode($_SESSION['booking_form_values']) ?>;
+        if (vals.start_time) localStorage.setItem('checkin_start_auto', vals.start_time);
+        if (vals.end_time) localStorage.setItem('checkin_end_auto', vals.end_time);
+      } catch(e) {}
+    </script>
+    <?php unset($_SESSION['booking_form_values']); ?>
+  <?php endif; ?>
 
   <!-- Filter Section - Moved to Top -->
   <div class="filter-section">
@@ -428,7 +438,7 @@ $roomTypes = $conn->query("SELECT * FROM room_types ORDER BY hourly_rate ASC");
               <div class="card-body">
                 <h5>Room <?=htmlspecialchars($room['room_number'])?> (<?=htmlspecialchars($room['type'])?>)</h5>
                 <div class="alert alert-warning py-2">Prices may vary; final price is confirmed at booking.</div>
-                <p class="card-text"><?=nl2br(htmlspecialchars($room['description']))?></p>
+                <p class="card-text"><?=nl2br(htmlspecialchars($room['description'] ?? 'No description available for this room.'))?></p>
                 <div class="d-flex justify-content-between align-items-center mb-2">
                   <span class="room-price">₱<?=number_format($room['hourly_rate'],2)?><span class="text-muted" style="font-size: 1rem;">/hour</span></span>
                   <span class="badge bg-<?= $room['status']=='available' ? 'success':'danger' ?>">
@@ -449,12 +459,12 @@ $roomTypes = $conn->query("SELECT * FROM room_types ORDER BY hourly_rate ASC");
                     
                     <div class="mb-2">
                       <label class="form-label small">Start (date & time)</label>
-                      <input id="start<?=$room['id']?>" name="start_time" type="datetime-local" step="3600" required class="form-control" onchange="normalizeDatetimeToHour('start<?=$room['id']?>'); calcEstimateFromTimes('rate<?=$room['id']?>','start<?=$room['id']?>','end<?=$room['id']?>','total<?=$room['id']?>')">
+                      <input id="start<?=$room['id']?>" name="start_time" type="datetime-local" step="3600" required class="form-control" onchange="(function(){ normalizeDatetimeToHour('start<?=$room['id']?>'); calcEstimateFromTimes('rate<?=$room['id']?>','start<?=$room['id']?>','end<?=$room['id']?>','total<?=$room['id']?>'); try{ localStorage.setItem('checkin_start_<?=$room['id']?>', this.value);}catch(e){} }).call(this)">
                     </div>
                     
                     <div class="mb-2">
                       <label class="form-label small">End (date & time)</label>
-                      <input id="end<?=$room['id']?>" name="end_time" type="datetime-local" step="3600" required class="form-control" onchange="normalizeDatetimeToHour('end<?=$room['id']?>'); calcEstimateFromTimes('rate<?=$room['id']?>','start<?=$room['id']?>','end<?=$room['id']?>','total<?=$room['id']?>')">
+                      <input id="end<?=$room['id']?>" name="end_time" type="datetime-local" step="3600" required class="form-control" onchange="(function(){ normalizeDatetimeToHour('end<?=$room['id']?>'); calcEstimateFromTimes('rate<?=$room['id']?>','start<?=$room['id']?>','end<?=$room['id']?>','total<?=$room['id']?>'); try{ localStorage.setItem('checkin_end_<?=$room['id']?>', this.value);}catch(e){} }).call(this)">
                     </div>
                     
                     <div class="mb-2">
@@ -471,6 +481,19 @@ $roomTypes = $conn->query("SELECT * FROM room_types ORDER BY hourly_rate ASC");
                     </div>
                     
                     <button class="btn btn-primary w-100">Book Now</button>
+                    <script>
+                      // restore saved start/end values for this room (if user previously filled them)
+                      try {
+                        const s = localStorage.getItem('checkin_start_<?=$room['id']?>');
+                        const e = localStorage.getItem('checkin_end_<?=$room['id']?>');
+                        if (s) document.getElementById('start<?=$room['id']?>').value = s;
+                        if (e) document.getElementById('end<?=$room['id']?>').value = e;
+                          // if redirected back with server-side values, use them
+                          try { const autoS = localStorage.getItem('checkin_start_auto'); if (autoS && !s) { document.getElementById('start<?=$room['id']?>').value = autoS; localStorage.removeItem('checkin_start_auto'); } } catch(e) {}
+                          try { const autoE = localStorage.getItem('checkin_end_auto'); if (autoE && !e) { document.getElementById('end<?=$room['id']?>').value = autoE; localStorage.removeItem('checkin_end_auto'); } } catch(e) {}
+                        if (s && e) calcEstimateFromTimes('rate<?=$room['id']?>','start<?=$room['id']?>','end<?=$room['id']?>','total<?=$room['id']?>');
+                      } catch (err) {}
+                    </script>
                   </form>
                 <?php else: ?>
                   <button class="btn btn-secondary w-100" disabled>Not Available</button>
@@ -483,76 +506,7 @@ $roomTypes = $conn->query("SELECT * FROM room_types ORDER BY hourly_rate ASC");
     </div>
   <?php endif; ?>
 
-  <!-- Room Type Cards Section -->
-  <div class="row mb-5" id="room-types">
-    <div class="col-12">
-      <h4 class="mb-4">Our Room Types</h4>
-    </div>
-    <?php if ($roomTypes && $roomTypes->num_rows > 0): ?>
-      <?php while($roomType = $roomTypes->fetch_assoc()): ?>
-        <div class="col-md-4 mb-4">
-          <div class="card room-type-card h-100">
-            <div class="position-relative">
-              <?php 
-              // Get a sample image for this room type (first room of this type with an image)
-              $sampleImageQuery = $conn->prepare("
-                SELECT ri.filepath 
-                FROM rooms r 
-                JOIN room_images ri ON r.id = ri.room_id 
-                WHERE r.room_type_id = ? 
-                ORDER BY ri.is_primary DESC, ri.id ASC 
-                LIMIT 1
-              ");
-              $sampleImageQuery->bind_param("i", $roomType['id']);
-              $sampleImageQuery->execute();
-              $sampleImage = $sampleImageQuery->get_result()->fetch_assoc();
-              ?>
-              <?php if (!empty($sampleImage['filepath'])): ?>
-                <img src="<?=htmlspecialchars($sampleImage['filepath'])?>" class="room-type-img" alt="<?=htmlspecialchars($roomType['name'])?> Room">
-              <?php else: ?>
-                <!-- Fallback images based on room type -->
-                <?php if ($roomType['name'] == 'Standard'): ?>
-                  <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG90ZWwlMjByb29tfGVufDB8fDB8fHww&w=1000&q=80" class="room-type-img" alt="Standard Room">
-                <?php elseif ($roomType['name'] == 'Deluxe'): ?>
-                  <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aG90ZWwlMjByb29tfGVufDB8fDB8fHww&w=1000&q=80" class="room-type-img" alt="Deluxe Room">
-                <?php else: ?>
-                  <img src="https://images.unsplash.com/photo-1584132915807-fd1f5fbc078f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8aG90ZWwlMjByb29tfGVufDB8fDB8fHww&w=1000&q=80" class="room-type-img" alt="Suite Room">
-                <?php endif; ?>
-              <?php endif; ?>
-              <span class="room-type-badge"><?=htmlspecialchars($roomType['name'])?></span>
-            </div>
-            <div class="card-body">
-              <h5 class="card-title"><?=htmlspecialchars($roomType['name'])?> Room</h5>
-              <p class="card-text"><?=htmlspecialchars($roomType['description'])?></p>
-              <div class="room-price">₱<?=number_format($roomType['hourly_rate'],2)?><span class="text-muted" style="font-size: 1rem;">/hour</span></div>
-              <ul class="room-features mt-3">
-                <?php 
-                // Dynamic features based on room type
-                $features = [];
-                if ($roomType['name'] == 'Standard') {
-                  $features = ['Queen Size Bed', 'Private Bathroom', 'Free Wi-Fi', 'Air Conditioning'];
-                } elseif ($roomType['name'] == 'Deluxe') {
-                  $features = ['King Size Bed', 'Luxury Bathroom', 'Mini Refrigerator', 'Premium Wi-Fi', 'Work Desk'];
-                } else {
-                  $features = ['King Bed + Living Area', 'Jacuzzi Bath', 'Kitchenette', 'Premium Entertainment', 'Priority Service'];
-                }
-                foreach ($features as $feature): ?>
-                  <li><i class="fas fa-check"></i> <?=$feature?></li>
-                <?php endforeach; ?>
-              </ul>
-            </div>
-          </div>
-        </div>
-      <?php endwhile; ?>
-    <?php else: ?>
-      <div class="col-12">
-        <div class="alert alert-info text-center">
-          <p>No room types found in the database.</p>
-        </div>
-      </div>
-    <?php endif; ?>
-  </div>
-</div>
+  
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>

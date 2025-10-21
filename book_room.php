@@ -22,7 +22,9 @@ $payment = $_POST['payment'] ?? 'cash';
 // Basic validation
 if ($user_id <= 0 || $room_id <= 0 || !in_array($payment, ['cash', 'online'])) {
     // invalid request
+    // store posted values so the form can be repopulated
     $_SESSION['booking_error'] = 'Invalid input provided.';
+    $_SESSION['booking_form_values'] = ['start_time'=>$start_input, 'end_time'=>$end_input];
     $ret = $_POST['return_to'] ?? 'browse_rooms.php';
     header('Location: ' . $ret);
     exit;
@@ -37,10 +39,12 @@ if ($start_input !== '' && $end_input !== '') {
     $endTs = strtotime($end_input_fixed);
     if ($startTs === false || $endTs === false) {
         $_SESSION['booking_error'] = 'Invalid start or end time.';
+        $_SESSION['booking_form_values'] = ['start_time'=>$start_input, 'end_time'=>$end_input];
         $ret = $_POST['return_to'] ?? 'browse_rooms.php'; header('Location: ' . $ret); exit;
     }
     if ($endTs <= $startTs) {
         $_SESSION['booking_error'] = 'End time must be after start time.';
+        $_SESSION['booking_form_values'] = ['start_time'=>$start_input, 'end_time'=>$end_input];
         $ret = $_POST['return_to'] ?? 'browse_rooms.php'; header('Location: ' . $ret); exit;
     }
     // Do not allow booking start in the past
@@ -55,6 +59,7 @@ if ($start_input !== '' && $end_input !== '') {
     $endSec = intval(date('s', $endTs));
     if ($startMin !== 0 || $endMin !== 0 || $startSec !== 0 || $endSec !== 0) {
         $_SESSION['booking_error'] = 'Please select times on exact hours (minutes and seconds must be 00).';
+        $_SESSION['booking_form_values'] = ['start_time'=>$start_input, 'end_time'=>$end_input];
         $ret = $_POST['return_to'] ?? 'browse_rooms.php'; header('Location: ' . $ret); exit;
     }
     $hours = (int)ceil(($endTs - $startTs) / 3600);

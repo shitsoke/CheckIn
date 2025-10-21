@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     .container {
-      max-width: 800px;
+      max-width: 1140px;
     }
     
     .profile-card {
@@ -242,25 +242,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       border-top: 2px solid var(--primary-light);
       margin: 25px 0;
     }
+
+    /* Customer sidebar (desktop) */
+    .sidebar {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 20px;
+    }
+    .sidebar-header h3 { margin: 0 0 10px 0; color: var(--primary-color); }
+    .sidebar-menu { list-style: none; padding: 0; margin: 0; }
+    .sidebar-menu li { margin: 10px 0; }
+    .sidebar-menu a { color: #333; text-decoration: none; display: flex; gap: 10px; align-items: center; }
+    .sidebar-menu a.active { font-weight: 700; color: var(--primary-color); }
   </style>
 </head>
 <body class="bg-light">
 <div class="container mt-4">
-  <!-- Header Section -->
-  <div class="d-flex justify-content-between align-items-start mb-4">
-    <div>
-      <h1 class="page-title"><i class="fas fa-user-edit me-2"></i>Edit Profile</h1>
-      <p class="page-subtitle">Update your personal information and profile settings</p>
+  <div class="row">
+    <div class="col-lg-3 d-none d-lg-block">
+      <?php include 'includes/customer_sidebar.php'; ?>
     </div>
-    <?php $ret = $_GET['return_to'] ?? 'dashboard.php'; ?>
-    <a href="<?=htmlspecialchars($ret)?>" class="btn-back">
-      <i class="fas fa-arrow-left"></i>
-      Back
-    </a>
-  </div>
+    <div class="col-lg-9">
+      <!-- Header Section -->
+      <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+          <h1 class="page-title"><i class="fas fa-user-edit me-2"></i>Edit Profile</h1>
+          <p class="page-subtitle">Update your personal information and profile settings</p>
+        </div>
+        <?php $ret = $_GET['return_to'] ?? 'dashboard.php'; ?>
+        <a href="<?=htmlspecialchars($ret)?>" class="btn-back">
+          <i class="fas fa-arrow-left"></i>
+          Back
+        </a>
+      </div>
 
-  <!-- Profile Card -->
-  <div class="profile-card">
+      <!-- Profile Card -->
+      <div class="profile-card">
     <?php if($msg): ?>
       <div class="alert alert-info d-flex align-items-center">
         <i class="fas fa-info-circle me-2"></i>
@@ -280,7 +300,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php else: ?>
               <div class="avatar-placeholder">👤</div>
             <?php endif; ?>
-            <label for="avatar-upload" class="avatar-upload">
+            <label for="avatar-upload" class="avatar-upload" tabindex="0" role="button" aria-label="Upload avatar">
               <i class="fas fa-camera"></i>
             </label>
             <input type="file" name="avatar" id="avatar-upload" class="d-none" accept="image/*">
@@ -337,12 +357,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
       </div>
 
-      <!-- Avatar Upload -->
+      <!-- Avatar Upload note (use camera icon) -->
       <h5 class="mb-3 mt-4" style="color: var(--primary-color);"><i class="fas fa-image me-2"></i>Profile Picture</h5>
       <div class="mb-4">
-        <label class="form-label">Upload New Avatar</label>
-        <input type="file" name="avatar" class="form-control" accept="image/*">
-        <small class="text-muted">JPG, PNG, or WEBP format. Maximum file size: 2MB</small>
+        <small class="text-muted">Click the camera icon on your avatar to upload a new image. JPG, PNG, or WEBP. Max 2MB.</small>
       </div>
 
       <!-- Action Buttons -->
@@ -356,6 +374,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </a>
       </div>
     </form>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -379,6 +399,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       reader.readAsDataURL(file);
     }
   });
+  // allow keyboard activation of the camera label (Enter / Space)
+  const avatarLabel = document.querySelector('.avatar-upload');
+  if (avatarLabel) {
+    avatarLabel.addEventListener('keydown', function(ev) {
+      if (ev.key === 'Enter' || ev.key === ' ' || ev.key === 'Spacebar') {
+        ev.preventDefault();
+        document.getElementById('avatar-upload').click();
+      }
+    });
+  }
 </script>
 </body>
 </html>

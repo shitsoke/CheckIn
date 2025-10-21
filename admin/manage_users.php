@@ -2,9 +2,8 @@
 session_start();
 require_once "../db_connect.php";
 require_once __DIR__ . '/../includes/name_helper.php';
-include "admin_sidebar.php";
 
-// Check if logged in as admin
+// Handle authentication before sidebar inclusion
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
   header("Location: ../login.php");
   exit;
@@ -45,23 +44,28 @@ if (isset($_GET['unban'])) {
   exit;
 }
 
+include "admin_sidebar.php";
+
 // --- Load all users ---
 $where = [];
 $params = [];
 $types = '';
-if (!empty($_GET['q'])) { 
+
+if (!empty($_GET['q'])) {
   $where[] = "(u.email LIKE ? OR u.first_name LIKE ? OR u.last_name LIKE ?)";
-  $params[] = '%'.$_GET['q'].'%'; $params[] = '%'.$_GET['q'].'%'; $params[] = '%'.$_GET['q'].'%';
+  $params[] = '%'.$_GET['q'].'%';
+  $params[] = '%'.$_GET['q'].'%';
+  $params[] = '%'.$_GET['q'].'%';
   $types .= 'sss';
 }
-if (!empty($_GET['role'])) { 
-  $where[] = "u.role_id = ?"; 
-  $params[] = intval($_GET['role']); 
-  $types .= 'i'; 
+if (!empty($_GET['role'])) {
+  $where[] = "u.role_id = ?";
+  $params[] = intval($_GET['role']);
+  $types .= 'i';
 }
-if (isset($_GET['status']) && $_GET['status'] !== '') { 
-  if ($_GET['status'] === 'banned') { $where[] = "u.is_banned = 1"; } 
-  else { $where[] = "u.is_banned = 0"; } 
+if (isset($_GET['status']) && $_GET['status'] !== '') {
+  if ($_GET['status'] === 'banned') { $where[] = "u.is_banned = 1"; }
+  else { $where[] = "u.is_banned = 0"; }
 }
 $where_sql = $where ? 'WHERE '.implode(' AND ', $where) : '';
 $sql = "SELECT u.*, r.name AS role, p.display_name 
@@ -74,85 +78,145 @@ if ($params) { $stmt->bind_param($types, ...$params); }
 $stmt->execute();
 $res = $stmt->get_result();
 ?>
+
 <!doctype html>
+
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <title>Manage Users | Admin - CheckIn</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --sidebar-width: 250px;
+      --brand-red: #c62828;
+      --brand-red-dark: #b71c1c;
+    }
+    body {
+      background-color: #f8f9fa;
+      min-height: 100vh;
+    }
+    .page-wrapper { padding: 1.25rem; }
+    @media (min-width: 992px) {
+      .page-wrapper { margin-left: var(--sidebar-width); }
+      .page-inner { max-width: 1200px; margin: 0 auto; }
+    }
+    @media (max-width: 991.98px) {
+      .page-wrapper { margin-left: 0; padding-top: 0.5rem; }
+      .page-inner { padding: 0 .5rem; }
+    }
+    .table-responsive {
+      border-radius: 10px;
+      overflow-x: auto;
+      background-color: #fff;
+    }
+    .table thead th {
+      background-color: var(--brand-red) !important;
+      color: white !important;
+    }
+    .table td, .table th {
+      vertical-align: middle;
+    }
+    .btn-danger {
+      background-color: var(--brand-red) !important;
+      border-color: var(--brand-red-dark) !important;
+    }
+    .btn-danger:hover {
+      background-color: var(--brand-red-dark) !important;
+    }
+    .form-control.border-danger, .form-select.border-danger {
+      border-width: 2px;
+    }
+    .btn-sm { font-size: 0.85rem; padding: 4px 8px; }
+  </style>
 </head>
-<body class="p-4 bg-light">
-<div class="container">
-  <h3 class="text-danger fw-bold mb-3">Manage Users</h3>
-  <form method="get" class="row gy-2 gx-2 mb-3">
-    <div class="col-md-4">
-      <input name="q" value="<?=htmlspecialchars($_GET['q'] ?? '')?>" class="form-control border-danger" placeholder="Search by name or email">
-    </div>
-    <div class="col-md-3">
-      <select name="role" class="form-select border-danger">
-        <option value="">All roles</option>
-        <?php $roles = $conn->query("SELECT * FROM roles"); while($rrole=$roles->fetch_assoc()): ?>
-          <option value="<?=$rrole['id']?>" <?=(!empty($_GET['role']) && $_GET['role']==$rrole['id'])? 'selected':''?>>
-            <?=htmlspecialchars($rrole['name'])?>
-          </option>
-        <?php endwhile; ?>
-      </select>
-    </div>
-    <div class="col-md-3">
-      <select name="status" class="form-select border-danger">
-        <option value="">Any status</option>
-        <option value="active" <?=(!empty($_GET['status']) && $_GET['status']=='active')? 'selected':''?>>Active</option>
-        <option value="banned" <?=(!empty($_GET['status']) && $_GET['status']=='banned')? 'selected':''?>>Banned</option>
-      </select>
-    </div>
-    <div class="col-md-2">
-      <button class="btn btn-danger w-100">Filter</button>
-    </div>
-  </form>
 
-  <?php if(isset($_SESSION['msg'])): ?>
-    <div class="alert alert-danger"><?= htmlspecialchars($_SESSION['msg']); unset($_SESSION['msg']); ?></div>
-  <?php endif; ?>
+<body>
+  <div class="page-wrapper">
+    <div class="page-inner">
+      <div class="container-fluid py-3">
+        <h3 class="text-danger fw-bold mb-3">Manage Users</h3>
 
-  <table class="table table-bordered text-center align-middle">
-    <thead class="table-danger">
-      <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Role</th>
-        <th>Status</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php require_once __DIR__ . '/../includes/name_helper.php'; while($u = $res->fetch_assoc()): ?>
-      <tr class="<?= $u['id'] % 2 == 0 ? 'table-light' : '' ?>">
-        <td><?= $u['id'] ?></td>
-        <td><?= htmlspecialchars(display_name_from_row($u)) ?></td>
-        <td><?= htmlspecialchars($u['email']) ?></td>
-        <td><?= htmlspecialchars(ucfirst($u['role'])) ?></td>
-        <td>
-          <?php if($u['is_banned']): ?>
-            <span class="badge bg-danger">Banned</span>
-          <?php else: ?>
-            <span class="badge bg-success">Active</span>
-          <?php endif; ?>
-        </td>
-        <td>
-          <a class="btn btn-sm btn-outline-danger" href="view_user.php?id=<?= $u['id'] ?>">View</a>
-          <?php if($u['role'] === 'admin'): ?>
-            <button class="btn btn-sm btn-secondary" disabled>Protected</button>
-          <?php elseif($u['is_banned']): ?>
-            <a class="btn btn-sm btn-success" href="?unban=<?= $u['id'] ?>" onclick="return confirm('Unban this user?');">Unban</a>
-          <?php else: ?>
-            <a class="btn btn-sm btn-danger" href="?ban=<?= $u['id'] ?>" onclick="return confirm('Ban this user?');">Ban</a>
-          <?php endif; ?>
-        </td>
-      </tr>
-      <?php endwhile; ?>
-    </tbody>
-  </table>
+```
+    <!-- Filter Form -->
+    <form method="get" class="row gy-2 gx-2 mb-3">
+      <div class="col-12 col-md-4">
+        <input name="q" value="<?= htmlspecialchars($_GET['q'] ?? '') ?>" class="form-control border-danger" placeholder="Search by name or email">
+      </div>
+      <div class="col-12 col-md-3">
+        <select name="role" class="form-select border-danger">
+          <option value="">All roles</option>
+          <?php $roles = $conn->query("SELECT * FROM roles"); while($rrole=$roles->fetch_assoc()): ?>
+            <option value="<?= $rrole['id'] ?>" <?= (!empty($_GET['role']) && $_GET['role']==$rrole['id']) ? 'selected' : '' ?>>
+              <?= htmlspecialchars($rrole['name']) ?>
+            </option>
+          <?php endwhile; ?>
+        </select>
+      </div>
+      <div class="col-12 col-md-3">
+        <select name="status" class="form-select border-danger">
+          <option value="">Any status</option>
+          <option value="active" <?= (!empty($_GET['status']) && $_GET['status']=='active') ? 'selected' : '' ?>>Active</option>
+          <option value="banned" <?= (!empty($_GET['status']) && $_GET['status']=='banned') ? 'selected' : '' ?>>Banned</option>
+        </select>
+      </div>
+      <div class="col-12 col-md-2">
+        <button class="btn btn-danger w-100">Filter</button>
+      </div>
+    </form>
+
+    <!-- Status Message -->
+    <?php if(isset($_SESSION['msg'])): ?>
+      <div class="alert alert-danger"><?= htmlspecialchars($_SESSION['msg']); unset($_SESSION['msg']); ?></div>
+    <?php endif; ?>
+
+    <!-- User Table -->
+    <div class="table-responsive shadow-sm">
+      <table class="table table-bordered table-hover text-center align-middle mb-0">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php while($u = $res->fetch_assoc()): ?>
+          <tr class="<?= $u['id'] % 2 == 0 ? 'table-light' : '' ?>">
+            <td><?= $u['id'] ?></td>
+            <td><?= htmlspecialchars(display_name_from_row($u)) ?></td>
+            <td><?= htmlspecialchars($u['email']) ?></td>
+            <td><?= htmlspecialchars(ucfirst($u['role'])) ?></td>
+            <td>
+              <?php if($u['is_banned']): ?>
+                <span class="badge bg-danger">Banned</span>
+              <?php else: ?>
+                <span class="badge bg-success">Active</span>
+              <?php endif; ?>
+            </td>
+            <td>
+              <a class="btn btn-sm btn-outline-danger" href="view_user.php?id=<?= $u['id'] ?>">View</a>
+              <?php if($u['role'] === 'admin'): ?>
+                <button class="btn btn-sm btn-secondary" disabled>Protected</button>
+              <?php elseif($u['is_banned']): ?>
+                <a class="btn btn-sm btn-success" href="?unban=<?= $u['id'] ?>" onclick="return confirm('Unban this user?');">Unban</a>
+              <?php else: ?>
+                <a class="btn btn-sm btn-danger" href="?ban=<?= $u['id'] ?>" onclick="return confirm('Ban this user?');">Ban</a>
+              <?php endif; ?>
+            </td>
+          </tr>
+          <?php endwhile; ?>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
+```
+
+  </div>
 </body>
 </html>

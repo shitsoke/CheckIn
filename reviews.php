@@ -252,21 +252,24 @@ $myReviewsRes = $myReviews->get_result();
     <div class="row">
       <div class="col-md-6 mb-3">
         <label class="form-label fw-bold">What are you reviewing?</label>
+        <?php $selRoom = $_POST['room_id'] ?? ''; ?>
         <select name="room_id" class="form-select" required>
           <option value="">Choose...</option>
-          <option value="hotel">Overall Hotel Experience</option>
+          <option value="hotel" <?= $selRoom === 'hotel' ? 'selected' : '' ?>>Overall Hotel Experience</option>
           <?php while($rd = $roomsDoneRes->fetch_assoc()): ?>
-            <option value="<?=intval($rd['id'])?>">Room <?=htmlspecialchars($rd['room_number'])?> — <?=htmlspecialchars($rd['room_type'])?></option>
+            <?php $val = intval($rd['id']); ?>
+            <option value="<?=$val?>" <?= (string)$val === (string)$selRoom ? 'selected' : '' ?>>Room <?=htmlspecialchars($rd['room_number'])?> — <?=htmlspecialchars($rd['room_type'])?></option>
           <?php endwhile; ?>
         </select>
       </div>
       
       <div class="col-md-6 mb-3">
         <label class="form-label fw-bold">Rating</label>
+        <?php $selRating = $_POST['rating'] ?? ''; ?>
         <select name="rating" class="form-select" required>
           <option value="">Select rating...</option>
           <?php for($i=5;$i>=1;$i--): ?>
-            <option value="<?=$i?>"><?=$i?> Star<?=$i>1?'s':''?></option>
+            <option value="<?=$i?>" <?= (string)$i === (string)$selRating ? 'selected' : '' ?>><?=$i?> Star<?=$i>1?'s':''?></option>
           <?php endfor; ?>
         </select>
       </div>
@@ -274,7 +277,7 @@ $myReviewsRes = $myReviews->get_result();
     
     <div class="mb-3">
       <label class="form-label fw-bold">Your Review</label>
-      <textarea name="comment" class="form-control" rows="4" placeholder="Share your experience..."></textarea>
+      <textarea name="comment" class="form-control" rows="4" placeholder="Share your experience..."><?=htmlspecialchars($_POST['comment'] ?? '')?></textarea>
     </div>
     
     <button class="btn btn-primary px-4">Submit Review</button>
