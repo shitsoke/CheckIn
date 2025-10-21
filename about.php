@@ -1,4 +1,5 @@
 <?php
+include __DIR__ . "/user_sidebar.php";
 // Public About page placeholder
 ?>
 <!doctype html>
@@ -181,10 +182,6 @@
       <h1 class="page-title"><i class="fas fa-hotel me-2"></i>About CheckIn</h1>
       <p class="page-subtitle">Your trusted partner for comfortable and convenient hotel bookings</p>
     </div>
-    <a href="settings.php" class="btn-back">
-      <i class="fas fa-arrow-left"></i>
-      Back to Settings
-    </a>
   </div>
 
   <!-- About Card -->

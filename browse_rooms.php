@@ -2,6 +2,7 @@
 session_start();
 require_once "includes/auth_check.php";
 require_once "db_connect.php";
+include __DIR__ . "/user_sidebar.php";
 require_once "includes/csrf.php";
 
 // Filters
@@ -343,10 +344,6 @@ $roomTypes = $conn->query("SELECT * FROM room_types ORDER BY hourly_rate ASC");
       <h1 class="page-title"><i class="fas fa-bed me-3"></i>Browse Our Rooms</h1>
       <p class="page-subtitle">Find and book the perfect room for your stay</p>
     </div>
-    <a href="dashboard.php" class="btn-back">
-      <i class="fas fa-arrow-left"></i>
-      Back to Dashboard
-    </a>
   </div>
   
   <?php if (!empty($_SESSION['booking_error'])): ?>

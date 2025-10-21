@@ -3,7 +3,7 @@ session_start();
 require_once "includes/auth_check.php";
 require_once "includes/csrf.php";
 require_once "db_connect.php";
-
+include __DIR__ . "/user_sidebar.php";
 $user_id = $_SESSION['user_id'];
 $msg = "";
 
@@ -244,27 +244,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     /* Customer sidebar (desktop) */
-    .sidebar {
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-      position: sticky;
-      top: 20px;
-    }
-    .sidebar-header h3 { margin: 0 0 10px 0; color: var(--primary-color); }
-    .sidebar-menu { list-style: none; padding: 0; margin: 0; }
-    .sidebar-menu li { margin: 10px 0; }
-    .sidebar-menu a { color: #333; text-decoration: none; display: flex; gap: 10px; align-items: center; }
-    .sidebar-menu a.active { font-weight: 700; color: var(--primary-color); }
   </style>
 </head>
 <body class="bg-light">
 <div class="container mt-4">
-  <div class="row">
-    <div class="col-lg-3 d-none d-lg-block">
-      <?php include 'includes/customer_sidebar.php'; ?>
-    </div>
     <div class="col-lg-9">
       <!-- Header Section -->
       <div class="d-flex justify-content-between align-items-start mb-4">

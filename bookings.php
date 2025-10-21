@@ -2,6 +2,7 @@
 session_start();
 require_once "includes/auth_check.php";
 require_once "db_connect.php";
+include __DIR__ . "/user_sidebar.php";
 
 $user_id = $_SESSION['user_id'];
 
@@ -159,10 +160,6 @@ $res = $stmt->get_result();
       <h3><i class="fas fa-calendar-check"></i> My Bookings</h3>
       <p class="page-subtitle">Manage and view all your booking history</p>
     </div>
-    <a href="dashboard.php" class="btn-back">
-      <i class="fas fa-arrow-left"></i>
-      Back to Dashboard
-    </a>
   </div>
   
   <!-- Search and Filter Form -->

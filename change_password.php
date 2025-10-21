@@ -3,7 +3,7 @@ session_start();
 require_once "includes/auth_check.php";
 require_once "includes/csrf.php";
 require_once "db_connect.php";
-
+include __DIR__ . "/user_sidebar.php";
 $user_id = $_SESSION['user_id'];
 $msg = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

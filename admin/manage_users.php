@@ -138,7 +138,6 @@ $res = $stmt->get_result();
       <div class="container-fluid py-3">
         <h3 class="text-danger fw-bold mb-3">Manage Users</h3>
 
-```
     <!-- Filter Form -->
     <form method="get" class="row gy-2 gx-2 mb-3">
       <div class="col-12 col-md-4">
@@ -215,7 +214,6 @@ $res = $stmt->get_result();
     </div>
   </div>
 </div>
-```
 
   </div>
 </body>

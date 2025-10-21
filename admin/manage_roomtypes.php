@@ -26,7 +26,6 @@ $result = $conn->query("SELECT * FROM room_types ORDER BY id ASC");
       --brand-red-dark: #b71c1c;
     }
 
-```
 body {
   background-color: #f8f9fa;
   min-height: 100vh;
@@ -68,7 +67,6 @@ body {
 .btn-danger:hover {
   background-color: var(--brand-red-dark) !important;
 }
-```
 
   </style>
 </head>
@@ -77,7 +75,6 @@ body {
   <div class="page-wrapper">
     <div class="page-inner">
 
-```
   <div class="container-fluid py-3">
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h3 class="fw-bold text-danger mb-0">Manage Room Types</h3>
@@ -110,7 +107,7 @@ body {
   </div>
 
 </div> <!-- /.page-inner -->
-```
+
 
   </div> <!-- /.page-wrapper -->
 

@@ -4,7 +4,7 @@ require_once "includes/auth_check.php";
 require_once "includes/csrf.php";
 require_once "db_connect.php";
 require_once __DIR__ . '/includes/name_helper.php';
-
+include __DIR__ . "/user_sidebar.php";
 $user_id = $_SESSION['user_id'];
 $msg = "";
 
@@ -233,8 +233,6 @@ $myReviewsRes = $myReviews->get_result();
 <body class="bg-light">
 <div class="container mt-4 col-md-10">
   <h3>Leave a Review</h3>
-  <a href="dashboard.php" class="btn btn-secondary mb-3">← Back to Dashboard</a>
-  
   <?php if(!empty($_GET['msg']) && $_GET['msg']==='review_submitted'): ?>
     <div class="alert alert-success">Review submitted successfully!</div>
   <?php endif; ?>

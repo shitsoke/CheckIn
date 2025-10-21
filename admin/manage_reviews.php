@@ -78,7 +78,6 @@ $res = $stmt->get_result();
         <a href="dashboard.php" class="btn btn-outline-danger fw-semibold">← Back</a>
       </div>
 
-```
   <div class="alert alert-danger shadow-sm">
     <strong>Note:</strong> "Toggle" hides/unhides a review. "Delete" permanently removes it.
   </div>
@@ -172,7 +171,6 @@ $res = $stmt->get_result();
     </table>
   </div>
 </div>
-```
 
   </div>
 </body>

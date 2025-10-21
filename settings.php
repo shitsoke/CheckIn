@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once "includes/auth_check.php";
+include __DIR__ . "/user_sidebar.php";
 ?>
 <!doctype html>
 <html>
@@ -126,10 +127,6 @@ require_once "includes/auth_check.php";
       <h1 class="page-title"><i class="fas fa-cog me-2"></i>Settings</h1>
       <p class="page-subtitle">Manage your account preferences and profile settings</p>
     </div>
-    <a href="dashboard.php" class="btn-back">
-      <i class="fas fa-arrow-left"></i>
-      Back to Dashboard
-    </a>
   </div>
 
   <!-- Settings Card -->

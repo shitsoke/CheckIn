@@ -122,11 +122,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
       <li><a href="manage_roomtypes.php" class="nav-link <?= $current_page == 'manage_roomtypes.php' ? 'active' : '' ?>">🏨 Room Types</a></li>
     </ul>
 
-```
+
 <div class="mt-auto mb-3">
   <a href="../logout.php" class="btn logout-btn w-100 fw-semibold">Logout</a>
 </div>
-```
 
   </div>
 </div>
