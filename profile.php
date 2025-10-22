@@ -77,180 +77,151 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html>
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Profile | CheckIn</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    :root {
-      --primary-color: #dc3545;
-      --primary-hover: #c82333;
-      --primary-light: rgba(220, 53, 69, 0.1);
-    }
-    
-    body {
-      background-color: #f8f9fa;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    
-    .container {
-      max-width: 1140px;
-    }
-    
-    .profile-card {
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-      padding: 30px;
-      margin-top: 20px;
-    }
-    
-    .page-title {
-      color: var(--primary-color);
-      font-weight: 700;
-      margin-bottom: 5px;
-    }
-    
-    .page-subtitle {
-      color: #666;
-      font-size: 1.1rem;
-      margin-bottom: 30px;
-    }
-    
-    /* Button Styles */
-    .btn-primary {
-      background: var(--primary-color);
-      border: none;
-      height: 45px;
-      font-weight: 600;
-      color: white;
-      transition: all 0.3s ease;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0 25px;
-    }
+  /* === Responsive Profile Styles === */
+  :root{
+    --primary-color: #dc3545;
+    --primary-hover: #c82333;
+    --primary-light: rgba(220,53,69,0.08);
+  }
 
-    .btn-primary:hover {
-      background: var(--primary-hover);
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
-    }
+  body{
+    background-color:#f8f9fa;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin:0;
+    -webkit-font-smoothing:antialiased;
+  }
 
-    .btn-secondary {
-      background: #6c757d;
-      border: none;
-      height: 45px;
-      font-weight: 600;
-      color: white;
-      transition: all 0.3s ease;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0 25px;
-    }
+  /* container offset for desktop when sidebar is present */
+  .container{
+    max-width:1400px;
+    margin-left:200px;
+    padding:20px;
+    box-sizing:border-box;
+  }
+.sidebar-toggle, .toggle-btn {
+    display: none !important;
+}
+  .profile-card{
+    background:#fff;
+    border-radius:12px;
+    box-shadow:0 6px 18px rgba(0,0,0,0.06);
+    padding:24px;
+    margin-top:12px;
+  }
 
-    .btn-secondary:hover {
-      background: #545b62;
-      transform: translateY(-2px);
-    }
+  .page-title{ color:var(--primary-color); font-weight:700; margin-bottom:6px; }
+  .page-subtitle{ color:#666; margin-bottom:16px; }
 
+  .btn-primary{
+    background:var(--primary-color);
+    border:none;
+    height:44px;
+    font-weight:600;
+    color:#fff;
+    transition:all .18s;
+    padding:0 18px;
+  }
+  .btn-primary:hover{ background:var(--primary-hover); transform:translateY(-2px); }
+  .btn-secondary{ background:#6c757d; border:none; color:#fff; height:44px; padding:0 18px; }
+
+  /* Small back button in top right */
+  .btn-back{ 
+    background:var(--primary-color); 
+    color:#fff; 
+    padding:6px 12px; 
+    border-radius:6px; 
+    display:inline-flex; 
+    align-items:center;
+    gap:6px;
+    font-size:0.8rem;
+    font-weight:500;
+    text-decoration:none;
+    transition:all .18s;
+    position:absolute;
+    top:20px;
+    right:20px;
+  }
+  .btn-back:hover{ background:var(--primary-hover); color:#fff; transform:translateY(-1px); }
+
+  .form-control:focus, .form-select:focus{ border-color:var(--primary-color); box-shadow:0 0 0 .12rem rgba(220,53,69,0.12); }
+
+  .alert-info{ border-left:4px solid var(--primary-color); background:var(--primary-light); }
+
+  .avatar-container{ position:relative; display:inline-block; }
+  .avatar-upload{ position:absolute; bottom:8px; right:8px; background:var(--primary-color); color:#fff; border-radius:50%; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+  .avatar-upload:hover{ transform:scale(1.05); background:var(--primary-hover); }
+
+  .avatar-preview, .avatar-placeholder{ width:140px; height:140px; border-radius:50%; object-fit:cover; border:3px solid var(--primary-color); display:inline-block; }
+  .avatar-placeholder{ display:flex; align-items:center; justify-content:center; font-size:42px; background:var(--primary-light); color:var(--primary-color); }
+
+  .form-label{ font-weight:600; color:#333; margin-bottom:6px; }
+  .section-divider{ border-top:2px solid rgba(0,0,0,0.03); margin:20px 0; }
+
+  /* Header container with relative positioning for absolute back button */
+  .header-container {
+    position: relative;
+    padding-right: 120px; /* Space for the back button */
+    margin-bottom: 25px;
+  }
+
+  /* ===========================
+     Responsive adjustments
+     =========================== */
+  @media (max-width: 991.98px){
+    .container{ margin-left:140px; padding:18px; }
+    .avatar-preview, .avatar-placeholder{ width:120px; height:120px; }
+  }
+
+  @media (max-width: 767.98px){
+    /* remove left offset on small screens (sidebar collapses) */
+    .container{ margin-left:0; padding:12px; }
+    .profile-card{ padding:16px; }
+    .avatar-preview, .avatar-placeholder{ width:110px; height:110px; }
+    .btn-primary, .btn-secondary{ width:100%; display:block; }
+    .d-flex.gap-2.mt-4{ flex-direction:column; gap:10px; }
+    
+    /* Mobile header adjustments */
+    .header-container {
+      padding-right: 100px;
+      margin-bottom: 20px;
+    }
     .btn-back {
-      background: var(--primary-color);
-      border: none;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-weight: 600;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.3s ease;
-      margin-bottom: 30px;
+      top: 15px;
+      right: 15px;
+      padding: 5px 10px;
+      font-size: 0.75rem;
     }
-    
-    .btn-back:hover {
-      background: var(--primary-hover);
-      color: white;
-      transform: translateY(-2px);
-    }
+  }
 
-    .form-control:focus, .form-select:focus {
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
-    }
+  @media (max-width: 480px){
+    .avatar-preview, .avatar-placeholder{ width:96px; height:96px; }
+    .page-title{ font-size:1.1rem; }
+    .page-subtitle{ font-size:0.95rem; }
+    .col-md-3, .col-md-9{ flex:0 0 100%; max-width:100%; }
     
-    .alert-info {
-      border-left: 4px solid var(--primary-color);
-      background: var(--primary-light);
+    /* Extra small screens */
+    .header-container {
+      padding-right: 90px;
     }
-    
-    .avatar-container {
-      position: relative;
-      display: inline-block;
+    .btn-back {
+      top: 12px;
+      right: 12px;
+      padding: 4px 8px;
+      font-size: 0.7rem;
     }
-    
-    .avatar-upload {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
-      background: var(--primary-color);
-      color: white;
-      border-radius: 50%;
-      width: 35px;
-      height: 35px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    
-    .avatar-upload:hover {
-      background: var(--primary-hover);
-      transform: scale(1.1);
-    }
-    
-    .avatar-preview {
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid var(--primary-color);
-    }
-    
-    .avatar-placeholder {
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      background: var(--primary-light);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--primary-color);
-      font-size: 48px;
-      border: 3px solid var(--primary-color);
-    }
-    
-    .form-label {
-      font-weight: 600;
-      color: #333;
-      margin-bottom: 8px;
-    }
-    
-    .section-divider {
-      border-top: 2px solid var(--primary-light);
-      margin: 25px 0;
-    }
-
-    /* Customer sidebar (desktop) */
-  </style>
+  }
+   </style>
 </head>
 <body class="bg-light">
 <div class="container mt-4">
     <div class="col-lg-9">
-      <!-- Header Section -->
-      <div class="d-flex justify-content-between align-items-start mb-4">
+      <!-- Header Section with absolute positioned back button -->
+      <div class="header-container">
         <div>
           <h1 class="page-title"><i class="fas fa-user-edit me-2"></i>Edit Profile</h1>
           <p class="page-subtitle">Update your personal information and profile settings</p>

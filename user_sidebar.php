@@ -6,203 +6,363 @@ if (!isset($_SESSION['user_id'])) {
 }
 ?>
 
-<!-- ✅ CheckIn User Sidebar -->
+<!-- ✅ Retractable Sidebar (Red Theme, refined text size) -->
 <link
   rel="stylesheet"
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
 />
 
-<!-- Toggle Button (Mobile) -->
-<button class="checkin-user-toggle" id="checkinUserToggle">
+<!-- Toggle Button for Mobile -->
+<button class="sidebar-toggle" id="sidebarToggle">
   <i class="fas fa-bars"></i>
 </button>
 
-<!-- Overlay -->
-<div class="checkin-user-overlay" id="checkinUserOverlay"></div>
+<!-- Overlay for Mobile -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-<!-- Sidebar -->
-<aside class="checkin-user-sidebar" id="checkinUserSidebar">
-  <div class="checkin-user-header">
-    <h2><i class="fas fa-hotel me-2"></i> CheckIn</h2>
+<aside class="uc-sidebar" id="ucSidebar">
+  <div class="uc-header">
+    <h2><i class="fas fa-hotel"></i> CI</h2>
   </div>
-  <ul class="checkin-user-menu">
-    <li><a href="dashboard.php" class="<?= basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'active' : '' ?>"><i class="fas fa-home"></i> Dashboard</a></li>
-    <li><a href="browse_rooms.php" class="<?= basename($_SERVER['PHP_SELF']) == 'browse_rooms.php' ? 'active' : '' ?>"><i class="fas fa-door-open"></i> Browse Rooms</a></li>
-    <li><a href="bookings.php" class="<?= basename($_SERVER['PHP_SELF']) == 'bookings.php' ? 'active' : '' ?>"><i class="fas fa-calendar-check"></i> My Bookings</a></li>
-    <li><a href="reviews.php" class="<?= basename($_SERVER['PHP_SELF']) == 'reviews.php' ? 'active' : '' ?>"><i class="fas fa-star"></i> Leave Review</a></li>
-    <li><a href="settings.php" class="<?= basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'active' : '' ?>"><i class="fas fa-cog"></i> Settings</a></li>
-    <li><a href="logout.php" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+
+  <ul class="uc-menu">
+    <li>
+      <a href="dashboard.php" class="<?= basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'active' : '' ?>">
+        <i class="fas fa-home"></i>
+        <span>Dashboard</span>
+      </a>
+    </li>
+    <li>
+      <a href="browse_rooms.php" class="<?= basename($_SERVER['PHP_SELF']) == 'browse_rooms.php' ? 'active' : '' ?>">
+        <i class="fas fa-door-open"></i>
+        <span>Browse</span>
+      </a>
+    </li>
+    <li>
+      <a href="bookings.php" class="<?= basename($_SERVER['PHP_SELF']) == 'bookings.php' ? 'active' : '' ?>">
+        <i class="fas fa-calendar-check"></i>
+        <span>Bookings</span>
+      </a>
+    </li>
+    <li>
+      <a href="reviews.php" class="<?= basename($_SERVER['PHP_SELF']) == 'reviews.php' ? 'active' : '' ?>">
+        <i class="fas fa-star"></i>
+        <span>Reviews</span>
+      </a>
+    </li>
+    <li>
+      <a href="settings.php" class="<?= basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'active' : '' ?>">
+        <i class="fas fa-cog"></i>
+        <span>Settings</span>
+      </a>
+    </li>
+
+    <!-- ✅ Logout at the bottom -->
+    <li class="logout">
+      <a href="logout.php">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Logout</span>
+      </a>
+    </li>
   </ul>
 </aside>
 
 <style>
   /* ==============================
-     CHECKIN USER SIDEBAR (FINAL VERSION)
+     RETRACTABLE RED SIDEBAR
      ============================== */
 
-  .checkin-user-sidebar {
-    --checkin-primary: #dc3545;
-    --checkin-secondary: #b71c1c;
-    --checkin-hover: rgba(255, 255, 255, 0.2);
-    --checkin-width: 220px; /* ✅ Slimmer sidebar */
-
+  .uc-sidebar {
     position: fixed;
     top: 0;
     left: 0;
-    width: var(--checkin-width);
     height: 100vh;
-    background: linear-gradient(180deg, var(--checkin-primary) 0%, var(--checkin-secondary) 100%);
+    width: 90px;
+    background: linear-gradient(180deg, #dc3545 0%, #b71c1c 100%);
     color: #fff;
     display: flex;
     flex-direction: column;
-    box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
-    z-index: 4000;
+    align-items: center;
+    padding-top: 15px;
+    box-shadow: 3px 0 8px rgba(0, 0, 0, 0.15);
+    z-index: 3000;
     transition: transform 0.3s ease-in-out;
   }
 
-  .checkin-user-header {
-    padding: 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  .uc-header {
+    width: 100%;
     text-align: center;
+    margin-bottom: 15px;
   }
 
-  .checkin-user-header h2 {
-    font-size: 1.4rem;
-    margin: 0;
-    font-weight: 700;
-    letter-spacing: 1px;
+  .uc-header h2 {
+    font-size: 1.1rem;
     color: #fff;
+    font-weight: 700;
+    margin: 0;
   }
 
-  .checkin-user-menu {
+  /* ✅ Menu fix to push logout down */
+  .uc-menu {
     list-style: none;
     padding: 0;
-    margin: 20px 0;
+    margin: 0;
+    width: 100%;
     flex-grow: 1;
-  }
-
-  .checkin-user-menu li {
-    margin: 3px 0;
-  }
-
-  .checkin-user-menu a {
     display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .uc-menu li {
+    width: 100%;
+  }
+
+  .uc-menu a {
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    padding: 12px 20px;
-    color: rgba(255, 255, 255, 0.85);
+    justify-content: center;
     text-decoration: none;
-    font-size: 0.95rem;
-    border-left: 4px solid transparent;
-    transition: all 0.25s ease;
+    color: rgba(255, 255, 255, 0.9);
+    padding: 10px 0;
+    font-size: 0.75rem;
+    letter-spacing: 0.3px;
+    transition: background 0.3s ease, color 0.3s ease;
   }
 
-  .checkin-user-menu a i {
-    font-size: 1.1rem;
-    margin-right: 10px;
-    width: 22px;
-    text-align: center;
+  .uc-menu a i {
+    font-size: 1.2rem;
+    margin-bottom: 3px;
   }
 
-  .checkin-user-menu a:hover {
-    background-color: var(--checkin-hover);
-    border-left: 4px solid #fff;
+  .uc-menu a:hover,
+  .uc-menu a.active {
+    background: rgba(255, 255, 255, 0.15);
     color: #fff;
-    transform: translateX(3px);
   }
 
-  .checkin-user-menu a.active {
-    background-color: var(--checkin-hover);
-    border-left: 4px solid #fff;
-    color: #fff;
-    font-weight: 600;
-  }
-
-  .checkin-user-menu a.logout {
+  /* ✅ Logout stays at bottom */
+  .uc-menu .logout {
     margin-top: auto;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
   }
 
-  /* ====== TOGGLE BUTTON (MOBILE) ====== */
-  .checkin-user-toggle {
+  /* Adjust page content */
+  main,
+  .content-wrapper,
+  .container,
+  .main-content {
+    margin-left: 90px;
+    transition: margin-left 0.3s ease;
+  }
+
+  /* ==============================
+     MOBILE TOGGLE BUTTON & OVERLAY
+     ============================== */
+  .sidebar-toggle {
     display: none;
     position: fixed;
     top: 15px;
     left: 15px;
-    z-index: 4100;
+    z-index: 4000;
     background: #dc3545;
     border: none;
     color: #fff;
-    width: 42px;
-    height: 42px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
     font-size: 1.2rem;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
     cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 1;
+    visibility: visible;
   }
 
-  /* ====== OVERLAY ====== */
-  .checkin-user-overlay {
+  .sidebar-toggle.hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .sidebar-toggle:hover {
+    background: #c82333;
+    transform: scale(1.05);
+  }
+
+  .sidebar-overlay {
     display: none;
     position: fixed;
     top: 0;
     left: 0;
-    height: 100%;
     width: 100%;
-    background: rgba(0, 0, 0, 0.55);
-    z-index: 3900;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 2999;
+    backdrop-filter: blur(2px);
   }
 
-  .checkin-user-overlay.active {
+  .sidebar-overlay.active {
     display: block;
   }
 
-  /* ====== FIX MAIN CONTENT SPACING ====== */
-  main, .container, .content-wrapper {
-    margin-left: calc(var(--checkin-width) + 40px); /* ✅ Add gap to prevent overlap */
-    transition: margin-left 0.3s ease;
-  }
-
-  /* ====== RESPONSIVE BEHAVIOR ====== */
-  @media (max-width: 992px) {
-    .checkin-user-sidebar {
+  /* ==============================
+     RESPONSIVE BEHAVIOR
+     ============================== */
+  @media (max-width: 768px) {
+    .uc-sidebar {
+      width: 90px;
       transform: translateX(-100%);
     }
 
-    .checkin-user-sidebar.active {
+    .uc-sidebar.active {
       transform: translateX(0);
     }
 
-    .checkin-user-toggle {
+    .sidebar-toggle {
       display: block;
     }
 
-    main, .container, .content-wrapper {
+    main,
+    .content-wrapper,
+    .container,
+    .main-content {
       margin-left: 0 !important;
+    }
+
+    .uc-menu a span {
+      display: block;
     }
   }
 
-  /* Small improvements for touch devices */
-  @media (hover: none) {
-    .checkin-user-menu a:hover {
-      background: none;
-      transform: none;
+  @media (max-width: 480px) {
+    .uc-sidebar {
+      width: 85px;
     }
+
+    .sidebar-toggle {
+      width: 42px;
+      height: 42px;
+      font-size: 1.1rem;
+    }
+
+    .uc-menu a {
+      padding: 12px 0;
+      font-size: 0.7rem;
+    }
+
+    .uc-menu a i {
+      font-size: 1.1rem;
+    }
+  }
+
+  /* Smooth transitions for all interactive elements */
+  .uc-sidebar,
+  .sidebar-toggle,
+  .sidebar-overlay,
+  main,
+  .content-wrapper,
+  .container,
+  .main-content {
+    transition: all 0.3s ease;
   }
 </style>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const sidebar = document.getElementById("checkinUserSidebar");
-    const toggleBtn = document.getElementById("checkinUserToggle");
-    const overlay = document.getElementById("checkinUserOverlay");
+/*
+  Lightweight, robust sidebar toggle:
+  - Works if the toggle button is defined in sidebar include OR elsewhere (dashboard)
+  - Uses event delegation so order of includes doesn't matter
+  - Gracefully handles duplicate toggle buttons
+*/
+(function(){
+  const sidebarId = 'ucSidebar';
+  const overlayId = 'sidebarOverlay';
+  const toggleSelector = '.sidebar-toggle, #sidebarToggle';
 
-    function toggleSidebar() {
-      sidebar.classList.toggle("active");
-      overlay.classList.toggle("active");
+  function getSidebar(){ return document.getElementById(sidebarId); }
+  function getOverlay(){ return document.getElementById(overlayId); }
+
+  function setHamburgerVisibility(show){
+    document.querySelectorAll('.sidebar-toggle').forEach(btn=>{
+      btn.style.display = show ? '' : 'none';
+    });
+  }
+
+  function openSidebar(){
+    const s = getSidebar(), o = getOverlay();
+    if(!s || !o) return;
+    s.classList.add('active');
+    o.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    setHamburgerVisibility(false);
+  }
+
+  function closeSidebar(){
+    const s = getSidebar(), o = getOverlay();
+    if(!s || !o) return;
+    s.classList.remove('active');
+    o.classList.remove('active');
+    document.body.style.overflow = '';
+    // only show hamburger on small screens
+    if (window.innerWidth <= 768) setHamburgerVisibility(true);
+  }
+
+  // Toggle when any matching button is clicked (delegated)
+  document.addEventListener('click', function(e){
+    const toggle = e.target.closest(toggleSelector);
+    if(toggle){
+      const s = getSidebar();
+      if(!s) return;
+      if (s.classList.contains('active')) closeSidebar(); else openSidebar();
+      return;
     }
+    // clicking overlay closes sidebar
+    if (e.target.closest('#' + overlayId)){
+      closeSidebar();
+    }
+  }, { passive: true });
 
-    toggleBtn.addEventListener("click", toggleSidebar);
-    overlay.addEventListener("click", toggleSidebar);
+  // Escape key closes
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape') closeSidebar();
   });
+
+  // Resize: ensure correct visibility/state
+  let resizeTimer;
+  window.addEventListener('resize', function(){
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function(){
+      const s = getSidebar();
+      if(!s) return;
+      if (window.innerWidth > 768){
+        // on larger screens hide mobile hamburger and ensure sidebar is visible (not forced mobile slide-in)
+        setHamburgerVisibility(false);
+        // remove mobile-specific overlay/active state
+        s.classList.remove('active');
+        getOverlay()?.classList.remove('active');
+        document.body.style.overflow = '';
+      } else {
+        // small screens: show hamburger if sidebar closed
+        if (!s.classList.contains('active')) setHamburgerVisibility(true);
+      }
+    }, 120);
+  }, { passive: true });
+
+  // initial setup after DOM ready
+  function init(){
+    const s = getSidebar();
+    if (!s) return;
+    if (window.innerWidth > 768) {
+      setHamburgerVisibility(false);
+      s.classList.remove('active');
+      getOverlay()?.classList.remove('active');
+    } else {
+      // show hamburger on small screens if sidebar not open
+      if (!s.classList.contains('active')) setHamburgerVisibility(true);
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
 </script>

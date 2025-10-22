@@ -30,6 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html>
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Change Password | CheckIn</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -39,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       --primary-hover: #c82333;
       --primary-light: rgba(220, 53, 69, 0.1);
     }
+
     
     body {
       background-color: #f8f9fa;
@@ -46,27 +48,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     .container {
-      max-width: 600px;
+      max-width: 1000px;
+      padding: 15px;
     }
     
     .password-card {
       background: white;
       border-radius: 15px;
       box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-      padding: 30px;
-      margin-top: 20px;
+      padding: 25px;
+      margin-top: 15px;
     }
     
     .page-title {
       color: var(--primary-color);
       font-weight: 700;
       margin-bottom: 5px;
+      font-size: 1.8rem;
     }
     
     .page-subtitle {
       color: #666;
-      font-size: 1.1rem;
-      margin-bottom: 30px;
+      font-size: 1rem;
+      margin-bottom: 25px;
+    }
+    .sidebar-toggle, .toggle-btn {
+    display: none !important;
+    }
+    
+    /* Input Group Styles */
+    .input-group {
+      position: relative;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #6c757d;
+      cursor: pointer;
+      z-index: 3;
+    }
+
+    .password-toggle:hover {
+      color: var(--primary-color);
     }
     
     /* Button Styles */
@@ -80,7 +108,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 0 25px;
+      padding: 0 20px;
+      width: 100%;
     }
 
     .btn-primary:hover {
@@ -99,7 +128,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 0 25px;
+      padding: 0 20px;
+      width: 100%;
     }
 
     .btn-secondary:hover {
@@ -111,15 +141,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       background: var(--primary-color);
       border: none;
       color: white;
-      padding: 10px 20px;
+      padding: 10px 16px;
       border-radius: 8px;
       font-weight: 600;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       transition: all 0.3s ease;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
     }
     
     .btn-back:hover {
@@ -184,13 +215,183 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     .requirement.invalid {
       color: #666;
     }
+
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+      .container {
+        padding: 10px;
+        max-width: 100%;
+      }
+      
+      .password-card {
+        padding: 20px;
+        margin-top: 10px;
+        border-radius: 12px;
+      }
+      
+      .page-title {
+        font-size: 1.5rem;
+        text-align: center;
+      }
+      
+      .page-subtitle {
+        font-size: 0.95rem;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      
+      .btn-back {
+        padding: 8px 14px;
+        font-size: 0.85rem;
+        margin-bottom: 15px;
+      }
+      
+      .btn-primary, .btn-secondary {
+        height: 50px;
+        font-size: 1rem;
+        padding: 0 15px;
+      }
+      
+      .form-control {
+        font-size: 16px; /* Prevents zoom on iOS */
+        padding: 12px 15px;
+      }
+      
+      .alert {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+      }
+      
+      .password-requirements {
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .container {
+        padding: 8px;
+      }
+      
+      .password-card {
+        padding: 15px;
+        border-radius: 10px;
+      }
+      
+      .page-title {
+        font-size: 1.3rem;
+      }
+      
+      .page-subtitle {
+        font-size: 0.9rem;
+      }
+      
+      .btn-back {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+      }
+      
+      .form-control {
+        padding: 10px 12px;
+      }
+      
+      .d-flex.gap-2 {
+        gap: 10px !important;
+      }
+      
+      .mb-4 {
+        margin-bottom: 1rem !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page-title {
+        font-size: 1.2rem;
+      }
+      
+      .page-subtitle {
+        font-size: 0.85rem;
+      }
+      
+      .password-card {
+        padding: 12px;
+      }
+      
+      .btn-primary, .btn-secondary {
+        height: 45px;
+        font-size: 0.9rem;
+      }
+    }
+
+    /* Header layout for mobile - Back button top right */
+    @media (max-width: 768px) {
+      .d-flex.justify-content-between.align-items-start.mb-4 {
+        flex-direction: row;
+        text-align: left;
+        gap: 15px;
+        position: relative;
+      }
+      
+      .btn-back {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin-bottom: 0;
+        align-self: flex-start;
+      }
+      
+      .page-title, .page-subtitle {
+        text-align: left;
+        padding-right: 100px; /* Make space for the back button */
+      }
+    }
+
+    @media (max-width: 576px) {
+      .d-flex.justify-content-between.align-items-start.mb-4 {
+        gap: 10px;
+      }
+      
+      .page-title, .page-subtitle {
+        padding-right: 90px; /* Slightly less space on smaller screens */
+      }
+      
+      .btn-back {
+        padding: 5px 10px;
+        font-size: 0.75rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page-title, .page-subtitle {
+        padding-right: 80px; /* Even less space on very small screens */
+      }
+      
+      .btn-back {
+        padding: 4px 8px;
+        font-size: 0.7rem;
+      }
+    }
+
+    /* Button group layout for mobile */
+    @media (max-width: 768px) {
+      .d-flex.gap-2 {
+        flex-direction: column;
+      }
+      
+      .d-flex.gap-2 .btn {
+        margin-bottom: 10px;
+      }
+      
+      .d-flex.gap-2 .btn:last-child {
+        margin-bottom: 0;
+      }
+    }
   </style>
 </head>
 <body class="bg-light">
-<div class="container mt-4">
+<div class="container mt-3 mt-md-4">
   <!-- Header Section -->
   <div class="d-flex justify-content-between align-items-start mb-4">
-    <div>
+    <div class="flex-grow-1">
       <h1 class="page-title"><i class="fas fa-key me-2"></i>Change Password</h1>
       <p class="page-subtitle">Secure your account with a new password</p>
     </div>
@@ -218,7 +419,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <label class="form-label">Current Password</label>
         <div class="input-group">
           <input name="current" type="password" class="form-control" id="currentPassword" required>
-          <button type="button" class="btn btn-outline-secondary" onclick="togglePassword('currentPassword')">
+          <button type="button" class="password-toggle" onclick="togglePassword('currentPassword')">
             <i class="fas fa-eye"></i>
           </button>
         </div>
@@ -229,7 +430,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <label class="form-label">New Password</label>
         <div class="input-group">
           <input name="new" type="password" class="form-control" id="newPassword" required oninput="checkPasswordStrength()">
-          <button type="button" class="btn btn-outline-secondary" onclick="togglePassword('newPassword')">
+          <button type="button" class="password-toggle" onclick="togglePassword('newPassword')">
             <i class="fas fa-eye"></i>
           </button>
         </div>
@@ -261,7 +462,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <label class="form-label">Confirm New Password</label>
         <div class="input-group">
           <input name="confirm" type="password" class="form-control" id="confirmPassword" required oninput="checkPasswordMatch()">
-          <button type="button" class="btn btn-outline-secondary" onclick="togglePassword('confirmPassword')">
+          <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')">
             <i class="fas fa-eye"></i>
           </button>
         </div>
@@ -269,12 +470,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </div>
 
       <!-- Action Buttons -->
-      <div class="d-flex gap-2 mt-4">
-        <button type="submit" class="btn btn-primary">
+      <div class="d-flex gap-2 mt-4 flex-column flex-md-row">
+        <button type="submit" class="btn btn-primary order-2 order-md-1">
           <i class="fas fa-save me-2"></i>Change Password
         </button>
         <?php $ret = $_GET['return_to'] ?? 'dashboard.php'; ?>
-        <a href="<?=htmlspecialchars($ret)?>" class="btn btn-secondary">
+        <a href="<?=htmlspecialchars($ret)?>" class="btn btn-secondary order-1 order-md-2">
           <i class="fas fa-times me-2"></i>Cancel
         </a>
       </div>
@@ -286,7 +487,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <script>
   function togglePassword(inputId) {
     const input = document.getElementById(inputId);
-    const button = input.nextElementSibling;
+    const button = input.parentNode.querySelector('.password-toggle');
     const icon = button.querySelector('i');
     
     if (input.type === 'password') {

@@ -93,8 +93,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+  /* Disable browser's built-in password reveal icons */
+  input[type="password"]::-webkit-credentials-auto-fill-button,
+  input[type="password"]::-webkit-credentials-auto-fill-button:hover,
+  input[type="password"]::-webkit-credentials-auto-fill-button:active {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    opacity: 0 !important;
+  }
+
+  input[type="password"]::-ms-reveal,
+  input[type="password"]::-ms-clear {
+    display: none !important;
+  }
+
+  input[type="password"]::-moz-textbox-edit-icons {
+    display: none !important;
+  }
+  
   * { 
     box-sizing: border-box; 
     margin: 0; 
@@ -179,6 +198,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     height: 45px;
     font-size: 15px;
     padding: 10px 15px;
+    border: 1px solid #ddd;
   }
 
   .btn-login {
@@ -224,6 +244,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   
   .text-center a:hover { 
     text-decoration: underline; 
+  }
+
+  /* Password input group styling - UPDATED */
+  .password-input-group {
+    position: relative;
+    margin-bottom: 15px;
+  }
+
+  .password-input-group .form-control {
+    margin-bottom: 0;
+    padding-right: 45px;
+  }
+
+  .password-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    padding: 5px;
+    transition: color 0.3s ease;
+    z-index: 10;
+  }
+
+  .password-toggle:hover {
+    color: #dc3545;
+  }
+
+  /* Remove built-in browser eye icons */
+  input[type="password"]::-webkit-credentials-auto-fill-button,
+  input[type="password"]::-webkit-caps-lock-indicator,
+  input[type="password"]::-webkit-strong-password-auto-fill-button {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  /* For Firefox */
+  input[type="password"] {
+    -moz-appearance: none;
+  }
+
+  /* For all browsers - hide reveal password button */
+  input[type="password"]::-ms-reveal,
+  input[type="password"]::-ms-clear {
+    display: none;
+  }
+
+  /* Ensure no browser styles interfere */
+  .password-input-group input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
   }
 
   /* INTRO SECTION - ALTERNATING LAYOUT */
@@ -583,9 +660,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <form method="post">
         <?=csrf_input_field()?>
         <input name="email" id="emailInput" value="<?=htmlspecialchars($email)?>" type="email" class="form-control" placeholder="Email" required>
-        <div class="input-group mt-2 mb-2">
+        
+        <!-- Password with custom eye icon - UPDATED -->
+        <div class="password-input-group">
           <input name="password" id="passwordInput" type="password" class="form-control" placeholder="Password" required>
-          <button type="button" class="btn btn-outline-secondary" id="toggleShowPwd" aria-label="Toggle password visibility">
+          <button type="button" class="password-toggle" onclick="togglePassword('passwordInput')">
             <i class="fas fa-eye"></i>
           </button>
         </div>
@@ -605,17 +684,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <script>
         function togglePassword(inputId) {
           const input = document.getElementById(inputId);
-          const btn = document.getElementById('toggleShowPwd');
-          const icon = btn.querySelector('i');
+          const icon = input.parentElement.querySelector('.password-toggle i');
+          
           if (input.type === 'password') {
             input.type = 'text';
-            icon.classList.remove('fa-eye'); icon.classList.add('fa-eye-slash');
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
           } else {
             input.type = 'password';
-            icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye');
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
           }
         }
-        document.getElementById('toggleShowPwd').addEventListener('click', function(){ togglePassword('passwordInput'); });
 
         // Restore last used email from localStorage or cookie if available
         (function(){
@@ -630,9 +710,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (saved) el.value = saved;
               }
             }
-            el.addEventListener('change', function(){ localStorage.setItem('checkin_last_email', this.value); document.cookie = 'checkin_last_email=' + encodeURIComponent(this.value) + '; path=/; max-age=' + (60*60*24*365); });
+            el.addEventListener('change', function(){ 
+              localStorage.setItem('checkin_last_email', this.value); 
+              document.cookie = 'checkin_last_email=' + encodeURIComponent(this.value) + '; path=/; max-age=' + (60*60*24*365); 
+            });
           } catch (e) {}
         })();
+
+        // Additional script to ensure built-in icons stay hidden
+        document.addEventListener('DOMContentLoaded', function() {
+          const passwordInputs = document.querySelectorAll('input[type="password"]');
+          passwordInputs.forEach(input => {
+            // Remove any browser-specific attributes that might show icons
+            input.setAttribute('autocomplete', 'current-password');
+            input.setAttribute('aria-autocomplete', 'list');
+          });
+        });
       </script>
     </div>
   </div>

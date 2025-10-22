@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
     * { box-sizing: border-box; }
@@ -170,6 +170,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       text-decoration: underline;
     }
 
+    /* Password input group with eye icon */
+    .password-input-group {
+      position: relative;
+      margin-bottom: 15px;
+    }
+
+    .password-input-group .form-control {
+      margin-bottom: 0;
+      padding-right: 45px;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #666;
+      cursor: pointer;
+      padding: 5px;
+      transition: color 0.3s ease;
+      z-index: 10;
+    }
+
+    .password-toggle:hover {
+      color: #dc3545;
+    }
+
+    /* Remove built-in browser eye icons */
+    input[type="password"]::-webkit-credentials-auto-fill-button,
+    input[type="password"]::-webkit-caps-lock-indicator,
+    input[type="password"]::-webkit-strong-password-auto-fill-button {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+
+    /* For Firefox */
+    input[type="password"] {
+      -moz-appearance: none;
+    }
+
+    /* For all browsers - hide reveal password button */
+    input[type="password"]::-ms-reveal,
+    input[type="password"]::-ms-clear {
+      display: none;
+    }
+
+    /* Ensure no browser styles interfere */
+    .password-input-group input {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+
     /* RESPONSIVE DESIGN */
     @media (max-width: 1200px) {
       .register-right { padding: 60px 80px; }
@@ -247,14 +304,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <input name="email" type="email" class="form-control" placeholder="Email" required>
         <input name="phone" id="phoneInput" type="text" pattern="[0-9+()\-\s]{6,20}" title="Enter your phone number" class="form-control" placeholder="Phone number" required>
-        <input name="password" type="password" class="form-control" placeholder="Password" required>
-        <input name="confirm_password" type="password" class="form-control" placeholder="Confirm password" required>
+        
+        <!-- Password with custom eye icon -->
+        <div class="password-input-group">
+          <input name="password" type="password" class="form-control" id="password" placeholder="Password" required>
+          <button type="button" class="password-toggle" onclick="togglePassword('password')">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
+
+        <!-- Confirm Password with custom eye icon -->
+        <div class="password-input-group">
+          <input name="confirm_password" type="password" class="form-control" id="confirm_password" placeholder="Confirm password" required>
+          <button type="button" class="password-toggle" onclick="togglePassword('confirm_password')">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
 
         <button class="btn btn-register w-100 mt-2">Register</button>
         <p class="mt-3 text-center">Already have an account? <a href="login.php">Login here</a></p>
       </form>
     </div>
   </div>
+
+  <script>
+    function togglePassword(inputId) {
+      const input = document.getElementById(inputId);
+      const icon = input.parentElement.querySelector('.password-toggle i');
+      
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    }
+
+    // Additional script to ensure built-in icons stay hidden
+    document.addEventListener('DOMContentLoaded', function() {
+      const passwordInputs = document.querySelectorAll('input[type="password"]');
+      passwordInputs.forEach(input => {
+        // Remove any browser-specific attributes that might show icons
+        input.setAttribute('autocomplete', 'new-password');
+        input.setAttribute('aria-autocomplete', 'list');
+      });
+    });
+  </script>
 
 </body>
 </html>

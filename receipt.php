@@ -24,153 +24,373 @@ $status = htmlspecialchars($bk['status']);
 $created = htmlspecialchars($bk['created_at']);
 $bookingRef = htmlspecialchars($bk['id']);
 
+// Generate receipt number with proper format
+$receiptNumber = 'CI' . str_pad($bookingRef, 6, '0', STR_PAD_LEFT);
+
 // Primary receipt HTML (for browser rendering)
 $pageHtml = '<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Receipt — CheckIn #'.$bookingRef.'</title>
+<title>Official Receipt — Redwood Motel #'.$receiptNumber.'</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-  body { background: #f4f6f8; font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; color: #222; }
-  .receipt-wrap { max-width: 900px; margin: 32px auto; padding: 20px; }
-  .receipt-card { background:#fff; border-radius:12px; box-shadow:0 12px 30px rgba(20,20,30,0.06); padding:22px; }
-  .brand { display:flex; align-items:center; gap:14px; }
-  .brand .logo { width:56px; height:56px; border-radius:10px; background:rgba(220,53,69,1); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:20px; box-shadow:0 8px 24px rgba(220,53,69,0.14); }
-  .meta { color:#666; font-size:13px; }
-  .section-title { font-weight:700; font-size:14px; color:#111; margin-bottom:8px; }
-  .table td, .table th { vertical-align: middle; border-top: 0; }
-  .total-row { font-weight:700; font-size:18px; }
-  .actions { display:flex; gap:10px; margin-top:14px; }
-  .btn-ghost { background: #fff; border:1px solid rgba(0,0,0,0.06); color:#333; }
+  body { 
+    background: #f8f9fa; 
+    font-family: "Courier New", Courier, monospace;
+    color: #000;
+    line-height: 1.2;
+  }
+  .receipt-container { 
+    max-width: 380px; 
+    margin: 20px auto; 
+    background: white;
+    border: 2px solid #000;
+    border-radius: 0;
+    padding: 20px;
+    position: relative;
+  }
+  .receipt-header {
+    text-align: center;
+    border-bottom: 3px double #000;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+  }
+  .hotel-name {
+    font-size: 24px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0;
+  }
+  .hotel-address {
+    font-size: 12px;
+    margin: 5px 0;
+    color: #333;
+  }
+  .hotel-contact {
+    font-size: 11px;
+    margin: 3px 0;
+    color: #333;
+  }
+  .receipt-title {
+    font-size: 16px;
+    font-weight: 900;
+    text-transform: uppercase;
+    text-align: center;
+    margin: 10px 0;
+    border-top: 1px dashed #000;
+    border-bottom: 1px dashed #000;
+    padding: 5px 0;
+  }
+  .receipt-info {
+    font-size: 12px;
+    margin-bottom: 15px;
+  }
+  .receipt-info strong {
+    font-weight: 900;
+  }
+  .line-items {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin: 15px 0;
+  }
+  .line-items th {
+    border-bottom: 2px solid #000;
+    padding: 5px 3px;
+    text-align: left;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+  .line-items td {
+    padding: 4px 3px;
+    border-bottom: 1px dotted #ccc;
+    vertical-align: top;
+  }
+  .line-items .item-desc {
+    width: 50%;
+  }
+  .line-items .item-rate,
+  .line-items .item-qty,
+  .line-items .item-amount {
+    width: 16%;
+    text-align: right;
+  }
+  .total-section {
+    border-top: 2px solid #000;
+    margin-top: 10px;
+    padding-top: 10px;
+  }
+  .total-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    margin: 3px 0;
+  }
+  .grand-total {
+    font-weight: 900;
+    font-size: 15px;
+    border-top: 3px double #000;
+    border-bottom: 3px double #000;
+    padding: 8px 0;
+    margin: 10px 0;
+  }
+  .payment-method {
+    font-size: 12px;
+    margin: 15px 0;
+    padding: 10px;
+    border: 1px solid #000;
+    background: #f9f9f9;
+  }
+  .thank-you {
+    text-align: center;
+    font-size: 11px;
+    margin: 15px 0;
+    padding: 10px;
+    border-top: 1px dashed #000;
+  }
+  .footer-note {
+    font-size: 10px;
+    text-align: center;
+    color: #666;
+    margin-top: 20px;
+  }
+  .stamp-area {
+    text-align: center;
+    margin: 20px 0;
+    padding: 15px;
+    border: 1px dashed #000;
+  }
+  .stamp {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 900;
+    color: #dc3545;
+    border: 2px solid #dc3545;
+    padding: 5px 15px;
+    display: inline-block;
+    transform: rotate(-5deg);
+  }
+  .barcode-area {
+    text-align: center;
+    margin: 15px 0;
+    padding: 10px;
+  }
+  .barcode {
+    font-family: "Libre Barcode 128", monospace;
+    font-size: 36px;
+    letter-spacing: 2px;
+  }
+  .actions {
+    text-align: center;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #ccc;
+  }
+  .btn-receipt {
+    background: #000;
+    color: white;
+    border: 2px solid #000;
+    border-radius: 0;
+    padding: 8px 20px;
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: 12px;
+    margin: 0 5px;
+  }
+  .btn-receipt:hover {
+    background: #333;
+    border-color: #333;
+    color: white;
+  }
+  .btn-receipt-outline {
+    background: white;
+    color: #000;
+    border: 2px solid #000;
+    border-radius: 0;
+    padding: 8px 20px;
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: 12px;
+    margin: 0 5px;
+  }
+  .btn-receipt-outline:hover {
+    background: #000;
+    color: white;
+  }
+    .item-qty {
+    margin-right: 10px;
+}
   @media print {
-    body { background: #fff; }
-    .actions { display:none; }
-    .receipt-wrap { margin: 0; box-shadow: none; }
+    body { background: white; }
+    .actions { display: none; }
+    .receipt-container { 
+      margin: 0; 
+      border: none;
+      box-shadow: none;
+      max-width: 100%;
+    }
+  }
+  @media (max-width: 400px) {
+    .receipt-container {
+      margin: 10px;
+      padding: 15px;
+    }
   }
 </style>
 </head>
 <body>
-  <div class="receipt-wrap">
-    <div class="receipt-card">
-      <div class="d-flex justify-content-between align-items-start mb-3">
-        <div class="brand">
-          <div class="logo">CI</div>
-          <div>
-            <div style="font-weight:700; font-size:18px;">CheckIn / Redwood Motel</div>
-            <div class="meta">Official receipt</div>
-          </div>
-        </div>
-        <div class="text-end meta">
-          <div>Receipt #: <strong>'.$bookingRef.'</strong></div>
-          <div>Issued: '.$created.'</div>
-          <div>Status: <strong>'.$status.'</strong></div>
-        </div>
-      </div>
+  <div class="receipt-container">
+    <!-- Receipt Header -->
+    <div class="receipt-header">
+      <h1 class="hotel-name">CHECKIN HOTEL</h1>
+      <div class="hotel-address">Sudlon, Maguikay, Mandaue City 6014 Cebu City Central Visayas</div>
+      <div class="hotel-contact">Tel: (02) 8123-4567 | Email: info@checkinhotel.com</div>
+      <div class="hotel-contact">VAT Reg TIN: 123-456-789-000</div>
+    </div>
 
-      <div class="row mb-3">
-        <div class="col-md-6 mb-2">
-          <div class="section-title">Guest</div>
-          <div>'.$fullName.'</div>
-          <div class="meta">User ID: '.htmlspecialchars($bk['user_id']).'</div>
-        </div>
-        <div class="col-md-6 mb-2">
-          <div class="section-title">Booking details</div>
-          <div>Room: <strong>'.$roomNumber.' — '.$roomType.'</strong></div>
-          <div class="meta">Check-in: '.htmlspecialchars($bk['check_in'] ?? 'N/A').' &nbsp; • &nbsp; Check-out: '.htmlspecialchars($bk['check_out'] ?? 'N/A').'</div>
-          <div class="meta">Hours: '.$hours.'</div>
-        </div>
-      </div>
+    <!-- Receipt Title -->
+    <div class="receipt-title">OFFICIAL RECEIPT</div>
 
-      <div class="mb-3">
-        <div class="section-title">Charges</div>
-        <div class="table-responsive">
-          <table class="table align-middle">
-            <thead>
-              <tr>
-                <th class="w-50">Description</th>
-                <th class="text-end">Rate</th>
-                <th class="text-end">Qty</th>
-                <th class="text-end">Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Room — '. $roomType .'</td>
-                <td class="text-end">₱'.number_format($bk['hourly_rate'],2).'</td>
-                <td class="text-end">'.$hours.'</td>
-                <td class="text-end">₱'.number_format(($bk['hourly_rate'] * $hours),2).'</td>
-              </tr>';
+    <!-- Receipt Information -->
+    <div class="receipt-info">
+      <div><strong>Receipt No:</strong> '.$receiptNumber.'</div>
+      <div><strong>Date Issued:</strong> '.date('M j, Y g:i A', strtotime($created)).'</div>
+      <div><strong>Booking Ref:</strong> #'.$bookingRef.'</div>
+      <div><strong>Status:</strong> '.strtoupper($status).'</div>
+    </div>
 
+    <!-- Guest Information -->
+    <div class="receipt-info">
+      <div><strong>Guest Name:</strong> '.$fullName.'</div>
+      <div><strong>Room:</strong> '.$roomNumber.' - '.$roomType.'</div>
+      <div><strong>Duration:</strong> '.$hours.' hour'.($hours > 1 ? 's' : '').'</div>';
+      
+if (!empty($bk['check_in']) && !empty($bk['check_out'])) {
+    $pageHtml .= '<div><strong>Check-in:</strong> '.date('M j, Y g:i A', strtotime($bk['check_in'])).'</div>
+                  <div><strong>Check-out:</strong> '.date('M j, Y g:i A', strtotime($bk['check_out'])).'</div>';
+}
 
-// include any other line items if present (discounts, extras)
+$pageHtml .= '</div>
+
+    <!-- Line Items -->
+    <table class="line-items">
+      <thead>
+        <tr>
+          <th class="item-desc">Description</th>
+          <th class="item-rate">Rate</th>
+          <th class="item-qty">Hr</th>
+          <th class="item-amount">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="item-desc">Room Accommodation<br><small>'.$roomType.' - '.$hours.' hour'.($hours > 1 ? 's' : '').'</small></td>
+          <td class="item-rate">'.number_format($bk['hourly_rate'],2).'</td>
+          <td class="item-qty">'.$hours.'</td>
+          <td class="item-amount">'.number_format(($bk['hourly_rate'] * $hours),2).'</td>
+        </tr>';
+
+// Include any other line items if present
 $lineTotal = ($bk['hourly_rate'] * $hours);
-$extraRows = '';
 if (!empty($bk['extra_charges'])) {
-    // if stored as JSON or simple text, attempt to decode
     $extras = json_decode($bk['extra_charges'], true);
     if (is_array($extras)) {
         foreach ($extras as $label => $amt) {
-            $extraRows .= '<tr><td>'.htmlspecialchars($label).'</td><td class="text-end">₱'.number_format($amt,2).'</td><td class="text-end">1</td><td class="text-end">₱'.number_format($amt,2).'</td></tr>';
+            $pageHtml .= '<tr>
+                <td class="item-desc">'.htmlspecialchars($label).'</td>
+                <td class="item-rate">'.number_format($amt,2).'</td>
+                <td class="item-qty">1</td>
+                <td class="item-amount">'.number_format($amt,2).'</td>
+            </tr>';
             $lineTotal += floatval($amt);
         }
-    } else {
-        // fallback: show as note
-        $extraRows .= '<tr><td colspan="4" class="text-muted small">Extras: '.htmlspecialchars($bk['extra_charges']).'</td></tr>';
     }
 }
-$pageHtml .= $extraRows;
 
-$pageHtml .= '
-            </tbody>
-            <tfoot>
-              <tr class="total-row">
-                <td colspan="3" class="text-end">Subtotal</td>
-                <td class="text-end">₱'.number_format($lineTotal,2).'</td>
-              </tr>';
-// taxes or fees
+$pageHtml .= '</tbody>
+    </table>
+
+    <!-- Totals Section -->
+    <div class="total-section">
+      <div class="total-row">
+        <span>Subtotal:</span>
+        <span>'.number_format($lineTotal,2).'</span>
+      </div>';
+
+// Taxes and fees
 $feesTotal = 0;
 if (!empty($bk['tax']) || !empty($bk['service_fee'])) {
     $tax = floatval($bk['tax'] ?? 0);
     $service = floatval($bk['service_fee'] ?? 0);
     if ($tax) {
         $feesTotal += $tax;
-        $pageHtml .= '<tr><td colspan="3" class="text-end">Tax</td><td class="text-end">₱'.number_format($tax,2).'</td></tr>';
+        $pageHtml .= '<div class="total-row">
+            <span>VAT (12%):</span>
+            <span>'.number_format($tax,2).'</span>
+          </div>';
     }
     if ($service) {
         $feesTotal += $service;
-        $pageHtml .= '<tr><td colspan="3" class="text-end">Service fee</td><td class="text-end">₱'.number_format($service,2).'</td></tr>';
+        $pageHtml .= '<div class="total-row">
+            <span>Service Fee:</span>
+            <span>'.number_format($service,2).'</span>
+          </div>';
     }
 }
-$grandTotal = floatval(str_replace(',', '', $total)); // already formatted
+
+$grandTotal = floatval(str_replace(',', '', $total));
 $pageHtml .= '
-              <tr class="total-row">
-                <td colspan="3" class="text-end">Total</td>
-                <td class="text-end">₱'.number_format($grandTotal,2).'</td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
+      <div class="total-row grand-total">
+        <span>TOTAL AMOUNT:</span>
+        <span>'.number_format($grandTotal,2).'</span>
       </div>
-
-      <div class="row align-items-center">
-        <div class="col-md-8">
-          <div class="meta"><strong>Payment:</strong> '.$payment.'</div>
-          <div class="meta mt-2">Thank you for choosing Redwood Motel. For questions about this receipt or your booking, contact the front desk.</div>
-        </div>
-        <div class="col-md-4 text-md-end">
-          <div class="actions">
-            <button onclick="window.print()" class="btn btn-primary">Print</button>
-            <a href="?booking_id='.$bookingRef.'&download=pdf" class="btn btn-outline-secondary">Download PDF</a>
-            <a href="?booking_id='.$bookingRef.'&download=html" class="btn btn-ghost">Download HTML</a>
-          </div>
-        </div>
-      </div>
-
     </div>
 
-    <div class="text-center mt-3 small text-muted">Receipt generated by CheckIn • <a href="dashboard.php">Back to dashboard</a></div>
+    <!-- Payment Method -->
+    <div class="payment-method">
+      <div><strong>Payment Method:</strong> '.strtoupper($payment).'</div>
+      <div><strong>Amount Paid:</strong> '.number_format($grandTotal,2).'</div>
+      <div><strong>Change:</strong> 0.00</div>
+    </div>
+
+    <!-- Stamp Area -->
+    <div class="stamp-area">
+      <div class="stamp">PAID</div>
+      <div style="margin-top: 10px; font-size: 11px;">'.date('M j, Y').'</div>
+    </div>
+
+    <!-- Barcode Area -->
+    <div class="barcode-area">
+      <div class="barcode">*'.$receiptNumber.'*</div>
+      <div style="font-size: 10px; margin-top: 5px;">'.$receiptNumber.'</div>
+    </div>
+
+    <!-- Thank You Message -->
+    <div class="thank-you">
+      <strong>THANK YOU FOR CHOOSING CHECKIN HOTEL!</strong><br>
+      <span>This receipt is your official proof of payment.</span><br>
+      <span>For inquiries: (02) 8123-4567</span>
+    </div>
+
+    <!-- Footer Note -->
+    <div class="footer-note">
+      Receipt generated electronically • Valid without signature<br>
+      '.date('F j, Y \a\t g:i A').'
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="actions">
+      <button onclick="window.print()" class="btn-receipt">
+        <i class="fas fa-print me-1"></i>Print Receipt
+      </button>
+      <a href="?booking_id='.$bookingRef.'&download=pdf" class="btn-receipt-outline">
+        <i class="fas fa-download me-1"></i>Save PDF
+      </a>
+    </div>
   </div>
 </body>
 </html>';
@@ -182,11 +402,10 @@ if ($wantPdf && file_exists(__DIR__.'/vendor/autoload.php')) {
     require_once __DIR__.'/vendor/autoload.php';
     try {
         $dompdf = new Dompdf\Dompdf();
-        // use the printable portion only (receipt-card)
         $dompdf->loadHtml($pageHtml);
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
-        $dompdf->stream('receipt_'.$bookingRef.'.pdf');
+        $dompdf->stream('receipt_'.$receiptNumber.'.pdf');
         exit;
     } catch (Exception $e) {
         error_log('Dompdf error: '.$e->getMessage());
@@ -197,7 +416,7 @@ if ($wantPdf && file_exists(__DIR__.'/vendor/autoload.php')) {
 // If user requested raw HTML download
 if ($wantHtmlDownload) {
     header('Content-Type: application/octet-stream');
-    header('Content-Disposition: attachment; filename="receipt_'.$bookingRef.'.html"');
+    header('Content-Disposition: attachment; filename="receipt_'.$receiptNumber.'.html"');
     echo $pageHtml;
     exit;
 }

@@ -39,79 +39,129 @@ $overall = $conn->query("SELECT AVG(rating) as avg_rating, COUNT(*) as count_rev
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Room Details</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
-  body {
-    background-color: #fff;
+  :root{
+    --primary-color: #dc3545;
+    --primary-hover: #c82333;
+    --primary-light: rgba(220,53,69,0.08);
+    --sidebar-width: 240px;
+  }
+
+  html,body{
+    height:100%;
+    margin:0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #333;
+    background:#fff;
+    color:#333;
+    -webkit-font-smoothing:antialiased;
   }
-  .page-header {
-    background-color: #c40000;
+
+  /* container offset when sidebar present on desktop */
+  .container{
+    max-width:1140px;
+    margin-left: 120px;
+    padding:18px;
+    box-sizing:border-box;
+  }
+
+  .page-header{
+    background:var(--primary-color);
+    color:#fff;
+    padding:18px;
+    border-radius:8px;
+    margin-bottom:18px;
+    box-shadow:0 3px 8px rgba(0,0,0,0.06);
+  }
+
+  .btn-primary{ background:var(--primary-color); border:none; transition:all .16s; color:#fff; }
+  .btn-primary:hover{ background:var(--primary-hover); }
+  .btn-secondary{ background:#fff; color:var(--primary-color); border:1px solid var(--primary-color); }
+  .btn-success{ background:var(--primary-color); border:none; color:#fff; }
+
+  /* Smaller back button */
+  .btn-back {
+    background: rgba(255,255,255,0.2);
     color: white;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 25px;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-  }
-  .btn-primary {
-    background-color: #c40000;
-    border: none;
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    border-radius: 6px;
     transition: all 0.2s ease;
+    text-decoration: none;
   }
-  .btn-primary:hover {
-    background-color: #a00000;
-  }
-  .btn-secondary {
-    background-color: #fff;
-    color: #c40000;
-    border: 1px solid #c40000;
-  }
-  .btn-secondary:hover {
-    background-color: #c40000;
+
+  .btn-back:hover {
+    background: rgba(255,255,255,0.3);
     color: white;
+    border-color: rgba(255,255,255,0.5);
+    transform: translateY(-1px);
   }
-  .btn-success {
-    background-color: #c40000;
-    border: none;
+
+  .card{ border:none; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.06); margin-bottom:1rem; }
+  .card-header{ background:var(--primary-color); color:#fff; font-weight:600; border-radius:8px 8px 0 0; padding:.65rem 1rem; }
+  .form-label{ font-weight:600; }
+
+  .alert-warning{ background:#fff3f3; border:1px solid var(--primary-color); color:var(--primary-color); }
+
+  img.img-fluid{ border-radius:8px; transition:transform .18s ease; width:100%; height:auto; }
+  img.img-fluid:hover{ transform:scale(1.03); }
+
+  .gallery-row { display:flex; gap:12px; flex-wrap:wrap; }
+  .gallery-row .col-md-4 { flex:1 1 calc(33.333% - 12px); min-width:140px; }
+
+  .break-word{ overflow-wrap:anywhere; word-break:break-word; white-space:pre-wrap; }
+
+  /* small helpers */
+  .muted-small{ color:#6c757d; font-size:.95rem; }
+
+  /* Hide hamburger toggle button */
+  .sidebar-toggle, .toggle-btn {
+    display: none !important;
   }
-  .btn-success:hover {
-    background-color: #a00000;
+
+  /* ===== Responsive rules ===== */
+  @media (max-width: 991.98px){
+    .container{ margin-left:140px; padding:16px; }
+    .gallery-row .col-md-4{ flex:1 1 calc(33.333% - 12px); }
   }
-  .card {
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    margin-bottom: 1.5rem;
+
+  @media (max-width: 767.98px){
+    /* remove left offset on small screens (sidebar collapses) */
+    .container{ margin-left:0; padding:12px; }
+    .page-header{ padding:14px; }
+    .gallery-row{ gap:8px; }
+    .gallery-row .col-md-4{ flex:1 1 48%; }
+    .col-md-8, .col-md-4{ flex:0 0 100%; max-width:100%; }
+    .card{ margin-bottom:14px; }
+    .card .card-header{ font-size:1rem; }
+    .btn, .form-select, .form-control, .btn-primary, .btn-success { width:100% !important; }
+    .card .card-body p { font-size: .98rem; }
+    
+    /* Smaller back button on mobile */
+    .btn-back {
+      padding: 5px 10px;
+      font-size: 0.8rem;
+    }
   }
-  .card-header {
-    background-color: #c40000;
-    color: #fff;
-    font-weight: 600;
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
+
+  @media (max-width: 480px){
+    .gallery-row .col-md-4{ flex:1 1 100%; }
+    .page-header h3 { font-size:1.05rem; }
+    .card { padding: 12px; }
+    input[type="datetime-local"], .form-select, textarea { font-size: 0.95rem; }
+    
+    /* Even smaller back button on very small screens */
+    .btn-back {
+      padding: 4px 8px;
+      font-size: 0.75rem;
+    }
   }
-  .form-label {
-    font-weight: 600;
-  }
-  .alert-warning {
-    background-color: #ffeaea;
-    border: 1px solid #c40000;
-    color: #c40000;
-  }
-  img.img-fluid {
-    border-radius: 8px;
-    transition: transform 0.2s;
-  }
-  img.img-fluid:hover {
-    transform: scale(1.03);
-  }
-  .break-word {
-    overflow-wrap: anywhere;
-    word-break: break-word;
-    white-space: pre-wrap;
-  }
+
+  /* ensure booking inputs are readable on small screens */
+  input[type="datetime-local"] { width:100%; }
 </style>
 <script>
 // [Keep all JS logic intact — same as your original script]
@@ -152,6 +202,19 @@ function calcEstimateFromTimes(rateId, startId, endId, totalId) {
   let totalCents = rateCents * hours;
   document.getElementById(totalId).value = (totalCents / 100).toFixed(2);
 }
+
+// Add function to normalize datetime to hour
+function normalizeDatetimeToHour(elementId) {
+  const element = document.getElementById(elementId);
+  if (element && element.value) {
+    const datetime = element.value;
+    if (datetime.includes('T')) {
+      const [date, time] = datetime.split('T');
+      const [hours] = time.split(':');
+      element.value = `${date}T${hours.padStart(2, '0')}:00`;
+    }
+  }
+}
 </script>
 </head>
 <body>
@@ -163,7 +226,7 @@ function calcEstimateFromTimes(rateId, startId, endId, totalId) {
   ?>
   <div class="page-header d-flex justify-content-between align-items-center">
     <h3 class="m-0">Room Details</h3>
-    <a href="<?= htmlspecialchars($back) ?>" class="btn btn-light fw-bold">← Back</a>
+    <a href="<?= htmlspecialchars($back) ?>" class="btn-back fw-bold">← Back</a>
   </div>
 
   <?php if (!empty($_SESSION['booking_error'])): ?>
@@ -182,7 +245,7 @@ function calcEstimateFromTimes(rateId, startId, endId, totalId) {
     <div class="col-md-8">
       <div class="card p-3">
         <?php if ($imgsRes->num_rows): ?>
-          <div class="row">
+          <div class="row gallery-row">
             <?php while ($im = $imgsRes->fetch_assoc()): ?>
               <div class="col-md-4 mb-3">
                 <img src="<?= htmlspecialchars($im['filepath']) ?>" class="img-fluid" style="height:160px;object-fit:cover;">

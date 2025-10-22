@@ -77,136 +77,87 @@ $myReviews->execute();
 $myReviewsRes = $myReviews->get_result();
 ?>
 <!doctype html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Reviews | CheckIn</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    :root {
-      --primary-solid: #dc3545;
-      --primary-hover: #b32030;
+    :root { 
+      --primary-color: #dc3545; 
+      --primary-hover: #c82333; 
+      --primary-light: rgba(220, 53, 69, 0.1);
     }
     
     body {
-      background-color: #f9f5f5;
+      background-color: #f8f9fa;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .main-content {
+      margin-left: 90px;
+      padding: 20px;
+      transition: all 0.3s ease;
+      min-height: 100vh;
     }
     
     .container {
-      margin-top: 20px;
-      margin-bottom: 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 15px;
     }
     
-    /* Button Styles */
-    .btn-primary {
-      background: var(--primary-solid);
-      border: none;
-      height: 45px;
-      font-weight: 600;
-      color: white;
-      transition: 0.3s;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0 25px;
+    .page-title {
+      color: var(--primary-color);
+      font-weight: 700;
+      margin-bottom: 5px;
+      font-size: 2rem;
+    }
+    
+    .page-subtitle {
+      color: #666;
+      font-size: 1.1rem;
+      margin-bottom: 30px;
     }
 
-    .btn-primary:hover {
-      background: var(--primary-hover);
+    h3, h4 { 
+      color: var(--primary-color); 
+      margin-bottom: 1.5rem; 
+      font-weight: 600;
+    }
+    
+    .btn-primary { 
+      background: var(--primary-color); 
+      border: none; 
+      transition: all 0.3s ease;
+      font-weight: 600;
+      padding: 10px 20px;
+    }
+    
+    .btn-primary:hover { 
+      background: var(--primary-hover); 
       transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
     }
-
-    .btn-secondary {
-      background: var(--primary-solid);
+    
+    .review-rating { 
+      color: #ffc107; 
+      font-weight: bold; 
+    }
+    
+    .table th { 
+      background-color: var(--primary-color); 
+      color: white; 
       border: none;
-      height: 45px;
-      font-weight: 600;
-      color: white;
-      transition: 0.3s;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0 25px;
-    }
-
-    .btn-secondary:hover {
-      background: var(--primary-hover);
-      transform: translateY(-2px);
-    }
-
-    .form-select:focus, .form-control:focus {
-      border-color: var(--primary-solid);
-      box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+      padding: 12px 15px;
     }
     
-    .alert-success {
-      border-left: 4px solid #28a745;
-    }
-    
-    .alert-danger {
-      border-left: 4px solid var(--primary-solid);
-    }
-    
-    .alert-info {
-      border-left: 4px solid #17a2b8;
-    }
-    
-    .review-item {
-      border-bottom: 1px solid #e9ecef;
-      padding: 15px 0;
-      margin-bottom: 0;
-    }
-    
-    .review-item:last-child {
-      border-bottom: none;
-    }
-    
-    .review-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-    
-    .reviewer-name {
-      font-weight: 600;
-      color: var(--primary-solid);
-    }
-    
-    .review-rating {
-      color: #ffc107;
-      font-weight: bold;
-    }
-    
-    .table th {
-      background-color: var(--primary-solid);
-      color: white;
-      border-color: var(--primary-solid);
-    }
-    
-    .table-hover tbody tr:hover {
-      background-color: rgba(220, 53, 69, 0.05);
-    }
-    
-    hr {
-      border-color: rgba(220, 53, 69, 0.2);
-      margin: 2rem 0;
-    }
-    
-    h3, h4 {
-      color: var(--primary-solid);
-      margin-bottom: 1.5rem;
-    }
-    
-    .review-text { 
-      max-width: 100%; 
-      overflow: hidden; 
-    }
-    
-    .break-word { 
-      overflow-wrap: anywhere; 
-      word-break: break-word; 
-      white-space: pre-wrap; 
+    .table-hover tbody tr:hover { 
+      background-color: var(--primary-light); 
     }
     
     .review-text.clamped { 
@@ -218,170 +169,400 @@ $myReviewsRes = $myReviews->get_result();
     
     .show-more { 
       cursor: pointer; 
-      color: var(--primary-solid); 
-      text-decoration: underline; 
+      color: var(--primary-color); 
+      font-weight: 600; 
       font-size: 0.9rem; 
-      font-weight: 600;
-      margin-top: 8px;
     }
     
-    .show-more:hover {
-      color: var(--primary-hover);
+    /* Card styles */
+    .card {
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      margin-bottom: 20px;
+    }
+    
+    .card-header {
+      background-color: var(--primary-color);
+      color: white;
+      border-radius: 12px 12px 0 0 !important;
+      padding: 15px 20px;
+      font-weight: 600;
+    }
+    
+    /* Review item styles */
+    .review-item {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      border-left: 4px solid var(--primary-color);
+    }
+    
+    /* Mobile-specific styles */
+    .mobile-card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+      padding: 18px;
+      margin-bottom: 15px;
+      border-left: 4px solid var(--primary-color);
+    }
+    
+    .mobile-review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    
+    .mobile-review-type {
+      background: var(--primary-color);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    
+    .mobile-review-comment {
+      margin: 12px 0;
+      line-height: 1.5;
+      color: #444;
+    }
+    
+    .mobile-review-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: #6c757d;
+      margin-top: 10px;
+    }
+    
+    .form-control:focus, .form-select:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+    }
+    
+    .alert {
+      border-radius: 10px;
+      padding: 15px;
+    }
+    
+    .alert-success {
+      background-color: rgba(40, 167, 69, 0.1);
+      border-left: 4px solid #28a745;
+      color: #155724;
+    }
+    
+    .alert-danger {
+      background-color: rgba(220, 53, 69, 0.1);
+      border-left: 4px solid var(--primary-color);
+      color: #721c24;
+    }
+    
+    .alert-info {
+      background-color: rgba(23, 162, 184, 0.1);
+      border-left: 4px solid #17a2b8;
+      color: #0c5460;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .main-content {
+        margin-left: 0;
+        padding: 15px;
+        padding-top: 70px;
+      }
+      
+      .container {
+        padding: 0 10px;
+      }
+      
+      .page-title {
+        font-size: 1.6rem;
+        text-align: center;
+      }
+      
+      .page-subtitle {
+        font-size: 1rem;
+        text-align: center;
+        margin-bottom: 25px;
+      }
+      
+      h3, h4 {
+        font-size: 1.3rem;
+        text-align: center;
+      }
+      
+      .btn-primary {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+      
+      .review-item {
+        padding: 15px;
+      }
+      
+      .mobile-card {
+        padding: 15px;
+      }
+      
+      .table-responsive {
+        font-size: 0.9rem;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .main-content {
+        padding: 10px;
+        padding-top: 70px;
+      }
+      
+      .page-title {
+        font-size: 1.4rem;
+      }
+      
+      .page-subtitle {
+        font-size: 0.95rem;
+      }
+      
+      h3, h4 {
+        font-size: 1.2rem;
+      }
+      
+      .mobile-review-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      
+      .mobile-review-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+      }
+      
+      .form-control, .form-select {
+        font-size: 16px; /* Prevents zoom on iOS */
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .page-title {
+        font-size: 1.3rem;
+      }
+      
+      .mobile-card {
+        padding: 12px;
+      }
+      
+      .mobile-review-comment {
+        font-size: 0.9rem;
+      }
     }
   </style>
 </head>
-<body class="bg-light">
-<div class="container mt-4 col-md-10">
-  <h3>Leave a Review</h3>
-  <?php if(!empty($_GET['msg']) && $_GET['msg']==='review_submitted'): ?>
-    <div class="alert alert-success">Review submitted successfully!</div>
-  <?php endif; ?>
-  
-  <?php if(!empty($_GET['err']) && $_GET['err']==='cannot_submit_review'): ?>
-    <div class="alert alert-danger">You cannot submit review at this time.</div>
-  <?php endif; ?>
-  
-  <?php if($msg): ?>
-    <div class="alert alert-info"><?=$msg?></div>
-  <?php endif; ?>
-  
-  <form method="post" class="mb-4">
-    <?=csrf_input_field()?>
-    <div class="row">
-      <div class="col-md-6 mb-3">
-        <label class="form-label fw-bold">What are you reviewing?</label>
-        <?php $selRoom = $_POST['room_id'] ?? ''; ?>
-        <select name="room_id" class="form-select" required>
-          <option value="">Choose...</option>
-          <option value="hotel" <?= $selRoom === 'hotel' ? 'selected' : '' ?>>Overall Hotel Experience</option>
-          <?php while($rd = $roomsDoneRes->fetch_assoc()): ?>
-            <?php $val = intval($rd['id']); ?>
-            <option value="<?=$val?>" <?= (string)$val === (string)$selRoom ? 'selected' : '' ?>>Room <?=htmlspecialchars($rd['room_number'])?> — <?=htmlspecialchars($rd['room_type'])?></option>
-          <?php endwhile; ?>
-        </select>
-      </div>
-      
-      <div class="col-md-6 mb-3">
-        <label class="form-label fw-bold">Rating</label>
-        <?php $selRating = $_POST['rating'] ?? ''; ?>
-        <select name="rating" class="form-select" required>
-          <option value="">Select rating...</option>
-          <?php for($i=5;$i>=1;$i--): ?>
-            <option value="<?=$i?>" <?= (string)$i === (string)$selRating ? 'selected' : '' ?>><?=$i?> Star<?=$i>1?'s':''?></option>
-          <?php endfor; ?>
-        </select>
-      </div>
-    </div>
-    
-    <div class="mb-3">
-      <label class="form-label fw-bold">Your Review</label>
-      <textarea name="comment" class="form-control" rows="4" placeholder="Share your experience..."><?=htmlspecialchars($_POST['comment'] ?? '')?></textarea>
-    </div>
-    
-    <button class="btn btn-primary px-4">Submit Review</button>
-  </form>
-
-  <hr>
-  
-  <h4>Recent Overall Hotel Reviews</h4>
-  <?php
-    $hotelList = $conn->query("SELECT rv.*, u.first_name, u.last_name, p.display_name FROM reviews rv JOIN users u ON rv.user_id=u.id LEFT JOIN profiles p ON p.user_id=u.id WHERE rv.room_id IS NULL AND rv.is_visible=1 ORDER BY rv.created_at DESC LIMIT 10");
-  ?>
-  
-  <?php if ($hotelList && $hotelList->num_rows): ?>
-    <div>
-      <?php while($hr=$hotelList->fetch_assoc()): ?>
-        <div class="review-item">
-          <div class="review-header">
-            <span class="reviewer-name">
-              <?=htmlspecialchars(!empty($hr['display_name']) ? $hr['display_name'] : ($hr['first_name'].' '.$hr['last_name']))?>
-            </span>
-            <span class="review-rating"><?=intval($hr['rating'])?>/5 ★</span>
-          </div>
-          <?php $hsafe = htmlspecialchars($hr['comment']); ?>
-          <div class="review-text break-word"><?=nl2br($hsafe)?></div>
-          <small class="text-muted"><?=date('M j, Y', strtotime($hr['created_at']))?></small>
+<body>
+  <div class="main-content">
+    <div class="container">
+      <!-- Header Section -->
+      <div class="d-flex justify-content-between align-items-start mb-4">
+        <div class="flex-grow-1">
+          <h1 class="page-title"><i class="fas fa-star me-2"></i>Reviews</h1>
+          <p class="page-subtitle">Share your experience and view your past reviews</p>
         </div>
-      <?php endwhile; ?>
-    </div>
-  <?php else: ?>
-    <div class="text-muted text-center py-4">
-      <i class="fas fa-comments fa-2x mb-2"></i>
-      <p>No overall hotel reviews yet.</p>
-    </div>
-  <?php endif; ?>
+      </div>
 
-  <hr>
-  
-  <h4>My Reviews</h4>
-  <div class="table-responsive">
-    <table class="table table-hover table-bordered">
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Rating</th>
-          <th>Comment</th>
-          <?php if ($isAdmin): ?><th>Visible</th><?php endif; ?>
-          <th>Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php while($r=$myReviewsRes->fetch_assoc()): ?>
-        <tr>
-          <td>
-            <span class="badge rounded-pill" style="background-color: var(--primary-solid);">
-              <?=htmlspecialchars($r['room_type'] ?? 'Hotel')?>
-            </span>
-          </td>
-          <td>
-            <span class="review-rating"><?=intval($r['rating'])?>/5 ★</span>
-          </td>
-          <td>
-            <?php $safe = htmlspecialchars($r['comment']); ?>
-            <div class="review-text break-word" data-full="<?=htmlentities($safe)?>"><?=nl2br($safe)?></div>
-          </td>
-          <?php if ($isAdmin): ?>
-            <td>
-              <span class="badge <?=$r['is_visible'] ? 'bg-success' : 'bg-secondary'?>">
-                <?=$r['is_visible']? 'Yes':'No'?>
-              </span>
-            </td>
+      <!-- Leave a Review Section -->
+      <div class="card">
+        <div class="card-header">
+          <i class="fas fa-edit me-2"></i>Leave a Review
+        </div>
+        <div class="card-body">
+          <?php if(!empty($_GET['msg']) && $_GET['msg']==='review_submitted'): ?>
+            <div class="alert alert-success">
+              <i class="fas fa-check-circle me-2"></i>Review submitted successfully!
+            </div>
           <?php endif; ?>
-          <td>
-            <small class="text-muted"><?=date('M j, Y', strtotime($r['created_at']))?></small>
-          </td>
-        </tr>
-        <?php endwhile; ?>
-      </tbody>
-    </table>
-  </div>
-</div>
+          <?php if(!empty($_GET['err']) && $_GET['err']==='cannot_submit_review'): ?>
+            <div class="alert alert-danger">
+              <i class="fas fa-exclamation-circle me-2"></i>You cannot submit a review at this time.
+            </div>
+          <?php endif; ?>
+          <?php if($msg): ?>
+            <div class="alert alert-info">
+              <i class="fas fa-info-circle me-2"></i><?=$msg?>
+            </div>
+          <?php endif; ?>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
-<script>
-  document.addEventListener('DOMContentLoaded', function(){
-    document.querySelectorAll('.review-text').forEach(function(el){
-      var text = el.textContent || el.innerText || '';
-      if (text.length > 300) {
-        el.classList.add('clamped');
-        var btn = document.createElement('div');
-        btn.className = 'show-more';
-        btn.textContent = 'Show more';
-        btn.addEventListener('click', function(){
-          if (el.classList.contains('clamped')) {
-            el.classList.remove('clamped');
-            btn.textContent = 'Show less';
-          } else {
-            el.classList.add('clamped');
-            btn.textContent = 'Show more';
-          }
-        });
-        el.parentNode.appendChild(btn);
-      }
-    });
-  });
-</script>
-<?php require_once __DIR__ . '/includes/image_modal.php'; ?>
+          <form method="post">
+            <?=csrf_input_field()?>
+            <div class="row">
+              <div class="col-12 col-md-6 mb-3">
+                <label class="form-label fw-bold">What are you reviewing?</label>
+                <?php $selRoom = $_POST['room_id'] ?? ''; ?>
+                <select name="room_id" class="form-select" required>
+                  <option value="">Choose...</option>
+                  <option value="hotel" <?= $selRoom === 'hotel' ? 'selected' : '' ?>>Overall Hotel Experience</option>
+                  <?php while($rd = $roomsDoneRes->fetch_assoc()): ?>
+                    <?php $val = intval($rd['id']); ?>
+                    <option value="<?=$val?>" <?= (string)$val === (string)$selRoom ? 'selected' : '' ?>>
+                      Room <?=htmlspecialchars($rd['room_number'])?> — <?=htmlspecialchars($rd['room_type'])?>
+                    </option>
+                  <?php endwhile; ?>
+                </select>
+              </div>
+              <div class="col-12 col-md-6 mb-3">
+                <label class="form-label fw-bold">Rating</label>
+                <?php $selRating = $_POST['rating'] ?? ''; ?>
+                <select name="rating" class="form-select" required>
+                  <option value="">Select rating...</option>
+                  <?php for($i=5;$i>=1;$i--): ?>
+                    <option value="<?=$i?>" <?= (string)$i === (string)$selRating ? 'selected' : '' ?>>
+                      <?=str_repeat('★', $i)?><?=str_repeat('☆', 5-$i)?> - <?=$i?> Star<?=$i>1?'s':''?>
+                    </option>
+                  <?php endfor; ?>
+                </select>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold">Your Review</label>
+              <textarea name="comment" class="form-control" rows="4" placeholder="Share your experience..."><?=htmlspecialchars($_POST['comment'] ?? '')?></textarea>
+            </div>
+            <button class="btn btn-primary px-4 w-100 w-md-auto">
+              <i class="fas fa-paper-plane me-2"></i>Submit Review
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Recent Hotel Reviews Section -->
+      <div class="card">
+        <div class="card-header">
+          <i class="fas fa-hotel me-2"></i>Recent Overall Hotel Reviews
+        </div>
+        <div class="card-body">
+          <?php
+            $hotelList = $conn->query("SELECT rv.*, u.first_name, u.last_name, p.display_name FROM reviews rv JOIN users u ON rv.user_id=u.id LEFT JOIN profiles p ON p.user_id=u.id WHERE rv.room_id IS NULL AND rv.is_visible=1 ORDER BY rv.created_at DESC LIMIT 10");
+          ?>
+          <?php if ($hotelList && $hotelList->num_rows): ?>
+            <!-- Desktop view for hotel reviews -->
+            <div class="d-none d-md-block">
+              <?php while($hr=$hotelList->fetch_assoc()): ?>
+                <div class="review-item">
+                  <div class="d-flex justify-content-between">
+                    <span class="fw-semibold text-danger">
+                      <?=htmlspecialchars(!empty($hr['display_name']) ? $hr['display_name'] : ($hr['first_name'].' '.$hr['last_name']))?>
+                    </span>
+                    <span class="review-rating"><?=intval($hr['rating'])?>/5 ★</span>
+                  </div>
+                  <div class="review-text"><?=nl2br(htmlspecialchars($hr['comment']))?></div>
+                  <small class="text-muted"><?=date('M j, Y', strtotime($hr['created_at']))?></small>
+                </div>
+              <?php endwhile; ?>
+            </div>
+            
+            <!-- Mobile view for hotel reviews -->
+            <div class="d-md-none">
+              <?php 
+                // Reset pointer for mobile view
+                $hotelList->data_seek(0);
+              ?>
+              <?php while($hr=$hotelList->fetch_assoc()): ?>
+                <div class="mobile-card">
+                  <div class="mobile-review-header">
+                    <span class="fw-semibold text-danger">
+                      <?=htmlspecialchars(!empty($hr['display_name']) ? $hr['display_name'] : ($hr['first_name'].' '.$hr['last_name']))?>
+                    </span>
+                    <span class="review-rating"><?=intval($hr['rating'])?>/5 ★</span>
+                  </div>
+                  <div class="mobile-review-comment"><?=nl2br(htmlspecialchars($hr['comment']))?></div>
+                  <div class="mobile-review-footer">
+                    <small class="text-muted"><?=date('M j, Y', strtotime($hr['created_at']))?></small>
+                  </div>
+                </div>
+              <?php endwhile; ?>
+            </div>
+          <?php else: ?>
+            <div class="text-muted text-center py-4">
+              <i class="fas fa-comment-slash fa-2x mb-3"></i>
+              <p>No overall hotel reviews yet.</p>
+            </div>
+          <?php endif; ?>
+        </div>
+      </div>
+
+      <!-- My Reviews Section -->
+      <div class="card">
+        <div class="card-header">
+          <i class="fas fa-list me-2"></i>My Reviews
+        </div>
+        <div class="card-body">
+          <!-- Desktop table view -->
+          <div class="d-none d-md-block table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Rating</th>
+                  <th>Comment</th>
+                  <?php if ($isAdmin): ?><th>Visible</th><?php endif; ?>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php while($r=$myReviewsRes->fetch_assoc()): ?>
+                <tr>
+                  <td><span class="badge bg-danger"><?=htmlspecialchars($r['room_type'] ?? 'Hotel')?></span></td>
+                  <td><span class="review-rating"><?=intval($r['rating'])?>/5 ★</span></td>
+                  <td><?=nl2br(htmlspecialchars($r['comment']))?></td>
+                  <?php if ($isAdmin): ?>
+                    <td><span class="badge <?=$r['is_visible'] ? 'bg-success' : 'bg-secondary'?>"><?=$r['is_visible']? 'Yes':'No'?></span></td>
+                  <?php endif; ?>
+                  <td><small class="text-muted"><?=date('M j, Y', strtotime($r['created_at']))?></small></td>
+                </tr>
+                <?php endwhile; ?>
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- Mobile card view for reviews -->
+          <div class="d-md-none">
+            <?php 
+              // Reset pointer for mobile view
+              $myReviewsRes->data_seek(0);
+            ?>
+            <?php while($r=$myReviewsRes->fetch_assoc()): ?>
+              <div class="mobile-card">
+                <div class="mobile-review-header">
+                  <span class="mobile-review-type"><?=htmlspecialchars($r['room_type'] ?? 'Hotel')?></span>
+                  <span class="review-rating"><?=intval($r['rating'])?>/5 ★</span>
+                </div>
+                <div class="mobile-review-comment"><?=nl2br(htmlspecialchars($r['comment']))?></div>
+                <div class="mobile-review-footer">
+                  <small class="text-muted"><?=date('M j, Y', strtotime($r['created_at']))?></small>
+                  <?php if ($isAdmin): ?>
+                    <span class="badge <?=$r['is_visible'] ? 'bg-success' : 'bg-secondary'?>"><?=$r['is_visible']? 'Visible':'Hidden'?></span>
+                  <?php endif; ?>
+                </div>
+              </div>
+            <?php endwhile; ?>
+          </div>
+          
+          <?php if ($myReviewsRes->num_rows === 0): ?>
+            <div class="text-muted text-center py-4">
+              <i class="fas fa-star fa-2x mb-3"></i>
+              <p>You haven't submitted any reviews yet.</p>
+            </div>
+          <?php endif; ?>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
