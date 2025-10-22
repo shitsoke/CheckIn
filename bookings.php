@@ -434,66 +434,7 @@ $res = $stmt->get_result();
         </table>
       </div>
 
-      <!-- Mobile Cards View (Hidden) -->
-      <div class="mobile-bookings">
-        <?php 
-        // Reset result pointer for mobile view
-        $res->data_seek(0);
-        while($b = $res->fetch_assoc()): 
-        ?>
-        <div class="booking-card">
-          <div class="booking-header">
-            <div>
-              <div class="booking-room">Room <?=htmlspecialchars($b['room_number'])?></div>
-              <div class="booking-type"><?=htmlspecialchars($b['room_type'])?></div>
-            </div>
-            <span class="status-badge 
-              <?= $b['status'] == 'confirmed' ? 'bg-success' : '' ?>
-              <?= $b['status'] == 'reserved' ? 'bg-warning text-dark' : '' ?>
-              <?= $b['status'] == 'ongoing' ? 'bg-primary' : '' ?>
-              <?= $b['status'] == 'checked_out' ? 'bg-info' : '' ?>
-              <?= $b['status'] == 'canceled' ? 'bg-danger' : '' ?>
-            ">
-              <?=htmlspecialchars($b['status'])?>
-            </span>
-          </div>
-          
-          <div class="booking-details">
-            <div class="detail-item">
-              <span class="detail-label">Start Time</span>
-              <span class="detail-value"><?=htmlspecialchars($b['start_time'])?></span>
-            </div>
-            <div class="detail-item">
-              <span class="detail-label">End Time</span>
-              <span class="detail-value"><?=htmlspecialchars($b['end_time'])?></span>
-            </div>
-            <div class="detail-item">
-              <span class="detail-label">Hours</span>
-              <span class="detail-value"><?=intval($b['hours'])?></span>
-            </div>
-            <div class="detail-item">
-              <span class="detail-label">Total Amount</span>
-              <span class="detail-value">₱<?=number_format($b['total_amount'],2)?></span>
-            </div>
-            <div class="detail-item">
-              <span class="detail-label">Payment Method</span>
-              <span class="detail-value"><?=htmlspecialchars($b['payment_method'])?></span>
-            </div>
-          </div>
-          
-          <div class="booking-actions">
-            <a class="btn btn-outline-primary" href="booking_history.php?booking_id=<?=$b['id']?>">
-              <i class="fas fa-eye me-1"></i>View Details
-            </a>
-            <?php if(in_array($b['status'], ['confirmed','checked_out','ongoing'])): ?>
-              <a class="btn btn-primary" href="receipt.php?booking_id=<?=$b['id']?>&download=pdf">
-                <i class="fas fa-download me-1"></i>Download Receipt
-              </a>
-            <?php endif; ?>
-          </div>
-        </div>
-        <?php endwhile; ?>
-      </div>
+      
 
       <?php if($res->num_rows === 0): ?>
         <div class="text-center py-5">

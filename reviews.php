@@ -4,10 +4,10 @@ require_once "includes/auth_check.php";
 require_once "includes/csrf.php";
 require_once "db_connect.php";
 require_once __DIR__ . '/includes/name_helper.php';
-include __DIR__ . "/user_sidebar.php";
 $user_id = $_SESSION['user_id'];
 $msg = "";
 
+// Handle POST before any output (user_sidebar.php sends HTML)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   verify_csrf();
   $return_to = $_POST['return_to'] ?? null; // optional URL to go back to
@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   } elseif ($rating < 1 || $rating > 5) {
     $msg = "Invalid rating.";
   } else {
-  if ($is_hotel) {
+    if ($is_hotel) {
       // check if user has any completed booking at all
       $chk = $conn->prepare("SELECT id FROM bookings WHERE user_id=? AND status='checked_out' LIMIT 1");
       $chk->bind_param("i", $user_id);
@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $ins->execute();
         $msg = $ins->affected_rows ? 'Hotel review submitted.' : 'Failed to submit review.';
       }
-      } else {
+    } else {
       // room-specific review: verify user completed that room
       $chk = $conn->prepare("SELECT id FROM bookings WHERE user_id=? AND room_id=? AND status='checked_out' LIMIT 1");
       $chk->bind_param("ii", $user_id, $room_id);
@@ -62,6 +62,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   }
 }
+
+// include sidebar after POST handling so header() can redirect safely
+include __DIR__ . "/user_sidebar.php";
 // fetch rooms that the user has completed (checked_out)
 $roomsDone = $conn->prepare("SELECT DISTINCT r.id, r.room_number, t.name as room_type FROM bookings b JOIN rooms r ON b.room_id=r.id JOIN room_types t ON r.room_type_id=t.id WHERE b.user_id=? AND b.status='checked_out'");
 $roomsDone->bind_param("i", $user_id);
