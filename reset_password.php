@@ -2,37 +2,54 @@
 session_start();
 require_once "db_connect.php";
 require_once "includes/csrf.php";
+
 $token = $_GET['token'] ?? '';
 if (!$token) die('Invalid token');
+
 $msg = '';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   verify_csrf();
   $pass = $_POST['password'] ?? '';
   $confirm = $_POST['confirm_password'] ?? '';
+
   if ($pass !== $confirm) {
     $msg = 'Passwords do not match';
   } else {
     require_once __DIR__ . '/includes/password_policy.php';
     $pwCheck = validate_password_strength($pass);
+
     if ($pwCheck !== true) {
       $msg = $pwCheck;
     } else {
-      $stmt = $conn->prepare("SELECT id, reset_expires FROM users WHERE reset_token=? LIMIT 1");
+      // Step 1: Validate token
+      $stmt = $conn->prepare("SELECT id, password, reset_expires FROM users WHERE reset_token=? LIMIT 1");
       $stmt->bind_param("s", $token);
       $stmt->execute();
       $res = $stmt->get_result();
+
       if ($res->num_rows === 0) {
         $msg = 'Invalid token';
       } else {
         $row = $res->fetch_assoc();
+
+        // Step 2: Check if token expired
         if (strtotime($row['reset_expires']) < time()) {
           $msg = 'Token expired';
         } else {
-          $hash = password_hash($pass, PASSWORD_BCRYPT);
-          $u = $conn->prepare("UPDATE users SET password=?, reset_token=NULL, reset_expires=NULL WHERE id=?");
-          $u->bind_param("si", $hash, $row['id']);
-          $u->execute();
-          header('Location: login.php?msg=password_updated'); exit;
+          // Step 3: Prevent using old password
+          if (password_verify($pass, $row['password'])) {
+            $msg = 'New password cannot be the same as your current password';
+          } else {
+            // Step 4: Update to new password
+            $hash = password_hash($pass, PASSWORD_BCRYPT);
+            $u = $conn->prepare("UPDATE users SET password=?, reset_token=NULL, reset_expires=NULL WHERE id=?");
+            $u->bind_param("si", $hash, $row['id']);
+            $u->execute();
+
+            header('Location: login.php?msg=password_updated');
+            exit;
+          }
         }
       }
     }
